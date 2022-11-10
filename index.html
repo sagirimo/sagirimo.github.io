@@ -19,7 +19,7 @@
             <input type="password"/>
         </div>
         <div class="btn-box">
-            <a href="#">忘记密码?</a>
+            <a onclick="btnClink3()" href="#">忘记密码?</a>
             <div>
                 <button  onclick="btnClink1()">登录</button>
                 <button  onclick="btnClink2()">注册</button>
@@ -32,16 +32,16 @@
 </script>
 </body>
 <script>
-    var flag = false;
     var AccountNumber1 = "pcgame";
     var Password1 = "pcgame";
     function btnClink1()
     {
-        var input1 = document.getElementById("AccountNumber");
-        var input2 = document.getElementById("Password");
+        var input1 = document.getElementById("text");
+        var input2 = document.getElementById("password");
         if(input1.value == AccountNumber1 && input2.value == Password1)
         {
             alert("登陆成功");
+			setTimeout("javascript:location.href='home.html'", 5000);
         }
         else
         {
@@ -52,5 +52,9 @@
     {
         alert("网站内测中，暂不开放注册功能");
     }      
+	function btnClink3()
+    {
+        alert("网站内测中，暂不开放找回密码功能");
+    }
 </script>
 </html>
