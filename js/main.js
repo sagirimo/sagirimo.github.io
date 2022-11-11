@@ -93,7 +93,7 @@ fetch('https://v1.hitokoto.cn?max_length=24')
 //获取天气
 //每日限量 100 次
 //请前往 https://www.tianqiapi.com/ 申请（免费）
-fetch('https://www.yiketianqi.com/free/day?appid=43986679&appsecret=TksqGZT7&unescape=1')
+fetch('https://www.yiketianqi.com/free/day?appid=59425722&appsecret=nNtLly5v&unescape=1')
     .then(response => response.json())
     .then(data => {
         $('#wea_text').html(data.wea)
@@ -158,27 +158,27 @@ $("#social").mouseover(function () {
 $("#github").mouseover(function () {
     $("#link-text").html("去 Github 看看");
 }).mouseout(function () {
-    $("#link-text").html("通过这里联系我");
+    $("#link-text").html("通过这里转接");
 });
 $("#qq").mouseover(function () {
     $("#link-text").html("有什么事吗");
 }).mouseout(function () {
-    $("#link-text").html("通过这里联系我");
+    $("#link-text").html("通过这里转接");
 });
 $("#email").mouseover(function () {
     $("#link-text").html("来封 Email");
 }).mouseout(function () {
-    $("#link-text").html("通过这里联系我");
+    $("#link-text").html("通过这里转接");
 });
 $("#telegram").mouseover(function () {
-    $("#link-text").html("你懂的 ~");
+    $("#link-text").html("去知网逛一下");
 }).mouseout(function () {
-    $("#link-text").html("通过这里联系我");
+    $("#link-text").html("通过这里转接");
 });
 $("#twitter").mouseover(function () {
-    $("#link-text").html("你懂的 ~");
+    $("#link-text").html("去知网逛一下");
 }).mouseout(function () {
-    $("#link-text").html("通过这里联系我");
+    $("#link-text").html("通过这里转接");
 });
 
 //更多页面切换
