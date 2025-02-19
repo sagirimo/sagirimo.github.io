@@ -1,0 +1,118 @@
+/* 基础排版 */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* 控制栏样式 */
+.control-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* 题目容器 */
+.question {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 选项容器 */
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+/* 单个选项 */
+.option {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: #fafafa;
+    transition: all 0.2s;
+}
+
+.option:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+}
+
+/* 输入框样式 */
+.option input[type="radio"],
+.option input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+/* 移动端优化 */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+
+    .question {
+        padding: 15px;
+    }
+
+    .option {
+        padding: 12px;
+        font-size: 15px;
+    }
+}
+
+/* 正确/错误状态 */
+.correct-answer {
+    border-color: #4CAF50 !important;
+    background: #e8f5e9 !important;
+}
+
+.user-correct {
+    background: #c8e6c9 !important;
+    border-color: #2e7d32 !important;
+}
+
+.user-wrong {
+    background: #ffebee !important;
+    border-color: #c62828 !important;
+}
+
+button {
+    padding: 12px 25px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* 动画效果 */
+@keyframes pulse-correct {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}

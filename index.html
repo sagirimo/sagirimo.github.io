@@ -1,196 +1,183 @@
-    <!DOCTYPE html>
-    <html lang="zh-CN">
-    <head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>智能刷题系统</title>
+      <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="control-bar">
+        <!-- 添加加载提示 -->
+        <div id="loadProgress" style="color: #666; margin-right: 15px;">正在初始化...</div>
+        <select id="chapterSelect">
+            <option value="all">全部章节</option>
+        </select>
+        <select id="modeSelect">
+            <option value="random">随机模式</option>
+            <option value="sequential">顺序模式</option>
+        </select>
+        <button onclick="startPractice()">开始刷题</button>
+    </div>
+    <div id="questionContainer"></div>
 
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>智能刷题系统</title>
-          <style>
-              body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
-              .control-bar { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-              .question { background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-              .option { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-              .correct { background: #dfffdf; border-color: #4CAF50; }
-              .wrong { background: #ffe5e5; border-color: #ff5722; }
-              button { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; }
-              img { max-width: 100%; height: auto; }
-              .correct-answer { background: #e8f5e9 !important; border-color: #43a047 !important; animation: pulse-correct 0.5s; }
-              .user-correct { background: #c8e6c9 !important; border-color: #2e7d32 !important; }
-              .user-wrong { background: #ffebee !important; border-color: #c62828 !important; animation: shake 0.5s; }
-              @keyframes pulse-correct { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-              @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-          </style>
-    </head>
-    <body>
-        <div class="control-bar">
-            <!-- 添加加载提示 -->
-            <div id="loadProgress" style="color: #666; margin-right: 15px;">正在初始化...</div>
-            <select id="chapterSelect">
-                <option value="all">全部章节</option>
-            </select>
-            <select id="modeSelect">
-                <option value="random">随机模式</option>
-                <option value="sequential">顺序模式</option>
-            </select>
-            <button onclick="startPractice()">开始刷题</button>
-        </div>
-        <div id="questionContainer"></div>
-
-    <script>
-    // 修复1：添加必要的polyfill
-    if (!window.flatMap) {
-        Array.prototype.flatMap = function(cb) {
-            return this.map(cb).reduce((acc, val) => acc.concat(val), []);
-        };
-    }
-
-    // 修复2：重构题库加载器
-    const questionBank = {
-        chapters: [],
-        isLoaded: false,
-
-        async init() {
-            try {
-                const listRes = await fetch('./chapter-list.json');
-                const { files } = await listRes.json();
-
-                await Promise.all(files.map(async file => {
-                    const res = await fetch(file);
-                    const data = await res.json();
-                    this._validate(data);
-                    this.chapters.push(...data.chapters);
-                }));
-
-                this.chapters.sort((a, b) => a.id - b.id);
-                this.isLoaded = true;
-                initChapters();
-                document.getElementById('loadProgress').textContent = '题库加载完成';
-            } catch (e) {
-                console.error('初始化失败:', e);
-                document.getElementById('loadProgress').textContent = '加载失败，请检查控制台';
-            }
-        },
-
-        _validate(data) {
-            if (!data?.chapters?.length) throw new Error('无效章节数据');
-            data.chapters.forEach(ch => {
-                const required = ['id', 'name', 'questions'];
-                required.forEach(field => {
-                    if (!(field in ch)) throw new Error(`章节缺少必要字段: ${field}`);
-                });
-            });
-        },
-
-        getQuestions(chapterId) {
-            if (chapterId === 'all') return this.chapters.flatMap(c => c.questions);
-            const ch = this.chapters.find(c => c.id == chapterId);
-            return ch ? ch.questions : [];
-        }
+<script>
+// 修复1：添加必要的polyfill
+if (!window.flatMap) {
+    Array.prototype.flatMap = function(cb) {
+        return this.map(cb).reduce((acc, val) => acc.concat(val), []);
     };
+}
 
-    // 修复3：增强章节初始化
-    function initChapters() {
-        const select = document.getElementById('chapterSelect');
-        select.innerHTML = '<option value="all">全部章节</option>';
-        questionBank.chapters.forEach(ch => {
-            const option = new Option(ch.name, ch.id);
-            select.add(option);
+// 修复2：重构题库加载器
+const questionBank = {
+    chapters: [],
+    isLoaded: false,
+
+    async init() {
+        try {
+            const listRes = await fetch('./chapter-list.json');
+            const { files } = await listRes.json();
+
+            await Promise.all(files.map(async file => {
+                const res = await fetch(file);
+                const data = await res.json();
+                this._validate(data);
+                this.chapters.push(...data.chapters);
+            }));
+
+            this.chapters.sort((a, b) => a.id - b.id);
+            this.isLoaded = true;
+            initChapters();
+            document.getElementById('loadProgress').textContent = '题库加载完成';
+        } catch (e) {
+            console.error('初始化失败:', e);
+            document.getElementById('loadProgress').textContent = '加载失败，请检查控制台';
+        }
+    },
+
+    _validate(data) {
+        if (!data?.chapters?.length) throw new Error('无效章节数据');
+        data.chapters.forEach(ch => {
+            const required = ['id', 'name', 'questions'];
+            required.forEach(field => {
+                if (!(field in ch)) throw new Error(`章节缺少必要字段: ${field}`);
+            });
         });
+    },
+
+    getQuestions(chapterId) {
+        if (chapterId === 'all') return this.chapters.flatMap(c => c.questions);
+        const ch = this.chapters.find(c => c.id == chapterId);
+        return ch ? ch.questions : [];
+    }
+};
+
+// 修复3：增强章节初始化
+function initChapters() {
+    const select = document.getElementById('chapterSelect');
+    select.innerHTML = '<option value="all">全部章节</option>';
+    questionBank.chapters.forEach(ch => {
+        const option = new Option(ch.name, ch.id);
+        select.add(option);
+    });
+}
+
+// 修复4：完善刷题流程
+function startPractice() {
+    if (!questionBank.isLoaded) {
+        alert('题库尚未加载完毕，请稍后再试');
+        return;
     }
 
-    // 修复4：完善刷题流程
-    function startPractice() {
-        if (!questionBank.isLoaded) {
-            alert('题库尚未加载完毕，请稍后再试');
-            return;
-        }
+    const chapterId = document.getElementById('chapterSelect').value;
+    const isRandom = document.getElementById('modeSelect').value === 'random';
 
-        const chapterId = document.getElementById('chapterSelect').value;
-        const isRandom = document.getElementById('modeSelect').value === 'random';
-
-        let questions = questionBank.getQuestions(chapterId);
-        if (!questions.length) {
-            alert('当前章节没有题目');
-            return;
-        }
-
-        if (isRandom) questions = shuffleArray(questions);
-        renderQuestions(questions);
+    let questions = questionBank.getQuestions(chapterId);
+    if (!questions.length) {
+        alert('当前章节没有题目');
+        return;
     }
 
-    // 修复5：优化题目渲染
-    function renderQuestions(questions) {
-        const container = document.getElementById('questionContainer');
-        container.innerHTML = '';
+    if (isRandom) questions = shuffleArray(questions);
+    renderQuestions(questions);
+}
 
-        questions.forEach((q, qIndex) => {
-            const div = document.createElement('div');
-            div.className = 'question';
-            div.innerHTML = `
-                <h3>题目 ${qIndex + 1}</h3>
-                <div class="stem">${q.stem}</div>
-                ${q.options.map((opt, oIndex) => `
+// 修复5：优化题目渲染
+function renderQuestions(questions) {
+    const container = document.getElementById('questionContainer');
+    container.innerHTML = '';
+
+    questions.forEach((q, qIndex) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `
+            <h3>题目 ${qIndex + 1}</h3>
+            <div class="stem">${q.stem}</div>
+            <div class="options-container">
+                ${q.options.map((opt, i) => `
                     <label class="option">
                         <input type="${q.type === 'multi' ? 'checkbox' : 'radio'}"
-                               name="q${qIndex}"
-                               value="${oIndex}">
-                        ${opt}
+                               name="q${index}"
+                               value="${i}">
+                        <span class="option-text">${opt}</span>
                     </label>
                 `).join('')}
-                <button onclick="showAnswer(this, ${qIndex})">提交答案</button>
-                <div class="explanation" hidden>${q.explanation}</div>
-            `;
-            container.appendChild(div);
-        });
-    }
+            </div>
+            <button onclick="showAnswer(this, ${qIndex})">提交答案</button>
+            <div class="explanation" hidden>${q.explanation}</div>
+        `;
+        container.appendChild(div);
+    });
+}
 
-    // 修复6：完善答案验证
-    function showAnswer(button, qIndex) {
-        const questionDiv = button.closest('.question');
-        const inputs = questionDiv.querySelectorAll('input');
-        const explanation = questionDiv.querySelector('.explanation');
-        const q = getQuestion(qIndex);
+// 修复6：完善答案验证
+function showAnswer(button, qIndex) {
+    const questionDiv = button.closest('.question');
+    const inputs = questionDiv.querySelectorAll('input');
+    const explanation = questionDiv.querySelector('.explanation');
+    const q = getQuestion(qIndex);
 
-        // 重置样式
-        questionDiv.querySelectorAll('.option').forEach(opt => {
-            opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
-        });
+    // 重置样式
+    questionDiv.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
+    });
 
-        // 标记正确答案
-        const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
-        answers.forEach(ans => {
-            inputs[ans].closest('.option').classList.add('correct-answer');
-        });
+    // 标记正确答案
+    const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
+    answers.forEach(ans => {
+        inputs[ans].closest('.option').classList.add('correct-answer');
+    });
 
-        // 检查用户选择
-        inputs.forEach((input, i) => {
-            if (input.checked) {
-                const isCorrect = answers.includes(i);
-                input.closest('.option').classList.add(
-                    isCorrect ? 'user-correct' : 'user-wrong'
-                );
-            }
-        });
+    // 检查用户选择
+    inputs.forEach((input, i) => {
+        if (input.checked) {
+            const isCorrect = answers.includes(i);
+            input.closest('.option').classList.add(
+                isCorrect ? 'user-correct' : 'user-wrong'
+            );
+        }
+    });
 
-        explanation.hidden = false;
-        button.disabled = true;
-    }
+    explanation.hidden = false;
+    button.disabled = true;
+}
 
-    // 修复7：正确的题目获取
-    function getQuestion(index) {
-        return questionBank.chapters.flatMap(c => c.questions)[index];
-    }
+// 修复7：正确的题目获取
+function getQuestion(index) {
+    return questionBank.chapters.flatMap(c => c.questions)[index];
+}
 
-    // 修复8：可靠的洗牌算法
-    function shuffleArray(arr) {
-        return arr
-            .map(v => ({ v, r: Math.random() }))
-            .sort((a, b) => a.r - b.r)
-            .map(a => a.v);
-    }
+// 修复8：可靠的洗牌算法
+function shuffleArray(arr) {
+    return arr
+        .map(v => ({ v, r: Math.random() }))
+        .sort((a, b) => a.r - b.r)
+        .map(a => a.v);
+}
 
-    // 初始化
-    window.addEventListener('load', () => questionBank.init());
-    </script>
-    </body>
-    </html>
+// 初始化
+window.addEventListener('load', () => questionBank.init());
+</script>
+</body>
+</html>
