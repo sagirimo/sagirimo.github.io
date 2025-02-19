@@ -114,6 +114,7 @@ function renderQuestions(questions) {
         div.innerHTML = `
             <h3>题目 ${qIndex + 1}</h3>
             <div class="stem">${q.stem}</div>
+            ${q.image ? `<img src="${q.image}" alt="题目图片" class="question-image">` : ''}
             <div class="options-container">
                 ${q.options.map((opt, i) => `
                     <label class="option">

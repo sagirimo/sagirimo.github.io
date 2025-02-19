@@ -90,6 +90,13 @@ body {
     border-color: #c62828 !important;
 }
 
+.question-image {
+    max-width: 100%; /* 图片宽度不超过容器宽度 */
+    height: auto; /* 保持图片比例 */
+    margin: 10px 0; /* 图片与上下内容间距 */
+    display: block; /* 防止图片与文本在同一行 */
+}
+
 button {
     padding: 12px 25px;
     background: #4CAF50;
