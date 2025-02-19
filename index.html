@@ -104,9 +104,12 @@ function startPractice() {
 }
 
 // 修复5：优化题目渲染
-function renderQuestions(questions) {
+function renderQuestions(questions, chapterFileName) {
     const container = document.getElementById('questionContainer');
     container.innerHTML = '';
+
+    // 从文件名中提取章节编号（如 "ch3"）
+    const chapterNumber = chapterFileName.match(/ch(\d+)/i)[0]; // 匹配 "ch3"
 
     questions.forEach((q, qIndex) => {
         const div = document.createElement('div');
@@ -114,7 +117,7 @@ function renderQuestions(questions) {
         div.innerHTML = `
             <h3>题目 ${qIndex + 1}</h3>
             <div class="stem">${q.stem}</div>
-            ${q.image ? `<img src="images/${q.image}" alt="题目图片" class="question-image">` : ''}
+            ${q.image ? `<img src="${chapterNumber}_question_${qIndex + 1}.png" alt="题目图片" class="question-image">` : ''}
             <div class="options-container">
                 ${q.options.map((opt, i) => `
                     <label class="option">
@@ -131,6 +134,7 @@ function renderQuestions(questions) {
         container.appendChild(div);
     });
 }
+
 
 // 修复6：完善答案验证
 function showAnswer(button, qIndex) {
