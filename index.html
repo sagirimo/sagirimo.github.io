@@ -155,7 +155,8 @@
         const questionDiv = button.closest('.question');
         const inputs = questionDiv.querySelectorAll('input');
         const explanation = questionDiv.querySelector('.explanation');
-        const q = getQuestion(qIndex);
+        const chapterId = document.getElementById('chapterSelect').value;
+        const q = getQuestion(qIndex, chapterId); // 传递 chapterId
 
         // 重置样式
         questionDiv.querySelectorAll('.option').forEach(opt => {
@@ -204,8 +205,13 @@
 
 
         // 获取题目
-        function getQuestion(index) {
-            return questionBank.chapters.flatMap(c => c.questions)[index];
+        function getQuestion(index, chapterId) {
+            if (chapterId === 'all') {
+                return questionBank.chapters.flatMap(c => c.questions)[index];
+            } else {
+                const chapter = questionBank.chapters.find(c => c.id == chapterId);
+                return chapter ? chapter.questions[index] : null;
+            }
         }
 
         // 洗牌算法
