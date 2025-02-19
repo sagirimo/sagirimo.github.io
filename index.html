@@ -118,7 +118,7 @@ function renderQuestions(questions) {
                 ${q.options.map((opt, i) => `
                     <label class="option">
                         <input type="${q.type === 'multi' ? 'checkbox' : 'radio'}"
-                               name="q${index}"
+                               name="q${qIndex}"
                                value="${i}">
                         <span class="option-text">${opt}</span>
                     </label>
