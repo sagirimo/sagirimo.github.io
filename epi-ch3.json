@@ -419,7 +419,7 @@
                     ],
                     "answer": 2,
                     "explanation": "题中给出的资料是有关构成比指标的，而要比较两人群某疾病孰高孰低，需要用率的指标来测量。",
-                    "image": "question_32.png"
+                    "image": "ch3_question_32.png"
                 },
                 {
                     "type": "single",
@@ -537,7 +537,7 @@
                     ],
                     "answer": 3,
                     "explanation": "二代移民冠心病、宫颈癌均接近美国白人水平，说明两者都是环境因素起作用。",
-                    "image": "question_41.png"
+                    "image": "ch3_question_41.png"
                 },
                 {
                     "type": "single",
@@ -551,7 +551,7 @@
                     ],
                     "answer": 4,
                     "explanation": "没有各年龄组的人口，不能算率。",
-                    "image": "question_42.png"
+                    "image": "ch3_question_42.png"
                 },
                 {
                     "type": "single",
