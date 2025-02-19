@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>智能刷题系统</title>
-      <link rel="stylesheet" href="./css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能刷题系统</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <div class="control-bar">
-        <!-- 添加加载提示 -->
+        <!-- 加载提示 -->
         <div id="loadProgress" style="color: #666; margin-right: 15px;">正在初始化...</div>
         <select id="chapterSelect">
             <option value="all">全部章节</option>
@@ -21,172 +21,182 @@
     </div>
     <div id="questionContainer"></div>
 
-<script>
-// 修复1：添加必要的polyfill
-if (!window.flatMap) {
-    Array.prototype.flatMap = function(cb) {
-        return this.map(cb).reduce((acc, val) => acc.concat(val), []);
-    };
-}
-
-// 修复2：重构题库加载器
-const questionBank = {
-    chapters: [],
-    isLoaded: false,
-
-    async init() {
-        try {
-            const listRes = await fetch('./chapter-list.json');
-            const { files } = await listRes.json();
-
-            await Promise.all(files.map(async file => {
-                const res = await fetch(file);
-                const data = await res.json();
-                this._validate(data);
-                this.chapters.push(...data.chapters);
-            }));
-
-            this.chapters.sort((a, b) => a.id - b.id);
-            this.isLoaded = true;
-            initChapters();
-            document.getElementById('loadProgress').textContent = '题库加载完成';
-        } catch (e) {
-            console.error('初始化失败:', e);
-            document.getElementById('loadProgress').textContent = '加载失败，请检查控制台';
+    <script>
+        // 添加必要的 polyfill
+        if (!window.flatMap) {
+            Array.prototype.flatMap = function(cb) {
+                return this.map(cb).reduce((acc, val) => acc.concat(val), []);
+            };
         }
-    },
 
-    _validate(data) {
-        if (!data?.chapters?.length) throw new Error('无效章节数据');
-        data.chapters.forEach(ch => {
-            const required = ['id', 'name', 'questions'];
-            required.forEach(field => {
-                if (!(field in ch)) throw new Error(`章节缺少必要字段: ${field}`);
+        // 题库加载器
+        const questionBank = {
+            chapters: [],
+            isLoaded: false,
+
+            async init() {
+                try {
+                    const listRes = await fetch('./chapter-list.json');
+                    const { files } = await listRes.json();
+
+                    await Promise.all(files.map(async file => {
+                        const res = await fetch(file);
+                        const data = await res.json();
+                        this._validate(data);
+                        this.chapters.push(...data.chapters);
+                    }));
+
+                    this.chapters.sort((a, b) => a.id - b.id);
+                    this.isLoaded = true;
+                    initChapters();
+                    document.getElementById('loadProgress').textContent = '题库加载完成';
+                } catch (e) {
+                    console.error('初始化失败:', e);
+                    document.getElementById('loadProgress').textContent = '加载失败，请检查控制台';
+                }
+            },
+
+            _validate(data) {
+                if (!data?.chapters?.length) throw new Error('无效章节数据');
+                data.chapters.forEach(ch => {
+                    const required = ['id', 'name', 'questions'];
+                    required.forEach(field => {
+                        if (!(field in ch)) throw new Error(`章节缺少必要字段: ${field}`);
+                    });
+                });
+            },
+
+            getQuestions(chapterId) {
+                if (chapterId === 'all') return this.chapters.flatMap(c => c.questions);
+                const ch = this.chapters.find(c => c.id == chapterId);
+                return ch ? ch.questions : [];
+            }
+        };
+
+        // 初始化章节选择器
+        function initChapters() {
+            const select = document.getElementById('chapterSelect');
+            select.innerHTML = '<option value="all">全部章节</option>';
+            questionBank.chapters.forEach(ch => {
+                const option = new Option(ch.name, ch.id);
+                select.add(option);
             });
-        });
-    },
-
-    getQuestions(chapterId) {
-        if (chapterId === 'all') return this.chapters.flatMap(c => c.questions);
-        const ch = this.chapters.find(c => c.id == chapterId);
-        return ch ? ch.questions : [];
-    }
-};
-
-// 修复3：增强章节初始化
-function initChapters() {
-    const select = document.getElementById('chapterSelect');
-    select.innerHTML = '<option value="all">全部章节</option>';
-    questionBank.chapters.forEach(ch => {
-        const option = new Option(ch.name, ch.id);
-        select.add(option);
-    });
-}
-
-// 修复4：完善刷题流程
-function startPractice() {
-    if (!questionBank.isLoaded) {
-        alert('题库尚未加载完毕，请稍后再试');
-        return;
-    }
-
-    const chapterId = document.getElementById('chapterSelect').value;
-    const isRandom = document.getElementById('modeSelect').value === 'random';
-
-    let questions = questionBank.getQuestions(chapterId);
-    if (!questions.length) {
-        alert('当前章节没有题目');
-        return;
-    }
-
-    if (isRandom) questions = shuffleArray(questions);
-    renderQuestions(questions);
-}
-
-// 修复5：优化题目渲染
-function renderQuestions(questions, chapterFileName) {
-    if (!chapterFileName) {
-        console.error("题库文件名未定义！");
-        return;
-    }
-
-    const container = document.getElementById('questionContainer');
-    container.innerHTML = '';
-
-    // 从文件名中提取章节编号（如 "ch3"）
-    const chapterNumber = chapterFileName.match(/ch(\d+)/i)[0]; // 匹配 "ch3"
-
-    questions.forEach((q, qIndex) => {
-        const div = document.createElement('div');
-        div.className = 'question';
-        div.innerHTML = `
-            <h3>题目 ${qIndex + 1}</h3>
-            <div class="stem">${q.stem}</div>
-            ${q.image ? `<img src="${chapterNumber}_question_${qIndex + 1}.png" alt="题目图片" class="question-image">` : ''}
-            <div class="options-container">
-                ${q.options.map((opt, i) => `
-                    <label class="option">
-                        <input type="${q.type === 'multi' ? 'checkbox' : 'radio'}"
-                               name="q${qIndex}"
-                               value="${i}">
-                        <span class="option-text">${opt}</span>
-                    </label>
-                `).join('')}
-            </div>
-            <button onclick="showAnswer(this, ${qIndex})">提交答案</button>
-            <div class="explanation" hidden>${q.explanation}</div>
-        `;
-        container.appendChild(div);
-    });
-}
-
-// 修复6：完善答案验证
-function showAnswer(button, qIndex) {
-    const questionDiv = button.closest('.question');
-    const inputs = questionDiv.querySelectorAll('input');
-    const explanation = questionDiv.querySelector('.explanation');
-    const q = getQuestion(qIndex);
-
-    // 重置样式
-    questionDiv.querySelectorAll('.option').forEach(opt => {
-        opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
-    });
-
-    // 标记正确答案
-    const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
-    answers.forEach(ans => {
-        inputs[ans].closest('.option').classList.add('correct-answer');
-    });
-
-    // 检查用户选择
-    inputs.forEach((input, i) => {
-        if (input.checked) {
-            const isCorrect = answers.includes(i);
-            input.closest('.option').classList.add(
-                isCorrect ? 'user-correct' : 'user-wrong'
-            );
         }
-    });
 
-    explanation.hidden = false;
-    button.disabled = true;
-}
+        // 开始刷题
+        function startPractice() {
+            if (!questionBank.isLoaded) {
+                alert('题库尚未加载完毕，请稍后再试');
+                return;
+            }
 
-// 修复7：正确的题目获取
-function getQuestion(index) {
-    return questionBank.chapters.flatMap(c => c.questions)[index];
-}
+            const chapterId = document.getElementById('chapterSelect').value;
+            const isRandom = document.getElementById('modeSelect').value === 'random';
 
-// 修复8：可靠的洗牌算法
-function shuffleArray(arr) {
-    return arr
-        .map(v => ({ v, r: Math.random() }))
-        .sort((a, b) => a.r - b.r)
-        .map(a => a.v);
-}
+            let questions = questionBank.getQuestions(chapterId);
+            if (!questions.length) {
+                alert('当前章节没有题目');
+                return;
+            }
 
-// 初始化
-window.addEventListener('load', () => questionBank.init());
-</script>
+            if (isRandom) questions = shuffleArray(questions);
+
+            // 获取章节文件名
+            const chapterFileName = getChapterFileName(chapterId);
+            renderQuestions(questions, chapterFileName);
+        }
+
+        // 根据章节 ID 获取文件名
+        function getChapterFileName(chapterId) {
+            if (chapterId === 'all') return 'all';
+            const chapter = questionBank.chapters.find(c => c.id == chapterId);
+            return chapter ? `ch${chapter.id}` : 'all';
+        }
+
+        // 渲染题目
+        function renderQuestions(questions, chapterFileName) {
+            if (!chapterFileName) {
+                console.error("题库文件名未定义！");
+                return;
+            }
+
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = '';
+
+            // 从文件名中提取章节编号（如 "ch3"）
+            const chapterNumber = chapterFileName === 'all' ? 'all' : chapterFileName.match(/ch(\d+)/i)[0];
+
+            questions.forEach((q, qIndex) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `
+                    <h3>题目 ${qIndex + 1}</h3>
+                    <div class="stem">${q.stem}</div>
+                    ${q.image ? `<img src="${chapterNumber}_question_${qIndex + 1}.png" alt="题目图片" class="question-image">` : ''}
+                    <div class="options-container">
+                        ${q.options.map((opt, i) => `
+                            <label class="option">
+                                <input type="${q.type === 'multi' ? 'checkbox' : 'radio'}"
+                                       name="q${qIndex}"
+                                       value="${i}">
+                                <span class="option-text">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="showAnswer(this, ${qIndex})">提交答案</button>
+                    <div class="explanation" hidden>${q.explanation}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // 显示答案
+        function showAnswer(button, qIndex) {
+            const questionDiv = button.closest('.question');
+            const inputs = questionDiv.querySelectorAll('input');
+            const explanation = questionDiv.querySelector('.explanation');
+            const q = getQuestion(qIndex);
+
+            // 重置样式
+            questionDiv.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
+            });
+
+            // 标记正确答案
+            const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
+            answers.forEach(ans => {
+                inputs[ans].closest('.option').classList.add('correct-answer');
+            });
+
+            // 检查用户选择
+            inputs.forEach((input, i) => {
+                if (input.checked) {
+                    const isCorrect = answers.includes(i);
+                    input.closest('.option').classList.add(
+                        isCorrect ? 'user-correct' : 'user-wrong'
+                    );
+                }
+            });
+
+            explanation.hidden = false;
+            button.disabled = true;
+        }
+
+        // 获取题目
+        function getQuestion(index) {
+            return questionBank.chapters.flatMap(c => c.questions)[index];
+        }
+
+        // 洗牌算法
+        function shuffleArray(arr) {
+            return arr
+                .map(v => ({ v, r: Math.random() }))
+                .sort((a, b) => a.r - b.r)
+                .map(a => a.v);
+        }
+
+        // 初始化
+        window.addEventListener('load', () => questionBank.init());
+    </script>
 </body>
 </html>
