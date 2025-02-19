@@ -105,6 +105,11 @@ function startPractice() {
 
 // 修复5：优化题目渲染
 function renderQuestions(questions, chapterFileName) {
+    if (!chapterFileName) {
+        console.error("题库文件名未定义！");
+        return;
+    }
+
     const container = document.getElementById('questionContainer');
     container.innerHTML = '';
 
@@ -134,7 +139,6 @@ function renderQuestions(questions, chapterFileName) {
         container.appendChild(div);
     });
 }
-
 
 // 修复6：完善答案验证
 function showAnswer(button, qIndex) {
