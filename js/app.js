@@ -1,6 +1,6 @@
-import questionBank from './question-bank.js';
-import { questionRenderer } from './question-render.js';
-import aiAssistant from './ai-assistant.js';
+import questionBank from './js/question-bank.js';
+import { questionRenderer } from './js/question-render.js';
+import aiAssistant from './js/ai-assistant.js';
 
 // 初始化章节选择器
 function initChapters() {

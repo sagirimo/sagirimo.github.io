@@ -1,4 +1,4 @@
-import questionBank from './question-bank.js';
+import questionBank from './js/question-bank.js';
 
 const AIAssistant = {
     async queryDeepSeek(prompt, context = '') {
