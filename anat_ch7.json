@@ -1,0 +1,80 @@
+{
+    "chapters": [
+        {
+            "id": 7,
+            "name": "上肢-臂后区、前臂后区、手背",
+            "questions": [
+                {
+                    "type": "single",
+                    "stem": "1. 分布于虎口区域皮肤的神经是",
+                    "options": ["ulnar nerve","axillary nerve","median nerve","radial nerve","musculocutaneous nerve"],
+                    "answer": 3,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "2. 女性，68岁。因不慎跌倒导致肱骨中段骨折，最可能损伤的动脉是",
+                    "options": ["radial artery","brachial artery","posterior humeral circumflex artery","ulnar artery"],
+                    "answer": 3,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "3. 男性，35岁。因骑摩托车摔倒，造成右侧肱骨外上髁骨折，损伤了桡神经深支，可能造成瘫痪的骨骼肌是",
+                    "options": ["肱肌","肱桡肌","肱三头肌","桡侧腕长伸肌","桡侧腕短伸肌"],
+                    "answer": 4,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "4. 男性，13岁。不慎被狗咬伤需要注射狂犬病疫苗，最常选择的注射部位是",
+                    "options": ["肩胛下肌下部","肱三头肌长头","三角肌下部","股四头肌","大腿内收肌群"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "5. 男性，28岁。因练习举重出现肩前部疼痛，肱骨大结节处压痛明显，诊断为肩袖撕裂，最可能受损的肌是",
+                    "options": ["冈上肌","冈下肌","大圆肌","小圆肌","肩胛下肌"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "6. 肱三头肌的长头起自",
+                    "options": ["肩胛骨盂上结节","肩胛骨盂下结节","桡神经沟下方骨面","桡神经沟上方骨面","肩胛骨喙突"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "7. 支配旋后肌的神经是",
+                    "options": ["radial nerve","musculocutaneous nerve","median nerve","ulna rnerve","axillary nerve"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "8. 穿行旋后肌的神经是",
+                    "options": ["尺神经浅支","尺神经深支","桡神经浅支","桡神经深支","正中神经返支"],
+                    "answer": 3,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "9. 女性，31岁。因外伤导致左侧桡神经，最有可能出现的症状是",
+                    "options": ["垂腕","爪形手","翼状肩","肘管综合症","腕管综合症"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "10. 女性，23岁。因意外摔倒左侧手掌着地，腕部疼痛剧烈，按压鼻烟窝时症状加重，腕部略肿胀，最有可能出现异常的结构是",
+                    "options": ["月骨","豌豆骨","手舟骨","屈肌支持带","伸肌支持带"],
+                    "answer": 2,
+                    "explanation": ""
+                }
+            ]
+        }
+    ]
+}

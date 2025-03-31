@@ -1,0 +1,80 @@
+{
+    "chapters": [
+        {
+            "id": 6,
+            "name": "上肢-臂前区、前臂前区、手掌",
+            "questions": [
+                {
+                    "type": "single",
+                    "stem": "1. 男性，25岁。因迷于游戏出现腕部疼痛，诊断为腕管综合症，可能受累的神经是",
+                    "options": ["ulnar nerve","axillary nerve","median nerve","radial nerve","musculocutaneous nerve"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "2. 不在腕管内穿行的结构是",
+                    "options": ["正中神经","掌长肌腱","指浅屈肌腱","指深屈肌腱","拇长屈肌腱"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "3. 男性，23岁。因左手腕内侧刀伤，导致手指不能相互靠拢，可能瘫痪的骨骼肌是",
+                    "options": ["指伸肌","掌长肌","拇收肌","蚓状肌","骨间肌"],
+                    "answer": 4,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "4. 女童，3岁。因爸爸牵拉左手上台阶时女童意外摔倒，造成肘部疼痛明显，处于半屈曲状态，能够屈伸，但不愿活动和取东西，该异常最可能涉及的结构是",
+                    "options": ["下斜韧带","方形韧带","环状韧带","尺侧副韧带","桡侧副韧带"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "5. 构成肘窝下内侧界的结构是",
+                    "options": ["肱桡肌","掌长肌","指浅屈肌","旋前圆肌","尺侧腕屈肌"],
+                    "answer": 3,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "6. 男性，25岁。工作时，右侧手掌刀伤后出现拇指不能内收，可能损伤的神经是",
+                    "options": ["尺神经浅支","尺神经深支","桡神经浅支","桡神经深支","正中神经返支"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "7. 女性，45岁。因肩背部外伤出现左侧肱二头肌腱反射减弱，可能受损伤的神经根是",
+                    "options": ["C3-C4","C5-C6","C7-C8","T1-T2","T3-T4"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "8. 分布于前臂外侧皮肤的神经是",
+                    "options": ["ulnar nerve","axillary nerve","median nerve","radial nerve","musculocutaneous nerve"],
+                    "answer": 4,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "9. 男性，21岁。因长时间打羽毛球后出现右侧肘关节上方疼痛，局部压痛明显，肘关节屈伸正常，右手用力握物、拧毛巾时疼痛加重，该异常可能涉及的结构是",
+                    "options": ["尺神经","桡神经","环状韧带","肱骨外上髁","肱骨内上髁"],
+                    "answer": 3,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "10. 当肘关节伸直，前臂处于旋后位时，前臂的远侧端偏向外侧，臂与前臂形成一向外开放的钝角，即肘关节的提携角，临床上常记录其互补角，正常情况下的角度是",
+                    "options": ["5°-10°","10°-15°","15°-20°","20°-25°","25°-30°"],
+                    "answer": 1,
+                    "explanation": ""
+                }
+            ]
+        }
+    ]
+}

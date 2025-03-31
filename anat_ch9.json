@@ -1,0 +1,80 @@
+{
+    "chapters": [
+        {
+            "id": 9,
+            "name": "结肠上区",
+            "questions": [
+                {
+                    "type": "single",
+                    "stem": "1. 形成omental foramen前界的结构是",
+                    "options": ["肝十二指肠韧带","十二指肠上部","肝胃韧带","肝尾状叶","下腔静脉"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "2. 内含有脾血管和胰尾的结构是",
+                    "options": ["gastrosplenic ligament","splenorenal ligament","phrenicosplenic ligament","gastrophrenic ligament","splenocolic ligament"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "3. 在肝的膈面上，区分肝左叶和肝右叶的结构是",
+                    "options": ["肝圆韧带","静脉韧带","镰状韧带","冠状韧带","腔静脉沟"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "4. 位于肝十二指肠韧带内后方的结构是",
+                    "options": ["胆囊管","胆总管","肝门静脉","肝总动脉","肝固有动脉"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "5. 正常的脾切迹位于脾的",
+                    "options": ["脾门","上缘","下缘","前端","后端"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "6. 男性，36岁。因腹痛行开腹探查手术，术中判断胃和十二指肠的标志结构是",
+                    "options": ["角切迹","幽门前静脉","十二指肠悬肌","肠系膜上静脉","肝门静脉"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "7. 男性，53岁。因胃底部胃癌行手术切除，营养的胃底的动脉是",
+                    "options": ["splenic artery","short gastric artery","left gastric artery","right gastric artery","left gastroepiploic artery"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "8. 男性，39岁。饭后突然出现右肩部疼痛，可能考虑的疾病是",
+                    "options": ["肺炎","颈椎病","胆囊病变","食管病变","肩关节损伤"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "9. 女性，52岁。患有胆结石，现突然出现右上腹部持续疼痛伴阵发性加剧，结石最可能嵌顿在了",
+                    "options": ["胆囊底","胆囊体","胆总管","肝总管","胆囊管"],
+                    "answer": 4,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "10. 女性，61岁。因胆结石行腹腔镜下胆囊切除，寻找并结扎胆囊动脉的标志是",
+                    "options": ["Calot triangle","Koch triangle","Hesselbach triangle","Femoral triangle","Suboccipital triangle"],
+                    "answer": 0,
+                    "explanation": ""
+                }
+            ]
+        }
+    ]
+}

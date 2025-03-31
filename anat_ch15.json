@@ -1,0 +1,80 @@
+{
+    "chapters": [
+        {
+            "id": 15,
+            "name": "下肢-后面",
+            "questions": [
+                {
+                    "type": "single",
+                    "stem": "1. 男性，34岁。右侧股骨髁上骨折并伴有轻微膝关节脱位，表现为小腿后群肌麻痹，小腿后部感觉障碍，最可能损伤的神经是",
+                    "options": ["femoral nerve","obturator nerve","tibial nerve","sciatic nerve","saphenous nerve"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "2. 女性，67岁。诊断为绝经后骨质疏松症10年，因外伤导致股骨头骨折，在骨折愈合过程中，与供应股骨头供血不直接相关的血管是",
+                    "options": ["闭孔动脉","旋髂浅动脉","干骺端动脉","旋股内侧动脉","股外侧皮神经"],
+                    "answer": 1,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "3. 女性，22岁。因外伤导致扁平足，不参与维持足弓内侧纵弓的结构是",
+                    "options": ["足底肌","趾长屈肌","胫骨后肌","足母长屈肌","小腿三头肌"],
+                    "answer": 4,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "4. 女性，55岁。因盆腔手术造成闭孔神经损伤，不会出现瘫痪的骨骼肌是",
+                    "options": ["gracilis","pectineus","adductor longus","sartorius","adductor magnus"],
+                    "answer": 3,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "5. 男性，72岁。因坐骨部的外伤缺损，需要转移肌瓣进行修补，最常选取的骨骼肌是",
+                    "options": ["半腱肌","半膜肌","缝匠肌","股薄肌","髂腰肌"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "6. 与“鹅足”无关的结构是",
+                    "options": ["鹅足囊","缝匠肌腱","股薄肌腱","半腱肌腱","半膜肌腱"],
+                    "answer": 4,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "7. 分布于小腿后区和足背外侧皮肤的神经是",
+                    "options": ["腓肠神经","隐神经","腓浅神经","腓深神经","胫神经"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "8. 小隐静脉汇入的血管是",
+                    "options": ["腘静脉","股静脉","大隐静脉","胫前静脉","胫后静脉"],
+                    "answer": 0,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "9. 不通过踝管内的结构是",
+                    "options": ["胫神经","胫后血管","腓肠神经","胫骨后肌腱","趾长屈肌腱"],
+                    "answer": 2,
+                    "explanation": ""
+                },
+                {
+                    "type": "single",
+                    "stem": "10. 足底中间骨筋膜鞘内的结构不包括",
+                    "options": ["足底方肌","趾短屈肌","趾长屈肌腱","屈肌支持带","足底动脉弓及分支"],
+                    "answer": 3,
+                    "explanation": ""
+                }
+            ]
+        }
+    ]
+}
