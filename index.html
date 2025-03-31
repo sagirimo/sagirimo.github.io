@@ -83,6 +83,9 @@
             });
         }
 
+        // 当前渲染的问题数组
+        let renderedQuestions = [];
+
         // 开始刷题
         function startPractice() {
             if (!questionBank.isLoaded) {
@@ -122,6 +125,7 @@
 
             const container = document.getElementById('questionContainer');
             container.innerHTML = '';
+            renderedQuestions = questions; // 保存当前渲染的问题数组
 
             // 从文件名中提取章节编号（如 "ch3"）
             const chapterNumber = chapterFileName === 'all' ? 'all' : chapterFileName.match(/ch(\d+)/i)[0];
@@ -152,65 +156,53 @@
 
         // 显示答案
         function showAnswer(button, qIndex) {
-        const questionDiv = button.closest('.question');
-        const inputs = questionDiv.querySelectorAll('input');
-        const explanation = questionDiv.querySelector('.explanation');
-        const chapterId = document.getElementById('chapterSelect').value;
-        const q = getQuestion(qIndex, chapterId); // 传递 chapterId
+            const questionDiv = button.closest('.question');
+            const inputs = questionDiv.querySelectorAll('input');
+            const explanation = questionDiv.querySelector('.explanation');
+            const q = renderedQuestions[qIndex]; // 直接从当前渲染的问题数组中获取
 
-        // 重置样式
-        questionDiv.querySelectorAll('.option').forEach(opt => {
-            opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
-        });
+            // 重置样式
+            questionDiv.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
+            });
 
-        // 获取正确答案
-        const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
+            // 获取正确答案
+            const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
 
-        // 标记正确答案
-        answers.forEach(ans => {
-            if (inputs[ans]) {
-                inputs[ans].closest('.option').classList.add('correct-answer');
-            }
-        });
-
-        // 检查用户选择
-        let isCorrect = true;
-        inputs.forEach((input, i) => {
-            if (input.checked) {
-                const isUserCorrect = answers.includes(i);
-                input.closest('.option').classList.add(
-                    isUserCorrect ? 'user-correct' : 'user-wrong'
-                );
-                if (!isUserCorrect) {
-                    isCorrect = false; // 用户选择了错误答案
+            // 标记正确答案
+            answers.forEach(ans => {
+                if (inputs[ans]) {
+                    inputs[ans].closest('.option').classList.add('correct-answer');
                 }
+            });
+
+            // 检查用户选择
+            let isCorrect = true;
+            inputs.forEach((input, i) => {
+                if (input.checked) {
+                    const isUserCorrect = answers.includes(i);
+                    input.closest('.option').classList.add(
+                        isUserCorrect ? 'user-correct' : 'user-wrong'
+                    );
+                    if (!isUserCorrect) {
+                        isCorrect = false; // 用户选择了错误答案
+                    }
+                }
+            });
+
+            // 如果用户未选择任何选项，标记为错误
+            const userSelected = Array.from(inputs).some(input => input.checked);
+            if (!userSelected) {
+                isCorrect = false;
             }
-        });
 
-        // 如果用户未选择任何选项，标记为错误
-        const userSelected = Array.from(inputs).some(input => input.checked);
-        if (!userSelected) {
-            isCorrect = false;
-        }
+            // 显示解释
+            explanation.hidden = false;
+            button.disabled = true;
 
-        // 显示解释
-        explanation.hidden = false;
-        button.disabled = true;
-
-        // 如果用户答案错误，提示正确答案
-        if (!isCorrect) {
-            alert(`正确答案是：${answers.map(ans => q.options[ans]).join(', ')}`);
-              }
-          }
-
-
-        // 获取题目
-        function getQuestion(index, chapterId) {
-            if (chapterId === 'all') {
-                return questionBank.chapters.flatMap(c => c.questions)[index];
-            } else {
-                const chapter = questionBank.chapters.find(c => c.id == chapterId);
-                return chapter ? chapter.questions[index] : null;
+            // 如果用户答案错误，提示正确答案
+            if (!isCorrect) {
+                alert(`正确答案是：${answers.map(ans => q.options[ans]).join(', ')}`);
             }
         }
 
