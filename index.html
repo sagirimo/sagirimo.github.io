@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="control-bar">
-        <!-- 加载提示 -->
         <div id="loadProgress" style="color: #666; margin-right: 15px;">正在初始化...</div>
         <select id="chapterSelect">
             <option value="all">全部章节</option>
@@ -17,213 +16,17 @@
             <option value="random">随机模式</option>
             <option value="sequential">顺序模式</option>
         </select>
-        <button onclick="startPractice()">开始刷题</button>
+        <button onclick="app.startPractice()">开始刷题</button>
     </div>
     <div id="questionContainer"></div>
 
-    <script>
-        // 添加必要的 polyfill
-        if (!window.flatMap) {
-            Array.prototype.flatMap = function(cb) {
-                return this.map(cb).reduce((acc, val) => acc.concat(val), []);
-            };
-        }
-
-        // 题库加载器
-        const questionBank = {
-            chapters: [],
-            isLoaded: false,
-
-            async init() {
-                try {
-                    const listRes = await fetch('./chapter-list.json');
-                    const { files } = await listRes.json();
-
-                    await Promise.all(files.map(async file => {
-                        const res = await fetch(file);
-                        const data = await res.json();
-                        this._validate(data);
-                        this.chapters.push(...data.chapters);
-                    }));
-
-                    this.chapters.sort((a, b) => a.id - b.id);
-                    this.isLoaded = true;
-                    initChapters();
-                    document.getElementById('loadProgress').textContent = '题库加载完成';
-                } catch (e) {
-                    console.error('初始化失败:', e);
-                    document.getElementById('loadProgress').textContent = '加载失败，请检查控制台';
-                }
-            },
-
-            _validate(data) {
-                if (!data?.chapters?.length) throw new Error('无效章节数据');
-                data.chapters.forEach(ch => {
-                    const required = ['id', 'name', 'questions'];
-                    required.forEach(field => {
-                        if (!(field in ch)) throw new Error(`章节缺少必要字段: ${field}`);
-                    });
-                });
-            },
-
-            getQuestions(chapterId) {
-                if (chapterId === 'all') return this.chapters.flatMap(c => c.questions);
-                const ch = this.chapters.find(c => c.id == chapterId);
-                return ch ? ch.questions : [];
-            }
-        };
-
-        // 初始化章节选择器
-        function initChapters() {
-            const select = document.getElementById('chapterSelect');
-            select.innerHTML = '<option value="all">全部章节</option>';
-            questionBank.chapters.forEach(ch => {
-                const option = new Option(ch.name, ch.id);
-                select.add(option);
-            });
-        }
-
-        // 开始刷题
-        function startPractice() {
-            if (!questionBank.isLoaded) {
-                alert('题库尚未加载完毕，请稍后再试');
-                return;
-            }
-
-            const chapterId = document.getElementById('chapterSelect').value;
-            const isRandom = document.getElementById('modeSelect').value === 'random';
-
-            let questions = questionBank.getQuestions(chapterId);
-            if (!questions.length) {
-                alert('当前章节没有题目');
-                return;
-            }
-
-            if (isRandom) questions = shuffleArray(questions);
-
-            // 获取章节文件名
-            const chapterFileName = getChapterFileName(chapterId);
-            renderQuestions(questions, chapterFileName);
-        }
-
-        // 根据章节 ID 获取文件名
-        function getChapterFileName(chapterId) {
-            if (chapterId === 'all') return 'all';
-            const chapter = questionBank.chapters.find(c => c.id == chapterId);
-            return chapter ? `ch${chapter.id}` : 'all';
-        }
-
-        // 渲染题目
-        function renderQuestions(questions, chapterFileName) {
-            if (!chapterFileName) {
-                console.error("题库文件名未定义！");
-                return;
-            }
-
-            const container = document.getElementById('questionContainer');
-            container.innerHTML = '';
-
-            // 从文件名中提取章节编号（如 "ch3"）
-            const chapterNumber = chapterFileName === 'all' ? 'all' : chapterFileName.match(/ch(\d+)/i)[0];
-
-            questions.forEach((q, qIndex) => {
-                const div = document.createElement('div');
-                div.className = 'question';
-                div.innerHTML = `
-                    <h3>题目 ${qIndex + 1}</h3>
-                    <div class="stem">${q.stem}</div>
-                    ${q.image ? `<img src="${chapterNumber}_question_${qIndex + 1}.png" alt="题目图片" class="question-image">` : ''}
-                    <div class="options-container">
-                        ${q.options.map((opt, i) => `
-                            <label class="option">
-                                <input type="${q.type === 'multi' ? 'checkbox' : 'radio'}"
-                                       name="q${qIndex}"
-                                       value="${i}">
-                                <span class="option-text">${opt}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                    <button onclick="showAnswer(this, ${qIndex})">提交答案</button>
-                    <div class="explanation" hidden>${q.explanation}</div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // 显示答案
-        function showAnswer(button, qIndex) {
-        const questionDiv = button.closest('.question');
-        const inputs = questionDiv.querySelectorAll('input');
-        const explanation = questionDiv.querySelector('.explanation');
-        const chapterId = document.getElementById('chapterSelect').value;
-        const q = getQuestion(qIndex, chapterId); // 传递 chapterId
-
-        // 重置样式
-        questionDiv.querySelectorAll('.option').forEach(opt => {
-            opt.classList.remove('correct-answer', 'user-correct', 'user-wrong');
-        });
-
-        // 获取正确答案
-        const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
-
-        // 标记正确答案
-        answers.forEach(ans => {
-            if (inputs[ans]) {
-                inputs[ans].closest('.option').classList.add('correct-answer');
-            }
-        });
-
-        // 检查用户选择
-        let isCorrect = true;
-        inputs.forEach((input, i) => {
-            if (input.checked) {
-                const isUserCorrect = answers.includes(i);
-                input.closest('.option').classList.add(
-                    isUserCorrect ? 'user-correct' : 'user-wrong'
-                );
-                if (!isUserCorrect) {
-                    isCorrect = false; // 用户选择了错误答案
-                }
-            }
-        });
-
-        // 如果用户未选择任何选项，标记为错误
-        const userSelected = Array.from(inputs).some(input => input.checked);
-        if (!userSelected) {
-            isCorrect = false;
-        }
-
-        // 显示解释
-        explanation.hidden = false;
-        button.disabled = true;
-
-        // 如果用户答案错误，提示正确答案
-        if (!isCorrect) {
-            alert(`正确答案是：${answers.map(ans => q.options[ans]).join(', ')}`);
-              }
-          }
-
-
-        // 获取题目
-        function getQuestion(index, chapterId) {
-            if (chapterId === 'all') {
-                return questionBank.chapters.flatMap(c => c.questions)[index];
-            } else {
-                const chapter = questionBank.chapters.find(c => c.id == chapterId);
-                return chapter ? chapter.questions[index] : null;
-            }
-        }
-
-        // 洗牌算法
-        function shuffleArray(arr) {
-            return arr
-                .map(v => ({ v, r: Math.random() }))
-                .sort((a, b) => a.r - b.r)
-                .map(a => a.v);
-        }
-
-        // 初始化
-        window.addEventListener('load', () => questionBank.init());
+    <!-- 加载所有JavaScript模块 -->
+    <script type="module" src="./js/question-bank.js"></script>
+    <script type="module" src="./js/question-render.js"></script>
+    <script type="module" src="./js/ai-assistant.js"></script>
+    <script type="module">
+        import * as app from './app.js';
+        window.app = app; // 暴露到全局以便HTML按钮调用
     </script>
 </body>
 </html>
