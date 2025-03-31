@@ -1,6 +1,6 @@
 import questionBank from './question-bank.js';
 import { questionRenderer } from './question-render.js';
-import * as aiAssistant from './ai-assistant.js';
+import aiAssistant from './ai-assistant.js';
 
 // 初始化章节选择器
 function initChapters() {
@@ -27,6 +27,9 @@ function startPractice() {
 
     try {
         const questions = questionBank.getQuestions(chapterId, isRandom);
+        if (questions.length === 0) {
+            throw new Error('当前章节没有可用题目');
+        }
         questionRenderer.renderQuestions(questions);
     } catch (error) {
         console.error('开始刷题失败:', error);
@@ -37,7 +40,10 @@ function startPractice() {
 // 显示答案
 function showAnswer(button, questionIndex) {
     const question = questionBank.getQuestionByIndex(questionIndex);
-    if (!question) return;
+    if (!question) {
+        console.error('未找到题目:', questionIndex);
+        return;
+    }
 
     const questionDiv = button.closest('.question');
     const inputs = questionDiv.querySelectorAll('input');
@@ -48,19 +54,19 @@ function showAnswer(button, questionIndex) {
         opt.classList.remove('correct', 'incorrect');
     });
 
-    // 获取正确答案
+    // 处理正确答案（支持单选和多选）
     const correctAnswers = Array.isArray(question.answer) ? question.answer : [question.answer];
-    let isCorrect = true;
+    let isUserCorrect = true;
 
-    // 检查用户答案
+    // 检查用户选择
     inputs.forEach((input, index) => {
-        const isAnswerCorrect = correctAnswers.includes(index);
         const optionElement = input.closest('.option');
+        const isCorrectOption = correctAnswers.includes(index);
 
         if (input.checked) {
-            optionElement.classList.add(isAnswerCorrect ? 'correct' : 'incorrect');
-            if (!isAnswerCorrect) isCorrect = false;
-        } else if (isAnswerCorrect) {
+            optionElement.classList.add(isCorrectOption ? 'correct' : 'incorrect');
+            if (!isCorrectOption) isUserCorrect = false;
+        } else if (isCorrectOption) {
             optionElement.classList.add('correct');
         }
     });
@@ -70,12 +76,13 @@ function showAnswer(button, questionIndex) {
     button.disabled = true;
 
     // 显示结果
-    const resultText = isCorrect ? '回答正确!' : '回答错误';
-    alert(`${resultText}\n正确答案: ${correctAnswers.map(a => String.fromCharCode(65 + a)).join(', ')}`);
+    const resultText = isUserCorrect ? '✓ 回答正确!' : '✗ 回答错误';
+    const correctAnswerText = correctAnswers.map(a => String.fromCharCode(65 + a)).join(', ');
+    alert(`${resultText}\n正确答案: ${correctAnswerText}`);
 }
 
-// 暴露公共方法
-export {
+// 导出公共接口
+export default {
     initChapters,
     startPractice,
     showAnswer
