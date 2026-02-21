@@ -46,31 +46,32 @@ let bgColorEnd = { r: 235, g: 232, b: 227 };
 // 风格切换 (Default / Frutiger Aero / iOS 26 Glass)
 // ========================================
 
-const styleIcons = ['🎨', '🌿', '🔮'];
 const styleNames = ['default', 'frutiger', 'glass'];
 
 function applyStyle(style) {
     currentStyle = style;
     root.setAttribute('data-style', style);
 
-    // 更新风格切换按钮图标
+    // 更新风格切换按钮 title
     const styleBtn = document.getElementById('style-toggle');
     if (styleBtn) {
-        const idx = styleNames.indexOf(style);
-        styleBtn.textContent = styleIcons[idx];
         styleBtn.title = `Style: ${style.charAt(0).toUpperCase() + style.slice(1)}`;
     }
 
     // Frutiger Aero 不需要主题切换
     const themeBtn = document.getElementById('theme-toggle');
     if (style === 'frutiger') {
-        if (themeBtn) themeBtn.style.display = 'none';
+        if (themeBtn) themeBtn.style.opacity = '0.3';
+        if (themeBtn) themeBtn.style.pointerEvents = 'none';
         // 强制 light 主题用于 frutiger
         if (currentTheme === 'dark') {
             applyTheme('light');
         }
     } else {
-        if (themeBtn) themeBtn.style.display = '';
+        if (themeBtn) {
+            themeBtn.style.opacity = '1';
+            themeBtn.style.pointerEvents = '';
+        }
     }
 
     // 保存到 localStorage
@@ -134,8 +135,6 @@ function applyTheme(theme) {
     currentTheme = theme;
     root.setAttribute('data-theme', theme);
     updateThemeColors();
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
 
     // 保存到 localStorage
     localStorage.setItem('preferredTheme', theme);

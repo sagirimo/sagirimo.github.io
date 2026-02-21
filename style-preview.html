@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --transition-speed: 0.5s;
+            --accent-light: #0d9488;
+            --accent-dark: #64ffda;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 40px;
+            transition: background var(--transition-speed), color var(--transition-speed);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+        }
+
+        .style-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .style-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .style-btn.active {
+            transform: scale(1.05);
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .preview-card {
+            padding: 25px;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            transition: color var(--transition-speed);
+        }
+
+        .preview-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            transition: color var(--transition-speed);
+        }
+
+        .preview-card .meta {
+            font-size: 0.85rem;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            transition: color var(--transition-speed);
+        }
+
+        .preview-card .tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preview-card .tag {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            transition: all var(--transition-speed);
+        }
+
+        /* ============================================
+           THEME TOGGLE BUTTON
+        ============================================ */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        /* ============================================
+           STYLE 1: DEFAULT
+        ============================================ */
+        body.style-default {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f3f0 0%, #ebe8e3 100%);
+            color: #1a1a2e;
+        }
+
+        .style-default .style-btn {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .style-default .style-btn.active {
+            background: var(--accent-light);
+            color: #fff;
+            border-color: var(--accent-light);
+        }
+
+        .style-default .preview-card {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+        }
+
+        .style-default .preview-card:hover {
+            transform: translateX(5px);
+            border-color: var(--accent-light);
+        }
+
+        .style-default .preview-card h3 { color: #1a1a2e; }
+        .style-default .preview-card p { color: #4a5568; }
+        .style-default .preview-card .meta { color: var(--accent-light); }
+
+        .style-default .tag {
+            background: rgba(0, 0, 0, 0.03);
+            color: #718096;
+        }
+
+        .style-default .style-description {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            color: #4a5568;
+        }
+
+        .style-default .theme-toggle {
+            background: #fff;
+            color: #333;
+            display: block;
+        }
+
+        /* Default Dark Mode */
+        body.style-default.dark-mode {
+            background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
+            color: #ccd6f6;
+        }
+
+        .style-default.dark-mode .style-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ccd6f6;
+            border-color: #1e2d3d;
+        }
+
+        .style-default.dark-mode .style-btn.active {
+            background: var(--accent-dark);
+            color: #0a192f;
+            border-color: var(--accent-dark);
+        }
+
+        .style-default.dark-mode .preview-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: #1e2d3d;
+        }
+
+        .style-default.dark-mode .preview-card h3 { color: #ccd6f6; }
+        .style-default.dark-mode .preview-card p { color: #8892b0; }
+        .style-default.dark-mode .preview-card .meta { color: var(--accent-dark); }
+
+        .style-default.dark-mode .tag {
+            background: rgba(255, 255, 255, 0.05);
+            color: #5a6a8a;
+        }
+
+        .style-default.dark-mode .style-description {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: #1e2d3d;
+            color: #8892b0;
+        }
+
+        /* ============================================
+           STYLE 2: FRUTIGER AERO (No theme toggle)
+        ============================================ */
+        body.style-frutiger {
+            font-family: 'Segoe UI', 'Microsoft YaHei', '微软雅黑', 'Tahoma', sans-serif;
+            color: #1a3a4a;
+            position: relative;
+        }
+
+        body.style-frutiger::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(180deg,
+                    #3a8fc2 0%,
+                    #5ba3d0 15%,
+                    #7ec8e3 30%,
+                    #a8d8ea 45%,
+                    #c9e4de 55%,
+                    #9cc9a0 65%,
+                    #6eb56f 75%,
+                    #4a9c4d 85%,
+                    #357a38 100%
+                );
+            z-index: -2;
+        }
+
+        body.style-frutiger::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse 300px 100px at 15% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 70%),
+                radial-gradient(ellipse 200px 80px at 75% 15%, rgba(255, 255, 255, 0.7) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 150px at 50% 40%, rgba(255, 255, 255, 0.5) 0%, transparent 60%),
+                radial-gradient(ellipse 250px 100px at 85% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 65%),
+                radial-gradient(circle at 30% 8%, rgba(255, 255, 200, 0.4) 0%, transparent 30%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .style-frutiger .style-btn {
+            background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.95) 0%,
+                rgba(240, 250, 255, 0.9) 45%,
+                rgba(220, 240, 250, 0.85) 50%,
+                rgba(240, 250, 255, 0.9) 55%,
+                rgba(255, 255, 255, 0.95) 100%
+            );
+            color: #1a5a7a;
+            border: 1px solid rgba(120, 180, 220, 0.5);
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.8) inset,
+                0 -1px 0 rgba(0, 50, 100, 0.05) inset,
+                0 2px 8px rgba(0, 80, 120, 0.15);
+        }
+
+        .style-frutiger .style-btn.active {
+            background: linear-gradient(180deg, #5bc0de 0%, #3598dc 50%, #2980b9 100%);
+            color: #fff;
+            border-color: rgba(60, 130, 180, 0.7);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        }
+
+        .style-frutiger .preview-card {
+            background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.95) 0%,
+                rgba(250, 255, 255, 0.9) 40%,
+                rgba(240, 250, 255, 0.85) 50%,
+                rgba(250, 252, 255, 0.88) 60%,
+                rgba(255, 255, 255, 0.92) 100%
+            );
+            border: 1px solid rgba(100, 160, 200, 0.4);
+            border-radius: 8px;
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 1) inset,
+                0 -1px 0 rgba(0, 50, 100, 0.05) inset,
+                0 3px 15px rgba(0, 80, 120, 0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        .style-frutiger .preview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 5%;
+            right: 5%;
+            height: 45%;
+            background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(255, 255, 255, 0.6) 20%,
+                rgba(200, 230, 255, 0.3) 40%,
+                transparent 60%
+            );
+            border-radius: 8px 8px 100% 100%;
+            pointer-events: none;
+        }
+
+        .style-frutiger .preview-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 3%;
+            right: 3%;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(0, 80, 120, 0.1) 20%,
+                rgba(0, 80, 120, 0.15) 50%,
+                rgba(0, 80, 120, 0.1) 80%,
+                transparent 100%
+            );
+        }
+
+        .style-frutiger .preview-card:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 1) inset,
+                0 8px 25px rgba(0, 80, 120, 0.2);
+        }
+
+        .style-frutiger .preview-card h3 {
+            color: #0a4a6a;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .style-frutiger .preview-card p {
+            color: #2a5a6a;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .style-frutiger .preview-card .meta {
+            color: #2a80a0;
+        }
+
+        .style-frutiger .tag {
+            background: linear-gradient(180deg,
+                rgba(200, 235, 255, 0.8) 0%,
+                rgba(180, 225, 250, 0.7) 45%,
+                rgba(160, 215, 245, 0.6) 50%,
+                rgba(180, 225, 250, 0.7) 55%,
+                rgba(200, 235, 255, 0.8) 100%
+            );
+            color: #0a6080;
+            border: 1px solid rgba(100, 180, 220, 0.4);
+            border-radius: 8px;
+            font-family: 'Consolas', 'Microsoft YaHei Mono', monospace;
+        }
+
+        body.style-frutiger h1 {
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 50, 100, 0.3), 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .style-frutiger .style-description {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 253, 255, 0.85) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 160, 200, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 3px 15px rgba(0, 80, 120, 0.1);
+            color: #2a5a6a;
+        }
+
+        .style-frutiger .theme-toggle {
+            display: none !important;
+        }
+
+        /* ============================================
+           STYLE 3: iOS 26 LIQUID GLASS
+        ============================================ */
+        body.style-glass {
+            font-family:
+                -apple-system, BlinkMacSystemFont,
+                'SF Pro Display', 'SF Pro Text',
+                'PingFang SC', '苹果方',
+                'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #08080c 0%, #0c0c12 50%, #08080c 100%);
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        body.style-glass::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.015) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(220, 220, 240, 0.01) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .style-glass .style-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(150%);
+            border-radius: 14px;
+        }
+
+        .style-glass .style-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 10%, rgba(255, 255, 255, 0.2) 50%, transparent 90%);
+        }
+
+        .style-glass .style-btn::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 14px;
+            padding: 1px;
+            background: linear-gradient(135deg,
+                rgba(255, 100, 100, 0.05), rgba(255, 180, 100, 0.05),
+                rgba(100, 255, 150, 0.05), rgba(100, 180, 255, 0.05), rgba(150, 100, 255, 0.05)
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .style-glass .style-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .style-glass .preview-card {
+            background: rgba(180, 180, 190, 0.08);
+            border: none;
+            border-radius: 24px;
+            backdrop-filter: blur(50px) saturate(180%);
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 10px 20px -5px rgba(0, 0, 0, 0.15),
+                0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .style-glass .preview-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg,
+                rgba(255, 80, 120, 0.25), rgba(255, 160, 80, 0.2),
+                rgba(255, 240, 80, 0.15), rgba(80, 255, 160, 0.2),
+                rgba(80, 200, 255, 0.25), rgba(120, 80, 255, 0.25), rgba(255, 80, 200, 0.25)
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .style-glass .preview-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 30%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.25) 70%, transparent 100%);
+        }
+
+        .style-glass .preview-card:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 8px 10px -3px rgba(0, 0, 0, 0.12),
+                0 20px 30px -8px rgba(0, 0, 0, 0.2),
+                0 35px 60px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .style-glass .preview-card h3 {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .style-glass .preview-card p {
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .style-glass .preview-card .meta {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .style-glass .tag {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            font-family: 'SF Mono', 'PingFang SC', monospace;
+            backdrop-filter: blur(10px);
+        }
+
+        body.style-glass h1 {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+        }
+
+        .style-glass .style-description {
+            background: rgba(180, 180, 190, 0.06);
+            backdrop-filter: blur(40px) saturate(150%);
+            border: none;
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.55);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 10px 20px -5px rgba(0, 0, 0, 0.12);
+        }
+
+        .style-glass .style-description::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 100, 150, 0.15), rgba(150, 255, 200, 0.1), rgba(100, 180, 255, 0.15));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .style-glass .style-description h4 {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .style-glass .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.15);
+            display: block;
+        }
+
+        /* iOS 26 LIGHT MODE */
+        body.style-glass.light-mode {
+            background: linear-gradient(135deg, #f2f2f7 0%, #e5e5ea 50%, #f2f2f7 100%);
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        body.style-glass.light-mode::before {
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(0, 0, 0, 0.01) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(50, 50, 80, 0.015) 0%, transparent 35%);
+        }
+
+        body.style-glass.light-mode .style-btn {
+            background: rgba(255, 255, 255, 0.7);
+            color: rgba(0, 0, 0, 0.75);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        body.style-glass.light-mode .style-btn::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        }
+
+        body.style-glass.light-mode .style-btn::after {
+            background: linear-gradient(135deg,
+                rgba(255, 50, 80, 0.08), rgba(255, 150, 50, 0.08),
+                rgba(50, 200, 100, 0.08), rgba(50, 150, 255, 0.08), rgba(150, 50, 255, 0.08)
+            );
+        }
+
+        body.style-glass.light-mode .style-btn.active {
+            background: rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: rgba(0, 0, 0, 0.9);
+        }
+
+        body.style-glass.light-mode .preview-card {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow:
+                0 4px 6px -2px rgba(0, 0, 0, 0.04),
+                0 10px 20px -5px rgba(0, 0, 0, 0.06),
+                0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        body.style-glass.light-mode .preview-card::before {
+            background: linear-gradient(135deg,
+                rgba(255, 80, 100, 0.2), rgba(255, 160, 80, 0.15),
+                rgba(100, 200, 80, 0.12), rgba(80, 180, 255, 0.18),
+                rgba(140, 100, 255, 0.2), rgba(255, 100, 180, 0.18)
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        body.style-glass.light-mode .preview-card::after {
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 30%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.9) 70%, transparent 100%);
+        }
+
+        body.style-glass.light-mode .preview-card h3 {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.6) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.5));
+        }
+
+        body.style-glass.light-mode .preview-card p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.style-glass.light-mode .preview-card .meta {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.style-glass.light-mode .tag {
+            background: rgba(0, 0, 0, 0.04);
+            color: rgba(0, 0, 0, 0.6);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        body.style-glass.light-mode .tag::before {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.style-glass.light-mode h1 {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
+        }
+
+        body.style-glass.light-mode .style-description {
+            background: rgba(255, 255, 255, 0.45);
+            color: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.03), 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        body.style-glass.light-mode .style-description::before {
+            background: linear-gradient(135deg, rgba(255, 100, 150, 0.12), rgba(150, 255, 200, 0.08), rgba(100, 180, 255, 0.12));
+        }
+
+        body.style-glass.light-mode .style-description h4 {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.style-glass.light-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.75);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Description below */
+        .style-description {
+            max-width: 800px;
+            margin: 50px auto 0;
+            padding: 30px;
+            text-align: center;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+        .style-description h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .style-description p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Hide pseudo for default */
+        body.style-default::before,
+        body.style-default::after {
+            display: none;
+        }
+    </style>
+</head>
+<body class="style-default">
+    <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+
+    <h1>Style Preview</h1>
+
+    <div class="style-switcher">
+        <button class="style-btn active" data-style="default">Default</button>
+        <button class="style-btn" data-style="frutiger">Frutiger Aero</button>
+        <button class="style-btn" data-style="glass">iOS 26 Liquid Glass</button>
+    </div>
+
+    <div class="preview-grid">
+        <div class="preview-card">
+            <p class="meta">2026.02.21</p>
+            <h3>网站上线 Website Launched</h3>
+            <p>终于搭建好了个人网站！一个记录我医学生涯和更多可能性的空间。A clean, minimal space to document my journey.</p>
+            <div class="tags">
+                <span class="tag">Website</span>
+                <span class="tag">生活</span>
+            </div>
+        </div>
+
+        <div class="preview-card">
+            <p class="meta">2025.09 - Present</p>
+            <h3>骨科机器人研究 Orthopedic Robotics</h3>
+            <p>航天中心医院核心研究员。负责长木谷™机器人系统评估和 TiRobot 辅助 ACL 重建项目。</p>
+            <div class="tags">
+                <span class="tag">研究</span>
+                <span class="tag">Robotics</span>
+                <span class="tag">AI</span>
+            </div>
+        </div>
+
+        <div class="preview-card">
+            <p class="meta">2025.11</p>
+            <h3>JPRAS 论文发表 Paper Accepted</h3>
+            <p>AI-based 3D identification for rhinoplasty 被接收！研究道路上的重要里程碑。</p>
+            <div class="tags">
+                <span class="tag">发表</span>
+            </div>
+        </div>
+
+        <div class="preview-card">
+            <p class="meta">教育 Education</p>
+            <h3>北京大学 Peking University</h3>
+            <p>临床医学博士候选人 M.D. Candidate in Clinical Medicine at Peking University.</p>
+            <div class="tags">
+                <span class="tag">2022-2027</span>
+            </div>
+        </div>
+
+        <div class="preview-card">
+            <p class="meta">技能 Skills</p>
+            <h3>技术栈 Technical Stack</h3>
+            <p>机器人手术系统、Python/PyTorch、医学影像分析、RCT 方案设计。</p>
+            <div class="tags">
+                <span class="tag">手术</span>
+                <span class="tag">编程</span>
+                <span class="tag">Research</span>
+            </div>
+        </div>
+
+        <div class="preview-card">
+            <p class="meta">爱好 Hobby</p>
+            <h3>高达笔涂 Gunpla Painting</h3>
+            <p>手涂高达模型。六天的时间，一层层涂装，每一笔都是冥想。</p>
+            <div class="tags">
+                <span class="tag">创作</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="style-description">
+        <h4 id="style-name">Default Style</h4>
+        <p id="style-desc">Inter + 苹果方字体. 支持亮/暗模式切换.</p>
+    </div>
+
+    <script>
+        const descriptions = {
+            default: {
+                name: 'Default Style',
+                desc: 'Inter + 苹果方字体. 支持亮/暗模式切换.'
+            },
+            frutiger: {
+                name: 'Frutiger Aero (2004-2013)',
+                desc: 'Segoe UI + 微软雅黑. 天空草地背景, Win7 Aero 毛玻璃.'
+            },
+            glass: {
+                name: 'iOS 26 Liquid Glass',
+                desc: 'SF Pro + 苹果方. 彩虹折射边框, 毛玻璃卡片, 支持亮/暗双模式.'
+            }
+        };
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.textContent = '☀️';
+            } else {
+                btn.textContent = '🌙';
+            }
+        }
+
+        document.querySelectorAll('.style-btn[data-style]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const style = btn.dataset.style;
+
+                document.querySelectorAll('.style-btn[data-style]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Reset theme classes
+                document.body.classList.remove('dark-mode', 'light-mode');
+                document.body.className = `style-${style}`;
+
+                // Default starts light, glass starts dark
+                if (style === 'default') {
+                    document.querySelector('.theme-toggle').textContent = '🌙';
+                } else if (style === 'glass') {
+                    document.querySelector('.theme-toggle').textContent = '☀️';
+                }
+
+                document.getElementById('style-name').textContent = descriptions[style].name;
+                document.getElementById('style-desc').textContent = descriptions[style].desc;
+            });
+        });
+    </script>
+</body>
+</html>
