@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>战鹏宇 | Zhan Pengyu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <main>
+        <!-- Hero -->
+        <section id="hero" class="section hero-section">
+            <div class="hero-content">
+                <h1 class="name">战鹏宇</h1>
+                <p class="name-en">Zhan Pengyu</p>
+                <p class="tagline" data-zh="医学生 · 跨学科探索者" data-en="Medical Student · Interdisciplinary Explorer"></p>
+                <p class="sub-tagline" data-zh="北京大学临床医学 M.D. Candidate" data-en="M.D. Candidate, Peking University"></p>
+            </div>
+            <div class="scroll-hint">
+                <span data-zh="向下滚动" data-en="Scroll"></span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- 关于我 -->
+        <section id="about" class="section">
+            <h2 class="section-title" data-zh="关于我" data-en="About"></h2>
+            <div class="content parallax-content">
+                <div class="about-intro">
+                    <p data-zh="北京大学临床医学在读，专注于骨科机器人与医学人工智能的医工交叉研究。" data-en="M.D. Candidate at Peking University, focusing on orthopedic robotics and medical AI."></p>
+                </div>
+                <div class="philosophy">
+                    <div class="philosophy-item">
+                        <h3 data-zh="研究兴趣" data-en="Research"></h3>
+                        <ul>
+                            <li data-zh="骨科机器人与计算机辅助手术" data-en="Orthopedic Robotics & CAS"></li>
+                            <li data-zh="医学AI（三维重建、视觉、生成模型）" data-en="Medical AI (3D, CV, GenAI)"></li>
+                            <li data-zh="手术规划与精度评估" data-en="Surgical Planning & Precision"></li>
+                        </ul>
+                    </div>
+                    <div class="philosophy-item">
+                        <h3 data-zh="其他兴趣" data-en="Interests"></h3>
+                        <p data-zh="建筑、音乐、健身、高达" data-en="Architecture, Music, Fitness, Gunpla"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 教育背景 -->
+        <section id="education" class="section">
+            <h2 class="section-title" data-zh="教育背景" data-en="Education"></h2>
+            <div class="content parallax-content">
+                <div class="edu-card">
+                    <div class="edu-header">
+                        <h3 data-zh="北京大学医学部" data-en="Peking University"></h3>
+                        <span class="edu-date">2022.9 – 2027.7</span>
+                    </div>
+                    <p class="edu-degree" data-zh="临床医学 M.D. Candidate" data-en="M.D. Candidate, Clinical Medicine"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 临床经历 -->
+        <section id="clinical" class="section">
+            <h2 class="section-title" data-zh="临床经历" data-en="Clinical"></h2>
+            <div class="content parallax-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025.4 – Present</div>
+                        <div class="timeline-content">
+                            <h3 data-zh="航天中心医院" data-en="Aerospace Center Hospital"></h3>
+                            <p class="timeline-role" data-zh="临床见习" data-en="Clinical Clerkship"></p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2024.9 – Present</div>
+                        <div class="timeline-content">
+                            <h3 data-zh="北京大学第三医院 成型科" data-en="PKU Third Hospital, Plastic Surgery"></h3>
+                            <p class="timeline-role" data-zh="安阳课题组 大创项目" data-en="Undergraduate Research Project (Prof. An Yang)"></p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2024.6 – 2024.9</div>
+                        <div class="timeline-content">
+                            <h3 data-zh="北京大学第六医院" data-en="PKU Sixth Hospital"></h3>
+                            <p class="timeline-role" data-zh="见习：精神科、心理治疗科" data-en="Clerkship: Psychiatry, Psychotherapy"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学术与项目 -->
+        <section id="projects" class="section">
+            <h2 class="section-title" data-zh="学术与项目" data-en="Research"></h2>
+            <div class="content parallax-content">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 data-zh="骨科机器人与AI研究组" data-en="Orthopedic Robotics & AI Lab"></h3>
+                        <span class="project-org" data-zh="航天中心医院" data-en="Aerospace Center Hospital"></span>
+                    </div>
+                    <p class="project-role" data-zh="核心研究员 & 项目负责人" data-en="Core Investigator & Project Lead"></p>
+                    <p class="project-date">2025.4 – Present</p>
+
+                    <div class="project-sub">
+                        <h4 data-zh="机器人辅助 UKA 转化研究" data-en="Robotic-Assisted UKA Study"></h4>
+                        <ul>
+                            <li data-zh="主导评估长木谷™机器人系统手术精度的转化研究" data-en="Leading translational study on Changmugu™ Robotic System accuracy"></li>
+                            <li data-zh="完成 20 例机器人 UKA 手术，掌握 CT 规划、配准、机械臂控制" data-en="Completed 20 robotic UKA procedures, mastering CT planning & arm control"></li>
+                            <li data-zh="设计实验量化手术精度，分析 40 例数据建立学习曲线" data-en="Designed precision protocol, analyzed 40 cases for learning curve"></li>
+                            <li data-zh="论文在投（目标 Q1/Q2）" data-en="Manuscript in prep (Q1/Q2 target)"></li>
+                        </ul>
+                    </div>
+
+                    <div class="project-sub">
+                        <h4 data-zh="机器人辅助 ACL 重建（国自然申报）" data-en="Robotic ACL Reconstruction (NSFC)"></h4>
+                        <ul>
+                            <li data-zh="与积水潭医院合作的前瞻性多中心 RCT" data-en="Multi-center RCT with Jishuitan Hospital"></li>
+                            <li data-zh="设计 RCT 方案 (n=120)，定义 TiRobot 精度验证路线" data-en="RCT protocol (n=120), TiRobot validation roadmap"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 data-zh="整形外科 AI 实验室" data-en="Plastic Surgery AI Lab"></h3>
+                        <span class="project-org" data-zh="北京大学第三医院" data-en="PKU Third Hospital"></span>
+                    </div>
+                    <p class="project-role" data-zh="研究助理 & 算法开发" data-en="Research Assistant"></p>
+                    <p class="project-date">2024.9 – Present</p>
+
+                    <div class="project-sub">
+                        <h4 data-zh="AI 驱动三维重建" data-en="AI-Driven 3D Reconstruction"></h4>
+                        <ul>
+                            <li data-zh="合作发表 JPRAS 论文，负责数据标注与论文撰写" data-en="Co-authored JPRAS paper, data annotation & manuscript"></li>
+                            <li data-zh="独立开发 Diffusion Model demo，从 2D 图像生成 3D 点云" data-en="Developed Diffusion Model demo for 2D→3D point cloud"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 data-zh="骨科3D打印手术导板系统" data-en="3D Printed Surgical Guide System"></h3>
+                        <span class="project-status" data-zh="筹备中" data-en="In Prep"></span>
+                    </div>
+                    <p class="project-role" data-zh="临床与产品负责人" data-en="Clinical & Product Lead"></p>
+                    <p class="project-desc" data-zh="基于计算机视觉的个性化骨科手术导板，为 UKA/ACL 提供机器人级精度" data-en="CV-based personalized surgical guides for UKA/ACL with robotic-level precision"></p>
+                    <p class="project-date" data-zh="预计 2026.4 启动" data-en="Launch: Apr 2026"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发表论文 -->
+        <section id="publications" class="section">
+            <h2 class="section-title" data-zh="发表文章" data-en="Publications"></h2>
+            <div class="content parallax-content">
+                <div class="paper-card">
+                    <p class="paper-title">AI-based three-dimensional identification of safe harvesting area of perpendicular plate of ethmoid in rhinoplasty.</p>
+                    <p class="paper-journal">JPRAS, 2025 Nov; 110:229-238.</p>
+                    <p class="paper-authors">Shen H*, Pan X*, Du S*, <strong>Zhan P</strong>, et al.</p>
+                </div>
+                <div class="paper-card">
+                    <p class="paper-title" data-zh="机器人辅助 UKA 手术精度研究" data-en="Robotic UKA Accuracy Study"></p>
+                    <p class="paper-status" data-zh="一作，在投" data-en="First author, in prep"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技能 -->
+        <section id="skills" class="section">
+            <h2 class="section-title" data-zh="技能" data-en="Skills"></h2>
+            <div class="content parallax-content">
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3 data-zh="手术" data-en="Surgical"></h3>
+                        <ul>
+                            <li data-zh="机器人手术（TiRobot、长木谷）" data-en="Robotic Surgery (TiRobot, Changmugu)"></li>
+                            <li data-zh="锯骨模型、临床解剖" data-en="Sawbone, Clinical Anatomy"></li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3 data-zh="编程" data-en="Programming"></h3>
+                        <ul>
+                            <li>Python (PyTorch, Diffusion)</li>
+                            <li>C++, SPSS</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3 data-zh="研究" data-en="Research"></h3>
+                        <ul>
+                            <li data-zh="RCT 方案设计" data-en="RCT Protocol Design"></li>
+                            <li data-zh="医学影像分析" data-en="Medical Imaging (CT/MRI/DICOM)"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 爱好与生活 -->
+        <section id="life" class="section">
+            <h2 class="section-title" data-zh="爱好与生活" data-en="Life"></h2>
+            <div class="content parallax-content">
+                <div class="hobby-grid">
+                    <div class="hobby-item">
+                        <span class="hobby-icon">🤖</span>
+                        <span data-zh="高达笔涂" data-en="Gunpla"></span>
+                    </div>
+                    <div class="hobby-item">
+                        <span class="hobby-icon">🎸</span>
+                        <span data-zh="电吉他 / 指弹" data-en="Guitar"></span>
+                    </div>
+                    <div class="hobby-item">
+                        <span class="hobby-icon">💪</span>
+                        <span data-zh="健身" data-en="Fitness"></span>
+                    </div>
+                    <div class="hobby-item">
+                        <span class="hobby-icon">🏛️</span>
+                        <span data-zh="建筑" data-en="Architecture"></span>
+                    </div>
+                    <div class="hobby-item">
+                        <span class="hobby-icon">🎮</span>
+                        <span data-zh="游戏" data-en="Gaming"></span>
+                    </div>
+                    <div class="hobby-item">
+                        <span class="hobby-icon">🐱</span>
+                        <span data-zh="猫咪" data-en="Cat"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 投资与思考 -->
+        <section id="investment" class="section">
+            <h2 class="section-title" data-zh="投资与思考" data-en="Investment"></h2>
+            <div class="content parallax-content">
+                <div class="invest-item">
+                    <h3 data-zh="比特币定投计划" data-en="Bitcoin DCA"></h3>
+                    <p>Target: 30,000 – 40,000 USD</p>
+                </div>
+                <div class="invest-item">
+                    <h3 data-zh="量化交易学习" data-en="Quant Trading"></h3>
+                    <p data-zh="算法交易策略、回测系统" data-en="Algorithmic trading, backtesting"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学习记录 -->
+        <section id="notes-entry" class="section notes-section">
+            <h2 class="section-title" data-zh="学习记录" data-en="Notes"></h2>
+            <div class="content parallax-content">
+                <a href="notes.html" class="notes-entry-card">
+                    <div class="notes-icon">📝</div>
+                    <div class="notes-info">
+                        <h3 data-zh="进入笔记空间" data-en="Enter Notes Space"></h3>
+                        <p data-zh="学习思考 · LMCHK备考 · 项目进展" data-en="Learning · LMCHK Prep · Project Updates"></p>
+                    </div>
+                    <span class="notes-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 联系 -->
+        <section id="contact" class="section">
+            <h2 class="section-title" data-zh="联系" data-en="Contact"></h2>
+            <div class="content parallax-content">
+                <div class="contact-info">
+                    <p><strong>Mobile:</strong> (+86) 19806332048</p>
+                    <p><strong>Email:</strong> <a href="mailto:2210122911@stu.pku.edu.cn">2210122911@stu.pku.edu.cn</a></p>
+                    <p><strong data-zh="地址" data-en="Addr">:</strong> <span data-zh="北京海淀区玉泉路15号 航天中心医院" data-en="Aerospace Center Hospital, Beijing"></span></p>
+                </div>
+                <div class="contact-links">
+                    <a href="mailto:2210122911@stu.pku.edu.cn" class="contact-link">Email</a>
+                    <a href="https://github.com/sagirimo" class="contact-link" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 Zhan Pengyu</p>
+            <!-- 隐藏链接：通过特定方式访问 -->
+            <p class="hidden-link"><a href="/hidden.html"></a></p>
+            <!-- 三观隐喻：放在最后 -->
+            <p class="philosophy-hidden" title="虚无 · 立德立功立言 · 正反合"></p>
+        </footer>
+    </main>
+
+    <div class="controls">
+        <button id="lang-toggle" class="control-btn">EN</button>
+        <button id="theme-toggle" class="control-btn">☀️</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

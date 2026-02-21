@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习记录 | Zhan Pengyu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <main>
+        <section class="section" style="min-height: auto; padding-top: 100px;">
+            <a href="index.html" class="back-link">← 返回首页</a>
+            <h1 class="section-title" data-zh="学习记录" data-en="Notes"></h1>
+        </section>
+
+        <section class="section" style="min-height: auto;">
+            <div class="content">
+                <div class="notes-list">
+                    <article class="note-full">
+                        <p class="note-date">2026-02-21</p>
+                        <h2 data-zh="网站上线" data-en="Website Launched"></h2>
+                        <p data-zh="网站上线。准备 LMCHK 考试，同时推进骨科机器人研究项目。" data-en="Website launched. Preparing for LMCHK while advancing orthopedic robotics research."></p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="controls">
+        <button id="lang-toggle" class="control-btn">EN</button>
+        <button id="theme-toggle" class="control-btn">☀️</button>
+    </div>
+
+    <script src="script.js"></script>
+    <style>
+        .back-link {
+            display: inline-block;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--fg); }
+        .note-full {
+            padding: 1.5rem;
+            border-left: 2px solid var(--border);
+            background: var(--accent-dim);
+        }
+        .note-full h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 0.5rem 0 1rem;
+        }
+        .note-full p:not(.note-date) {
+            line-height: 1.9;
+            color: var(--fg-secondary);
+        }
+    </style>
+</body>
+</html>

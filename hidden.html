@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思考空间</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #050505;
+        }
+        .hidden-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 8vw;
+        }
+        .hidden-header {
+            margin-bottom: 3rem;
+        }
+        .hidden-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+        .hidden-warning {
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-style: italic;
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border);
+            display: inline-block;
+            max-width: 400px;
+        }
+        .hidden-content {
+            max-width: 700px;
+        }
+        .hidden-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.01);
+        }
+        .hidden-section h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            color: var(--fg-secondary);
+            margin-bottom: 1rem;
+        }
+        .hidden-section p {
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: var(--fg-secondary);
+            margin-bottom: 1rem;
+        }
+        .hidden-section p:last-child {
+            margin-bottom: 0;
+        }
+        .back-home {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+            z-index: 100;
+        }
+        .back-home:hover {
+            color: var(--fg);
+        }
+        .quote {
+            font-style: italic;
+            border-left: 2px solid var(--border);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        [data-theme="light"] body {
+            background: #f0ede9;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <a href="index.html" class="back-home">← 返回首页</a>
+
+    <main class="hidden-container">
+        <header class="hidden-header">
+            <h1 class="hidden-title">思考空间</h1>
+            <p class="hidden-warning">此页面为私人思考记录，不对外公开链接。</p>
+        </header>
+
+        <div class="hidden-content">
+            <div class="hidden-section">
+                <h3>关于自由</h3>
+                <p>自由不是放纵，而是自主选择的能力。是一个人对自身命运的掌控，对思想的独立，对表达的权利。</p>
+                <p>真正的自由需要勇气的支撑——敢于质疑的勇气，敢于承担后果的勇气，敢于孤独的勇气。</p>
+            </div>
+
+            <div class="hidden-section">
+                <h3>关于权力</h3>
+                <p>权力需要约束，绝对的权力导致绝对的腐败。这不是政治学的理论，而是人性的常识。</p>
+                <p class="quote">"当权者不受制约时，人民便失去尊严。"</p>
+            </div>
+
+            <div class="hidden-section">
+                <h3>关于未来</h3>
+                <p>我希望有一天，这些文字可以公开地写在阳光下，而不必隐藏在代码的角落里。</p>
+                <p>那一天何时到来，取决于无数人的努力——包括我自己的。</p>
+            </div>
+
+            <div class="hidden-section">
+                <h3>关于选择</h3>
+                <p>每个人都有选择自己立场的权利。有人选择沉默，有人选择顺从，有人选择离开，有人选择反抗。</p>
+                <p>我选择记录，选择思考，选择在可以安全表达的时候发出声音。</p>
+                <p>这不是懦弱，而是在等待更合适的时机。活着本身，就是最大的反抗。</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="controls">
+        <button id="lang-toggle" class="control-btn">EN</button>
+        <button id="theme-toggle" class="control-btn">☀️</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
