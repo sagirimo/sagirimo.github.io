@@ -1,6 +1,6 @@
 /**
  * Zhan Pengyu - Personal Website
- * Neural Network Background + Tri-language Support
+ * Neural Network Background + Tri-language Support + Style Switcher
  */
 
 // ========================================
@@ -20,6 +20,7 @@ let targetMouseY = -1000;
 let time = 0;
 let currentTheme = 'light';
 let currentLang = 'en'; // en, zh, hk
+let currentStyle = 'default'; // default, frutiger, glass
 
 // 滚动
 let scrollY = 0;
@@ -42,10 +43,80 @@ let bgColorStart = { r: 245, g: 243, b: 240 };
 let bgColorEnd = { r: 235, g: 232, b: 227 };
 
 // ========================================
+// 风格切换 (Default / Frutiger Aero / iOS 26 Glass)
+// ========================================
+
+const styleIcons = ['🎨', '🌿', '🔮'];
+const styleNames = ['default', 'frutiger', 'glass'];
+
+function applyStyle(style) {
+    currentStyle = style;
+    root.setAttribute('data-style', style);
+
+    // 更新风格切换按钮图标
+    const styleBtn = document.getElementById('style-toggle');
+    if (styleBtn) {
+        const idx = styleNames.indexOf(style);
+        styleBtn.textContent = styleIcons[idx];
+        styleBtn.title = `Style: ${style.charAt(0).toUpperCase() + style.slice(1)}`;
+    }
+
+    // Frutiger Aero 不需要主题切换
+    const themeBtn = document.getElementById('theme-toggle');
+    if (style === 'frutiger') {
+        if (themeBtn) themeBtn.style.display = 'none';
+        // 强制 light 主题用于 frutiger
+        if (currentTheme === 'dark') {
+            applyTheme('light');
+        }
+    } else {
+        if (themeBtn) themeBtn.style.display = '';
+    }
+
+    // 保存到 localStorage
+    localStorage.setItem('preferredStyle', style);
+}
+
+function cycleStyle() {
+    const idx = styleNames.indexOf(currentStyle);
+    const nextIdx = (idx + 1) % styleNames.length;
+    applyStyle(styleNames[nextIdx]);
+}
+
+// 初始化风格
+const savedStyle = localStorage.getItem('preferredStyle');
+if (savedStyle && styleNames.includes(savedStyle)) {
+    applyStyle(savedStyle);
+} else {
+    applyStyle('default');
+}
+
+const styleToggle = document.getElementById('style-toggle');
+if (styleToggle) {
+    styleToggle.addEventListener('click', cycleStyle);
+}
+
+// ========================================
 // 主题切换
 // ========================================
 
 function updateThemeColors() {
+    // Glass 风格用不同颜色
+    if (currentStyle === 'glass') {
+        if (currentTheme === 'dark') {
+            dotColor = 'rgba(255, 255, 255, 0.015)';
+            dotGlow = 'rgba(255, 255, 255, 0.02)';
+            bgColorStart = { r: 8, g: 8, b: 12 };
+            bgColorEnd = { r: 12, g: 12, b: 18 };
+        } else {
+            dotColor = 'rgba(0, 0, 0, 0.01)';
+            dotGlow = 'rgba(0, 0, 0, 0.015)';
+            bgColorStart = { r: 242, g: 242, b: 247 };
+            bgColorEnd = { r: 229, g: 229, b: 234 };
+        }
+        return;
+    }
+
     if (currentTheme === 'dark') {
         dotColor = 'rgba(180, 175, 165, 0.025)';
         dotGlow = 'rgba(190, 185, 175, 0.04)';
@@ -65,13 +136,34 @@ function applyTheme(theme) {
     updateThemeColors();
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+
+    // 保存到 localStorage
+    localStorage.setItem('preferredTheme', theme);
 }
 
-applyTheme('light');
+// 初始化主题
+const savedTheme = localStorage.getItem('preferredTheme');
+if (savedTheme && savedTheme !== 'dark' && savedTheme !== 'light') {
+    // invalid value, use default
+    applyTheme('light');
+} else if (savedTheme) {
+    // 如果是 frutiger 风格，强制 light
+    if (currentStyle === 'frutiger') {
+        applyTheme('light');
+    } else {
+        applyTheme(savedTheme);
+    }
+} else {
+    applyTheme('light');
+}
 
 const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
-    themeToggle.addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+    themeToggle.addEventListener('click', () => {
+        // Frutiger 不切换主题
+        if (currentStyle === 'frutiger') return;
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
 }
 
 // ========================================
@@ -557,7 +649,7 @@ function initDecodeEffect() {
     const selectors = [
         '.greeting', '.name', '.subtitle',
         '.section-title',
-        '.about-text', '.skill-name', '.skill-desc',
+        '.about-text p', '.skill-name', '.skill-desc',
         '.timeline-title', '.timeline-company', '.timeline-desc',
         '.project-title', '.project-desc',
         '.paper-title', '.paper-journal', '.paper-status', '.paper-authors',
@@ -632,7 +724,7 @@ updateLanguage = function(lang) {
     const selectors = [
         '.greeting', '.name', '.subtitle',
         '.section-title',
-        '.about-text', '.skill-name', '.skill-desc',
+        '.about-text p', '.skill-name', '.skill-desc',
         '.timeline-title', '.timeline-company', '.timeline-desc',
         '.project-title', '.project-desc',
         '.paper-title', '.paper-journal', '.paper-status', '.paper-authors',

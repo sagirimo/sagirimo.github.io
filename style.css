@@ -758,3 +758,555 @@ body {
         min-width: auto;
     }
 }
+
+/* ============================================
+   STYLE SWITCHER - Three Themes
+   ============================================ */
+
+/* Style Toggle Button */
+.style-btn-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 36px;
+    padding: 0 10px;
+    background: transparent;
+    border: none;
+    color: var(--fg-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: var(--font-sans);
+}
+
+.style-btn-toggle:hover {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+/* ============================================
+   FRUTIGER AERO STYLE (2004-2013)
+   ============================================ */
+
+[data-style="frutiger"] {
+    --font-sans: 'Segoe UI', 'Microsoft YaHei', '微软雅黑', 'Tahoma', sans-serif;
+    --font-mono: 'Consolas', 'Microsoft YaHei Mono', monospace;
+}
+
+[data-style="frutiger"] body {
+    background: transparent;
+}
+
+[data-style="frutiger"] body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(180deg,
+            #3a8fc2 0%,
+            #5ba3d0 15%,
+            #7ec8e3 30%,
+            #a8d8ea 45%,
+            #c9e4de 55%,
+            #9cc9a0 65%,
+            #6eb56f 75%,
+            #4a9c4d 85%,
+            #357a38 100%
+        );
+    z-index: -2;
+}
+
+[data-style="frutiger"] body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse 300px 100px at 15% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 70%),
+        radial-gradient(ellipse 200px 80px at 75% 15%, rgba(255, 255, 255, 0.7) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 150px at 50% 40%, rgba(255, 255, 255, 0.5) 0%, transparent 60%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+[data-style="frutiger"] .sidebar {
+    background: transparent;
+}
+
+[data-style="frutiger"] .logo-name {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 50, 100, 0.3);
+}
+
+[data-style="frutiger"] .logo-title,
+[data-style="frutiger"] .logo-desc {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 50, 100, 0.3);
+}
+
+[data-style="frutiger"] .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 1px 2px rgba(0, 50, 100, 0.3);
+}
+
+[data-style="frutiger"] .nav-link:hover,
+[data-style="frutiger"] .nav-link.active {
+    color: #fff;
+}
+
+[data-style="frutiger"] .flat-btn {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-style="frutiger"] .github-link {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-style="frutiger"] .education-item,
+[data-style="frutiger"] .timeline-item,
+[data-style="frutiger"] .publication-item,
+[data-style="frutiger"] .interest-item,
+[data-style="frutiger"] .note-entry,
+[data-style="frutiger"] .thought-entry,
+[data-style="frutiger"] .hidden-warning,
+[data-style="frutiger"] .project-item {
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(250, 255, 255, 0.9) 40%,
+        rgba(240, 250, 255, 0.85) 50%,
+        rgba(250, 252, 255, 0.88) 60%,
+        rgba(255, 255, 255, 0.92) 100%
+    );
+    border-color: rgba(100, 160, 200, 0.4);
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+[data-style="frutiger"] .education-item::before,
+[data-style="frutiger"] .timeline-item::before,
+[data-style="frutiger"] .publication-item::before,
+[data-style="frutiger"] .interest-item::before,
+[data-style="frutiger"] .note-entry::before,
+[data-style="frutiger"] .thought-entry::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 5%;
+    right: 5%;
+    height: 45%;
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.6) 20%,
+        rgba(200, 230, 255, 0.3) 40%,
+        transparent 60%
+    );
+    border-radius: 8px 8px 100% 100%;
+    pointer-events: none;
+}
+
+[data-style="frutiger"] .education-item:hover,
+[data-style="frutiger"] .timeline-item:hover,
+[data-style="frutiger"] .publication-item:hover,
+[data-style="frutiger"] .interest-item:hover,
+[data-style="frutiger"] .note-entry:hover,
+[data-style="frutiger"] .thought-entry:hover {
+    transform: translateY(-3px);
+    border-color: rgba(100, 180, 220, 0.6);
+    box-shadow: 0 8px 25px rgba(0, 80, 120, 0.2);
+}
+
+[data-style="frutiger"] .section-title {
+    color: #0a4a5a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+[data-style="frutiger"] .section-title::after {
+    background: rgba(0, 100, 150, 0.2);
+}
+
+[data-style="frutiger"] .greeting { color: #2a80a0; text-shadow: none; }
+[data-style="frutiger"] .name { color: #0a3a5a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
+[data-style="frutiger"] .subtitle { color: #1a5a7a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); }
+[data-style="frutiger"] .description { color: #2a5a6a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); }
+
+[data-style="frutiger"] .cta-btn {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 250, 255, 0.8) 100%);
+    border-color: rgba(100, 180, 220, 0.5);
+    color: #0a5a7a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+[data-style="frutiger"] .cta-btn:hover {
+    background: linear-gradient(180deg, #5bc0de 0%, #3598dc 50%, #2980b9 100%);
+    color: #fff;
+    border-color: transparent;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+[data-style="frutiger"] .about-text p,
+[data-style="frutiger"] .project-description p,
+[data-style="frutiger"] .contact-text,
+[data-style="frutiger"] .note-content,
+[data-style="frutiger"] .thought-text {
+    color: #2a5a6a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+[data-style="frutiger"] .timeline-date,
+[data-style="frutiger"] .note-date,
+[data-style="frutiger"] .thought-date,
+[data-style="frutiger"] .project-org,
+[data-style="frutiger"] .project-status,
+[data-style="frutiger"] .paper-status {
+    color: #2a80a0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+[data-style="frutiger"] .tag {
+    background: linear-gradient(180deg, rgba(200, 235, 255, 0.8) 0%, rgba(180, 225, 250, 0.7) 100%);
+    color: #0a6080;
+    border-color: rgba(100, 180, 220, 0.4);
+}
+
+[data-style="frutiger"] #bg-canvas {
+    opacity: 0.4;
+}
+
+/* ============================================
+   iOS 26 LIQUID GLASS STYLE - Dark Mode
+   ============================================ */
+
+[data-style="glass"] {
+    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', '苹果方', 'Helvetica Neue', sans-serif;
+}
+
+[data-style="glass"] body {
+    background: linear-gradient(135deg, #08080c 0%, #0c0c12 50%, #08080c 100%);
+    color: rgba(255, 255, 255, 0.88);
+}
+
+[data-style="glass"] body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.015) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(220, 220, 240, 0.01) 0%, transparent 35%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+[data-style="glass"] .sidebar {
+    background: transparent;
+}
+
+[data-style="glass"] .logo-name,
+[data-style="glass"] .name {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+[data-style="glass"] .logo-title,
+[data-style="glass"] .logo-desc {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+[data-style="glass"] .nav-link {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-style="glass"] .nav-link:hover,
+[data-style="glass"] .nav-link.active {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-style="glass"] .flat-btn,
+[data-style="glass"] .github-link {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+[data-style="glass"] .education-item,
+[data-style="glass"] .timeline-item,
+[data-style="glass"] .publication-item,
+[data-style="glass"] .interest-item,
+[data-style="glass"] .note-entry,
+[data-style="glass"] .thought-entry,
+[data-style="glass"] .hidden-warning {
+    background: rgba(180, 180, 190, 0.08);
+    border: none;
+    border-radius: 20px;
+    backdrop-filter: blur(50px) saturate(180%);
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 10px 20px -5px rgba(0, 0, 0, 0.15),
+        0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-style="glass"] .education-item::before,
+[data-style="glass"] .timeline-item::before,
+[data-style="glass"] .publication-item::before,
+[data-style="glass"] .interest-item::before,
+[data-style="glass"] .note-entry::before,
+[data-style="glass"] .thought-entry::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(135deg,
+        rgba(255, 80, 120, 0.25), rgba(255, 160, 80, 0.2),
+        rgba(255, 240, 80, 0.15), rgba(80, 255, 160, 0.2),
+        rgba(80, 200, 255, 0.25), rgba(120, 80, 255, 0.25)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+[data-style="glass"] .education-item::after,
+[data-style="glass"] .timeline-item::after,
+[data-style="glass"] .publication-item::after,
+[data-style="glass"] .interest-item::after,
+[data-style="glass"] .note-entry::after,
+[data-style="glass"] .thought-entry::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 30%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.25) 70%, transparent 100%);
+}
+
+[data-style="glass"] .education-item:hover,
+[data-style="glass"] .timeline-item:hover,
+[data-style="glass"] .publication-item:hover,
+[data-style="glass"] .interest-item:hover,
+[data-style="glass"] .note-entry:hover,
+[data-style="glass"] .thought-entry:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 8px 10px -3px rgba(0, 0, 0, 0.12),
+        0 20px 30px -8px rgba(0, 0, 0, 0.2),
+        0 35px 60px -15px rgba(0, 0, 0, 0.3);
+}
+
+[data-style="glass"] .section-title {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-style="glass"] .section-title::after {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-style="glass"] .greeting,
+[data-style="glass"] .timeline-date,
+[data-style="glass"] .note-date,
+[data-style="glass"] .thought-date,
+[data-style="glass"] .project-org,
+[data-style="glass"] .project-status,
+[data-style="glass"] .paper-status {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.5) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-style="glass"] .subtitle,
+[data-style="glass"] .subsection-title {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+[data-style="glass"] .description,
+[data-style="glass"] .about-text p,
+[data-style="glass"] .project-description p,
+[data-style="glass"] .contact-text,
+[data-style="glass"] .note-content,
+[data-style="glass"] .thought-text {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+[data-style="glass"] .cta-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+[data-style="glass"] .cta-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-style="glass"] .tag {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+
+[data-style="glass"] .footer p {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+[data-style="glass"] #bg-canvas {
+    opacity: 0.3;
+}
+
+/* iOS 26 Glass - Light Mode */
+[data-style="glass"][data-theme="light"] body {
+    background: linear-gradient(135deg, #f2f2f7 0%, #e5e5ea 50%, #f2f2f7 100%);
+    color: rgba(0, 0, 0, 0.85);
+}
+
+[data-style="glass"][data-theme="light"] body::before {
+    background:
+        radial-gradient(ellipse at 20% 30%, rgba(0, 0, 0, 0.01) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(50, 50, 80, 0.015) 0%, transparent 35%);
+}
+
+[data-style="glass"][data-theme="light"] .logo-name,
+[data-style="glass"][data-theme="light"] .name {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
+}
+
+[data-style="glass"][data-theme="light"] .logo-title,
+[data-style="glass"][data-theme="light"] .logo-desc {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+[data-style="glass"][data-theme="light"] .nav-link {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+[data-style="glass"][data-theme="light"] .nav-link:hover,
+[data-style="glass"][data-theme="light"] .nav-link.active {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+[data-style="glass"][data-theme="light"] .education-item,
+[data-style="glass"][data-theme="light"] .timeline-item,
+[data-style="glass"][data-theme="light"] .publication-item,
+[data-style="glass"][data-theme="light"] .interest-item,
+[data-style="glass"][data-theme="light"] .note-entry,
+[data-style="glass"][data-theme="light"] .thought-entry {
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow:
+        0 4px 6px -2px rgba(0, 0, 0, 0.04),
+        0 10px 20px -5px rgba(0, 0, 0, 0.06),
+        0 25px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+[data-style="glass"][data-theme="light"] .education-item::before,
+[data-style="glass"][data-theme="light"] .timeline-item::before,
+[data-style="glass"][data-theme="light"] .publication-item::before,
+[data-style="glass"][data-theme="light"] .interest-item::before,
+[data-style="glass"][data-theme="light"] .note-entry::before,
+[data-style="glass"][data-theme="light"] .thought-entry::before {
+    background: linear-gradient(135deg,
+        rgba(255, 80, 100, 0.2), rgba(255, 160, 80, 0.15),
+        rgba(100, 200, 80, 0.12), rgba(80, 180, 255, 0.18),
+        rgba(140, 100, 255, 0.2)
+    );
+}
+
+[data-style="glass"][data-theme="light"] .education-item::after,
+[data-style="glass"][data-theme="light"] .timeline-item::after,
+[data-style="glass"][data-theme="light"] .publication-item::after,
+[data-style="glass"][data-theme="light"] .interest-item::after,
+[data-style="glass"][data-theme="light"] .note-entry::after,
+[data-style="glass"][data-theme="light"] .thought-entry::after {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 30%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.9) 70%, transparent 100%);
+}
+
+[data-style="glass"][data-theme="light"] .section-title {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-style="glass"][data-theme="light"] .section-title::after {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-style="glass"][data-theme="light"] .greeting,
+[data-style="glass"][data-theme="light"] .timeline-date,
+[data-style="glass"][data-theme="light"] .note-date,
+[data-style="glass"][data-theme="light"] .thought-date,
+[data-style="glass"][data-theme="light"] .project-org,
+[data-style="glass"][data-theme="light"] .project-status,
+[data-style="glass"][data-theme="light"] .paper-status {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.45) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-style="glass"][data-theme="light"] .subtitle,
+[data-style="glass"][data-theme="light"] .subsection-title {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+[data-style="glass"][data-theme="light"] .description,
+[data-style="glass"][data-theme="light"] .about-text p,
+[data-style="glass"][data-theme="light"] .project-description p,
+[data-style="glass"][data-theme="light"] .contact-text,
+[data-style="glass"][data-theme="light"] .note-content,
+[data-style="glass"][data-theme="light"] .thought-text {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+[data-style="glass"][data-theme="light"] .cta-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.85);
+}
+
+[data-style="glass"][data-theme="light"] .cta-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-style="glass"][data-theme="light"] .tag {
+    background: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.6);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-style="glass"][data-theme="light"] .footer p {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+[data-style="glass"][data-theme="light"] .flat-btn,
+[data-style="glass"][data-theme="light"] .github-link {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+[data-style="glass"][data-theme="light"] #bg-canvas {
+    opacity: 0.5;
+}
