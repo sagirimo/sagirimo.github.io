@@ -67,19 +67,24 @@
 
     <style>
         .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
             margin-top: 20px;
+            padding: 20px 0;
         }
 
         .photo-item {
-            position: relative;
+            width: calc(12.5% - 6px); /* 8 per row */
             aspect-ratio: 4/3;
+            position: relative;
             overflow: hidden;
             border-radius: 4px;
             cursor: pointer;
             background: rgba(0, 0, 0, 0.05);
+            transform-origin: center center;
+            transition: transform 0.15s ease-out, z-index 0s;
+            will-change: transform;
         }
 
         [data-theme="dark"] .photo-item {
@@ -90,25 +95,21 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease, opacity 0.3s;
             opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .photo-item img.loaded {
             opacity: 1;
         }
 
-        .photo-item:hover img {
-            transform: scale(1.05);
-        }
-
         .photo-item::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%);
+            background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s;
             pointer-events: none;
         }
 
@@ -167,11 +168,15 @@
         }
 
         /* 响应式 */
+        @media (max-width: 1200px) {
+            .photo-item { width: calc(16.666% - 6px); } /* 6 per row */
+        }
+        @media (max-width: 900px) {
+            .photo-item { width: calc(20% - 6px); } /* 5 per row */
+        }
         @media (max-width: 600px) {
-            .photo-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
+            .photo-item { width: calc(25% - 6px); } /* 4 per row */
+            .photo-grid { gap: 4px; }
         }
     </style>
 
@@ -305,6 +310,8 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxCaption = document.getElementById('lightbox-caption');
 
+        const photoItems = [];
+
         photos.forEach((photo, index) => {
             const item = document.createElement('div');
             item.className = 'photo-item';
@@ -321,7 +328,57 @@
             });
 
             grid.appendChild(item);
+            photoItems.push(item);
         });
+
+        // Mac Dock 风格放大效果
+        const dockConfig = {
+            maxScale: 1.5,      // 最大放大倍数
+            radius: 120,        // 影响半径（像素）
+            easing: 0.15        // 动画缓动系数
+        };
+
+        let mouseX = -1000;
+        let mouseY = -1000;
+
+        // 监听鼠标移动
+        grid.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        grid.addEventListener('mouseleave', () => {
+            mouseX = -1000;
+            mouseY = -1000;
+        });
+
+        // 动画循环：更新每个照片的缩放
+        function updateDockEffect() {
+            photoItems.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const itemCenterX = rect.left + rect.width / 2;
+                const itemCenterY = rect.top + rect.height / 2;
+
+                // 计算鼠标到照片中心的距离
+                const dx = mouseX - itemCenterX;
+                const dy = mouseY - itemCenterY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // 根据距离计算缩放比例
+                let scale = 1;
+                if (distance < dockConfig.radius) {
+                    const ratio = 1 - (distance / dockConfig.radius);
+                    scale = 1 + (dockConfig.maxScale - 1) * ratio * ratio; // 二次缓动
+                }
+
+                item.style.transform = `scale(${scale})`;
+                item.style.zIndex = scale > 1 ? '10' : '1';
+            });
+
+            requestAnimationFrame(updateDockEffect);
+        }
+
+        updateDockEffect();
 
         // 关闭 lightbox
         document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
