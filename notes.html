@@ -1,63 +1,149 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学习记录 | Zhan Pengyu</title>
+    <title>Notes | Zhan Pengyu</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <canvas id="bg-canvas"></canvas>
 
-    <main>
+    <!-- 左侧固定栏 -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <div class="logo">
+                <h1 class="logo-name" data-en="Zhan Pengyu" data-zh="战鹏宇" data-hk="戰鵬宇">Zhan Pengyu</h1>
+                <p class="logo-title" data-en="Medical Student & Researcher" data-zh="医学生 & 研究者" data-hk="醫學生 & 研究者">Medical Student & Researcher</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link" data-en="← Back Home" data-zh="← 返回首页" data-hk="← 返回首頁">← Back Home</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="footer-row">
+                    <a href="https://github.com/sagirimo" target="_blank" rel="noopener noreferrer" class="github-link" title="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </a>
+                </div>
+                <div class="footer-row btn-row">
+                    <button id="lang-toggle" class="flat-btn" data-en="中" data-zh="繁" data-hk="EN">中</button>
+                    <button id="theme-toggle" class="flat-btn">☀️</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 右侧内容 -->
+    <main class="main-content">
         <section class="section" style="min-height: auto; padding-top: 100px;">
-            <a href="index.html" class="back-link">← 返回首页</a>
-            <h1 class="section-title" data-zh="学习记录" data-en="Notes"></h1>
+            <div class="section-content">
+                <h2 class="section-title" data-en="Notes & Thoughts" data-zh="随笔与思考" data-hk="隨筆與思考">Notes & Thoughts</h2>
+                <p class="contact-text" data-en="A space for my learning journey, random thoughts, and daily life records." data-zh="记录我的学习历程、随想和生活点滴。" data-hk="記錄我的學習歷程、隨想和生活點滴。">A space for my learning journey, random thoughts, and daily life records.</p>
+            </div>
         </section>
 
         <section class="section" style="min-height: auto;">
-            <div class="content">
+            <div class="section-content">
                 <div class="notes-list">
-                    <article class="note-full">
-                        <p class="note-date">2026-02-21</p>
-                        <h2 data-zh="网站上线" data-en="Website Launched"></h2>
-                        <p data-zh="网站上线。准备 LMCHK 考试，同时推进骨科机器人研究项目。" data-en="Website launched. Preparing for LMCHK while advancing orthopedic robotics research."></p>
+                    <!-- Note Entry -->
+                    <article class="note-entry">
+                        <div class="note-date">2026.02.21</div>
+                        <h3 class="note-title" data-en="Website Launched" data-zh="网站上线上" data-hk="網站上線">Website Launched</h3>
+                        <p class="note-content" data-en="Finally built my personal website! A clean, minimal space to document my journey through medical school and beyond. Currently preparing for LMCHK while advancing orthopedic robotics research." data-zh="终于搭建好了个人网站！一个记录我医学生涯和更多可能性的空间。目前在香港执业医备考中，同时推进骨科机器人研究。" data-hk="終於搭建好了個人網站！一個記錄我醫學生涯和更多可能性的空間。目前在香港執業醫備考中，同時推進骨科機器人研究。">Finally built my personal website! A clean, minimal space to document my journey through medical school and beyond. Currently preparing for LMCHK while advancing orthopedic robotics research.</p>
+                        <div class="note-tags">
+                            <span class="tag">Website</span>
+                            <span class="tag">Life</span>
+                        </div>
+                    </article>
+
+                    <article class="note-entry">
+                        <div class="note-date">2025.11</div>
+                        <h3 class="note-title" data-en="JPRAS Paper Accepted" data-zh="JPRAS 论文接收" data-hk="JPRAS 論文接收">JPRAS Paper Accepted</h3>
+                        <p class="note-content" data-en="Our paper on AI-based 3D identification for rhinoplasty was accepted by JPRAS! A great milestone in my research journey. Grateful for the guidance from Prof. An and the collaboration with the team." data-zh="我们的 AI 辅助鼻整形三维识别论文被 JPRAS 接收了！研究道路上的一个重要里程碑。感谢安阳老师的指导和团队的合作。" data-hk="我們的 AI 輔助鼻整形三維識別論文被 JPRAS 接收了！研究道路上的一個重要里程碑。感謝安陽老師的指導和團隊的合作。">Our paper on AI-based 3D identification for rhinoplasty was accepted by JPRAS! A great milestone in my research journey. Grateful for the guidance from Prof. An and the collaboration with the team.</p>
+                        <div class="note-tags">
+                            <span class="tag">Research</span>
+                            <span class="tag">AI</span>
+                            <span class="tag">Publication</span>
+                        </div>
+                    </article>
+
+                    <article class="note-entry">
+                        <div class="note-date">2025.04</div>
+                        <h3 class="note-title" data-en="Started Orthopedic Robotics Research" data-zh="开始骨科机器人研究" data-hk="開始骨科機器人研究">Started Orthopedic Robotics Research</h3>
+                        <p class="note-content" data-en="Officially joined the Orthopedic Robotics & AI Lab at Aerospace Center Hospital. Working on Changmugu™ robotic system evaluation and TiRobot-assisted ACL reconstruction. Exciting times ahead!" data-zh="正式加入航天中心医院骨科机器人与AI实验室。负责长木谷™机器人系统评估和 TiRobot 辅助 ACL 重建项目。激动的时刻！" data-hk="正式加入航天中心醫院骨科機器人與AI實驗室。負責長木谷™機器人系統評估和 TiRobot 輔助 ACL 重建項目。激動的時刻！">Officially joined the Orthopedic Robotics & AI Lab at Aerospace Center Hospital. Working on Changmugu™ robotic system evaluation and TiRobot-assisted ACL reconstruction. Exciting times ahead!</p>
+                        <div class="note-tags">
+                            <span class="tag">Research</span>
+                            <span class="tag">Robotics</span>
+                        </div>
                     </article>
                 </div>
             </div>
         </section>
     </main>
 
-    <div class="controls">
-        <button id="lang-toggle" class="control-btn">EN</button>
-        <button id="theme-toggle" class="control-btn">☀️</button>
-    </div>
-
-    <script src="script.js"></script>
     <style>
-        .back-link {
-            display: inline-block;
-            color: var(--muted);
-            text-decoration: none;
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .note-entry {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            transition: all 0.25s;
+        }
+        [data-theme="dark"] .note-entry {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .note-entry:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+        .note-date {
+            font-family: var(--font-mono);
             font-size: 0.85rem;
-            margin-bottom: 2rem;
-            transition: color 0.3s;
+            color: var(--accent);
+            margin-bottom: 8px;
         }
-        .back-link:hover { color: var(--fg); }
-        .note-full {
-            padding: 1.5rem;
-            border-left: 2px solid var(--border);
-            background: var(--accent-dim);
-        }
-        .note-full h2 {
-            font-size: 1.2rem;
+        .note-title {
+            font-size: 1.15rem;
             font-weight: 500;
-            margin: 0.5rem 0 1rem;
+            color: var(--fg);
+            margin-bottom: 12px;
         }
-        .note-full p:not(.note-date) {
-            line-height: 1.9;
+        .note-content {
+            font-size: 0.95rem;
             color: var(--fg-secondary);
+            line-height: 1.75;
+            margin-bottom: 15px;
+        }
+        .note-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--fg-muted);
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 3px;
+        }
+        [data-theme="dark"] .tag {
+            background: rgba(255, 255, 255, 0.05);
         }
     </style>
+
+    <script src="script.js"></script>
 </body>
 </html>

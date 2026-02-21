@@ -1,6 +1,6 @@
 /**
- * 战鹏宇个人网站
- * 神经网络风格背景 + 视差滚动
+ * Zhan Pengyu - Personal Website
+ * Neural Network Background + Tri-language Support
  */
 
 // ========================================
@@ -18,8 +18,8 @@ let mouseY = -1000;
 let targetMouseX = -1000;
 let targetMouseY = -1000;
 let time = 0;
-let currentTheme = 'dark';
-let currentLang = 'zh';
+let currentTheme = 'light';
+let currentLang = 'en'; // en, zh, hk
 
 // 滚动
 let scrollY = 0;
@@ -35,32 +35,27 @@ let connections = [];
 const maxConnections = 120;
 const connectionDistance = 100;
 
-// 主题颜色 - 平衡的亮度
-let dotColor = 'rgba(180, 175, 165, 0.025)';
-let dotGlow = 'rgba(190, 185, 175, 0.04)';
-let bgColorStart = { r: 10, g: 10, b: 10 };
-let bgColorEnd = { r: 15, g: 15, b: 15 };
+// 主题颜色
+let dotColor = 'rgba(80, 75, 65, 0.03)';
+let dotGlow = 'rgba(100, 95, 85, 0.045)';
+let bgColorStart = { r: 245, g: 243, b: 240 };
+let bgColorEnd = { r: 235, g: 232, b: 227 };
 
 // ========================================
 // 主题切换
 // ========================================
 
-function getSystemTheme() {
-    // 默认使用白色主题
-    return 'light';
-}
-
 function updateThemeColors() {
-    if (currentTheme === 'light') {
-        dotColor = 'rgba(80, 75, 65, 0.03)';
-        dotGlow = 'rgba(100, 95, 85, 0.045)';
-        bgColorStart = { r: 245, g: 243, b: 240 };
-        bgColorEnd = { r: 235, g: 232, b: 227 };
-    } else {
+    if (currentTheme === 'dark') {
         dotColor = 'rgba(180, 175, 165, 0.025)';
         dotGlow = 'rgba(190, 185, 175, 0.04)';
         bgColorStart = { r: 10, g: 10, b: 10 };
         bgColorEnd = { r: 15, g: 15, b: 15 };
+    } else {
+        dotColor = 'rgba(80, 75, 65, 0.03)';
+        dotGlow = 'rgba(100, 95, 85, 0.045)';
+        bgColorStart = { r: 245, g: 243, b: 240 };
+        bgColorEnd = { r: 235, g: 232, b: 227 };
     }
 }
 
@@ -72,32 +67,49 @@ function applyTheme(theme) {
     if (themeBtn) themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
 }
 
-applyTheme(getSystemTheme());
+applyTheme('light');
 
 const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
     themeToggle.addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
 }
 
-if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => applyTheme(e.matches ? 'dark' : 'light'));
-}
-
 // ========================================
-// 语言切换
+// 三语切换 (EN -> ZH -> HK -> EN)
 // ========================================
 
 const langToggle = document.getElementById('lang-toggle');
 
+const langDisplay = { en: '中', zh: '繁', hk: 'EN' };
+const langNames = { en: 'English', zh: '简体中文', hk: '繁體中文' };
+
 function updateLanguage(lang) {
     currentLang = lang;
-    document.querySelectorAll('[data-zh]').forEach(el => el.textContent = el.getAttribute(`data-${lang}`));
-    if (langToggle) langToggle.textContent = lang === 'zh' ? 'EN' : '中';
-    document.documentElement.lang = lang === 'zh' ? 'zh' : 'en';
+
+    // 更新按钮显示
+    if (langToggle) {
+        langToggle.textContent = langDisplay[lang];
+        langToggle.title = langNames[lang];
+    }
+
+    root.lang = lang === 'hk' ? 'zh-HK' : (lang === 'zh' ? 'zh-CN' : 'en');
+
+    // 更新所有带 data-en/data-zh/data-hk 的元素
+    document.querySelectorAll('[data-en]').forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (text) el.textContent = text;
+    });
 }
 
-if (langToggle) langToggle.addEventListener('click', () => updateLanguage(currentLang === 'zh' ? 'en' : 'zh'));
-updateLanguage('zh');
+if (langToggle) {
+    langToggle.addEventListener('click', () => {
+        const nextLang = currentLang === 'en' ? 'zh' : (currentLang === 'zh' ? 'hk' : 'en');
+        updateLanguage(nextLang);
+    });
+}
+
+// 默认英文
+updateLanguage('en');
 
 // ========================================
 // Canvas
@@ -154,18 +166,6 @@ document.addEventListener('mouseleave', () => {
     targetMouseY = -1000;
 });
 
-document.addEventListener('touchmove', (e) => {
-    if (e.touches.length > 0) {
-        targetMouseX = e.touches[0].clientX;
-        targetMouseY = e.touches[0].clientY;
-    }
-});
-
-document.addEventListener('touchend', () => {
-    targetMouseX = -1000;
-    targetMouseY = -1000;
-});
-
 window.addEventListener('scroll', () => scrollY = window.pageYOffset, { passive: true });
 
 // ========================================
@@ -191,7 +191,6 @@ function noise2D(x, y) {
     return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
 }
 
-// 镀铬色 - 五彩斑斓
 function getChromeColor(hue, alpha) {
     const c = 0.06;
     const x = c * (1 - Math.abs((hue / 60) % 2 - 1));
@@ -236,8 +235,7 @@ function updateConnections() {
                     const midDist = (p1.distToMouse + p2.distToMouse) / 2;
                     const intensity = 1 - midDist / 160;
                     connections.push({
-                        p1: p1,
-                        p2: p2,
+                        p1: p1, p2: p2,
                         alpha: 0,
                         targetAlpha: 0.12 + intensity * 0.1,
                         decay: 0.003,
@@ -306,7 +304,6 @@ function draw() {
     const mouseRadius = 150;
     const maxScale = 2;
 
-    // 更新点
     gridPoints.forEach(point => {
         const n1 = noise2D(point.baseX * 0.004 + time * 0.0001 + point.noiseOffset, point.baseY * 0.004);
         const n2 = noise2D(point.baseX * 0.004 + 50, point.baseY * 0.004 + time * 0.00008 + point.noiseOffset);
@@ -375,71 +372,29 @@ function draw() {
 }
 
 // ========================================
-// 视差滚动 - 正常 Y 轴效果
+// 导航高亮
 // ========================================
 
-function handleScrollEffects() {
-    const scrollPos = window.pageYOffset;
-    const windowHeight = window.innerHeight;
+function updateNavHighlight() {
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-link');
 
-    const heroContent = document.querySelector('.hero-content');
-    const scrollHint = document.querySelector('.scroll-hint');
-
-    if (heroContent) {
-        const progress = Math.min(1, scrollPos / (windowHeight * 0.4));
-        heroContent.style.transform = `scale(${1 + progress * 0.4}) translateY(${scrollPos * 0.4}px)`;
-        heroContent.style.opacity = Math.max(0, 1 - progress * 1.2);
-    }
-
-    if (scrollHint) scrollHint.style.opacity = Math.max(0, 1 - scrollPos / 70);
-
-    document.querySelectorAll('.parallax-content').forEach((content, index) => {
-        const rect = content.getBoundingClientRect();
-        if (rect.top < windowHeight && rect.top > -rect.height) {
-            const speed = 0.05 + (index % 3) * 0.02;
-            content.style.transform = `translateY(${rect.top * speed}px)`;
-            content.style.opacity = smoothstep(windowHeight, windowHeight * 0.4, rect.top);
+    let current = '';
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 150) {
+            current = section.getAttribute('id');
         }
     });
 
-    document.querySelectorAll('.section-title').forEach((title) => {
-        const rect = title.getBoundingClientRect();
-        if (rect.top < windowHeight && rect.top > -100) {
-            title.style.transform = `translateX(${rect.top * 0.03}px)`;
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
         }
     });
 
-    const hobbyGrid = document.querySelector('.hobby-grid');
-    if (hobbyGrid) {
-        const rect = hobbyGrid.getBoundingClientRect();
-        if (rect.top < windowHeight && rect.bottom > 0) {
-            const progress = (windowHeight - rect.top) / (windowHeight + rect.height);
-            hobbyGrid.style.transform = `perspective(900px) rotateX(${(progress - 0.5) * 2.5}deg)`;
-        }
-    }
-
-    document.querySelectorAll('.timeline-item').forEach((item) => {
-        const rect = item.getBoundingClientRect();
-        if (rect.top < windowHeight * 0.85) {
-            item.style.transform = 'translateX(0)';
-        }
-    });
-
-    document.querySelectorAll('.project-card, .paper-card').forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        if (rect.top < windowHeight && rect.top > -rect.height) {
-            card.style.transform = `translateY(${rect.top * 0.025}px)`;
-        }
-    });
-
-    document.querySelectorAll('.skill-category').forEach((cat) => {
-        const rect = cat.getBoundingClientRect();
-        if (rect.top < windowHeight * 0.9) {
-            cat.style.transform = `scale(${1 + (windowHeight - rect.top) * 0.00008})`;
-        }
-    });
-
-    requestAnimationFrame(handleScrollEffects);
+    requestAnimationFrame(updateNavHighlight);
 }
 
 // ========================================
@@ -453,19 +408,58 @@ resize();
 
 if (!prefersReducedMotion) {
     draw();
-    handleScrollEffects();
-} else {
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, `rgb(${bgColorStart.r}, ${bgColorStart.g}, ${bgColorStart.b})`);
-    gradient.addColorStop(1, `rgb(${bgColorEnd.r}, ${bgColorEnd.g}, ${bgColorEnd.b})`);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
 }
 
-const hero = document.getElementById('hero');
-if (hero) {
-    hero.style.opacity = '1';
-    const heroContent = hero.querySelector('.hero-content');
-    if (heroContent) heroContent.style.opacity = '1';
-    document.querySelectorAll('.timeline-item').forEach(item => item.style.transform = 'translateX(-25px)');
-}
+updateNavHighlight();
+
+// ========================================
+// 秘技入口 - 上上下下左右左右ABAB
+// ========================================
+
+const konamiCode = [
+    'ArrowUp', 'ArrowUp',
+    'ArrowDown', 'ArrowDown',
+    'ArrowLeft', 'ArrowRight',
+    'ArrowLeft', 'ArrowRight',
+    'KeyA', 'KeyB', 'KeyA', 'KeyB'
+];
+let konamiIndex = 0;
+let konamiTimer = null;
+
+document.addEventListener('keydown', (e) => {
+    // 只在首页生效
+    if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/' && !window.location.pathname.endsWith('/')) {
+        return;
+    }
+
+    // 检查是否匹配当前步骤
+    if (e.code === konamiCode[konamiIndex]) {
+        konamiIndex++;
+
+        // 清除之前的计时器
+        if (konamiTimer) clearTimeout(konamiTimer);
+
+        // 3秒内无输入则重置
+        konamiTimer = setTimeout(() => {
+            konamiIndex = 0;
+        }, 3000);
+
+        // 完成秘技
+        if (konamiIndex === konamiCode.length) {
+            konamiIndex = 0;
+            // 闪光效果
+            document.body.style.transition = 'filter 0.3s';
+            document.body.style.filter = 'brightness(2)';
+            setTimeout(() => {
+                document.body.style.filter = 'brightness(1)';
+                setTimeout(() => {
+                    window.location.href = 'hidden.html';
+                }, 300);
+            }, 200);
+        }
+    } else {
+        // 不匹配则重置
+        konamiIndex = 0;
+        if (konamiTimer) clearTimeout(konamiTimer);
+    }
+});
