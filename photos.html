@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photography | Zhan Pengyu</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- 左侧固定栏 -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <div class="logo">
+                <h1 class="logo-name" data-en="Zhan Pengyu" data-zh="战鹏宇" data-hk="戰鵬宇">Zhan Pengyu</h1>
+                <p class="logo-title" data-en="Medical Student & Researcher" data-zh="医学生 & 研究者" data-hk="醫學生 & 研究者">Medical Student & Researcher</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link" data-en="← Back Home" data-zh="← 返回首页" data-hk="← 返回首頁">← Back Home</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="footer-row">
+                    <a href="https://github.com/sagirimo" target="_blank" rel="noopener noreferrer" class="github-link" title="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </a>
+                </div>
+                <div class="footer-row btn-row">
+                    <button id="lang-toggle" class="flat-btn" data-en="中" data-zh="繁" data-hk="EN">中</button>
+                    <button id="theme-toggle" class="flat-btn">☀️</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 右侧内容 -->
+    <main class="main-content">
+        <section class="section" style="min-height: auto; padding-top: 100px;">
+            <div class="section-content">
+                <h2 class="section-title" data-en="Photography" data-zh="摄影" data-hk="攝影">Photography</h2>
+                <p class="contact-text" data-en="Capturing moments through my lens. Landscapes, cityscapes, and the beauty in everyday life." data-zh="用镜头记录瞬间。风景、城市、日常生活中的美好。" data-hk="用鏡頭記錄瞬間。風景、城市、日常生活中的美好。">Capturing moments through my lens. Landscapes, cityscapes, and the beauty in everyday life.</p>
+            </div>
+        </section>
+
+        <section class="section" style="min-height: auto;">
+            <div class="section-content">
+                <div class="photo-grid">
+                    <!-- Photo Gallery - 照片会自动加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Lightbox -->
+        <div id="lightbox" class="lightbox">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </main>
+
+    <style>
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] .photo-item {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, opacity 0.3s;
+            opacity: 0;
+        }
+
+        .photo-item img.loaded {
+            opacity: 1;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .photo-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1001;
+            transition: color 0.2s;
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent);
+        }
+
+        #lightbox-img {
+            max-width: 90%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .lightbox-caption {
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            font-family: var(--font-mono);
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <script src="script.js"></script>
+    <script>
+        // 照片列表 - 自动从 thumbs 文件夹加载
+        const photos = [
+            { file: '3f9b22ba28de6898c249be42fefb026c.jpg', caption: '' },
+            { file: 'DSC00130.JPG', caption: '' },
+            { file: 'DSC00492.jpg', caption: '' },
+            { file: 'DSC00653.JPG', caption: '' },
+            { file: 'DSC00655.JPG', caption: '' },
+            { file: 'DSC00658.JPG', caption: '' },
+            { file: 'DSC00662.JPG', caption: '' },
+            { file: 'DSC00663.JPG', caption: '' },
+            { file: 'DSC00667.jpg', caption: '' },
+            { file: 'DSC00671.JPG', caption: '' },
+            { file: 'DSC00676.JPG', caption: '' },
+            { file: 'DSC00681.JPG', caption: '' },
+            { file: 'DSC00683.JPG', caption: '' },
+            { file: 'DSC00685.JPG', caption: '' },
+            { file: 'DSC00687.JPG', caption: '' },
+            { file: 'DSC00689.JPG', caption: '' },
+            { file: 'DSC00700.JPG', caption: '' },
+            { file: 'DSC00712.JPG', caption: '' },
+            { file: 'DSC00713.JPG', caption: '' },
+            { file: 'DSC00717.JPG', caption: '' },
+        ];
+
+        // 渲染照片网格
+        const grid = document.querySelector('.photo-grid');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+
+        photos.forEach((photo, index) => {
+            const item = document.createElement('div');
+            item.className = 'photo-item';
+            item.innerHTML = `<img src="photos/thumbs/${photo.file}" alt="${photo.caption || 'Photo ' + (index + 1)}" loading="lazy">`;
+
+            const img = item.querySelector('img');
+            img.onload = () => img.classList.add('loaded');
+
+            item.addEventListener('click', () => {
+                lightboxImg.src = `photos/full/${photo.file}`;
+                lightboxCaption.textContent = photo.caption || '';
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            grid.appendChild(item);
+        });
+
+        // 关闭 lightbox
+        document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    </script>
+</body>
+</html>
