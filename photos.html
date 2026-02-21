@@ -301,7 +301,7 @@
             { file: 'Picsew_20251005231721.JPEG', caption: '' },
             { file: 'a1d35deb4d9590914e36182dad402a34.jpg', caption: '' },
             { file: 'd55cfad48ee9b3c5adace3d47c74e3c7.jpg', caption: '' },
-            { file: 'e9df6b8d6d5d152dfeaf0e2928cbba65.JPG', caption: '' },
+            { file: 'e9df6b8d6d5d152dfeaf0e2928cbba65.JPG', caption: '' }
         ];
 
         // 渲染照片网格
@@ -338,18 +338,18 @@
             easing: 0.15        // 动画缓动系数
         };
 
-        let mouseX = -1000;
-        let mouseY = -1000;
+        let photoMouseX = -1000;
+        let photoMouseY = -1000;
 
         // 监听鼠标移动
         grid.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+            photoMouseX = e.clientX;
+            photoMouseY = e.clientY;
         });
 
         grid.addEventListener('mouseleave', () => {
-            mouseX = -1000;
-            mouseY = -1000;
+            photoMouseX = -1000;
+            photoMouseY = -1000;
         });
 
         // 动画循环：更新每个照片的缩放
@@ -360,8 +360,8 @@
                 const itemCenterY = rect.top + rect.height / 2;
 
                 // 计算鼠标到照片中心的距离
-                const dx = mouseX - itemCenterX;
-                const dy = mouseY - itemCenterY;
+                const dx = photoMouseX - itemCenterX;
+                const dy = photoMouseY - itemCenterY;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 // 根据距离计算缩放比例

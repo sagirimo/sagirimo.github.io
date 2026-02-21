@@ -463,3 +463,194 @@ document.addEventListener('keydown', (e) => {
         if (konamiTimer) clearTimeout(konamiTimer);
     }
 });
+
+// ========================================
+// 乱码解码动画效果
+// ========================================
+
+// 乱码字符池
+const glitchChars = {
+    en: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*',
+    zh: '的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也能下过子说产种面而方后多定行学法所民得经十三之进着等部度家电力里如水化高自二理起小物现实加量都两体制机当使点从业本去把性好应开它合还因由其些然前外天政四日那社义事平形相全表间样与关各重新线内数正心反你明看原又么利比或但质气第向道命此变条只没结解问意建月公无系军很情者最立代想已通并提直题党程展五果料象员革位入常文总次品式活设及管特件长求老头基资边流路级少图山统接知较将组见计别她手角期根论运农指几九区强放决西被干做必战先回则任取据处队南给色光门即保治北造百规热领七海口东导器压志世金增争济阶油思术极交受联什认六共权收证改清己美再采转更单风切打白教速花带安场身车例真务具万每目至达走积示议声报斗完类八离华名确才科张信马节话米整空元况今集温传土许步群广石记需段研界拉林律叫且究观越织装影算低持音众书布复容儿须际商非验连断深难近矿千周委素技备半办青省列习响约支般史感劳便团往酸历市克何除消构府称太准精值号率族维划选标写存候毛亲快效斯院查江型眼王按格养易置派层片始却专状育厂京识适属圆包火住调满县局照参红细引听该铁价严',
+    hk: '的一是在不了有和人這中大為上個國我以要他時來用們生到作地於出就分對成會可主發年動同工也能下過子說產種面而方後多定行學法所民得經十三之進著等部度家電力裡如水化高自二理起小物現實加量都兩體制機當使點從業本去把性好應開它合還因由其些然前外天政四日那社義事平形相全表間樣與關各重新線內數正心反你明看原又麼利比或但質氣第向道命此變條只沒結解問意建月公無系軍很情者最立代想已通並提直題黨程展五果料象員革位入常文總次品式活設及管特件長求老頭基資邊流路級少圖山統接知較將組見計別她手角期根論運農指幾九區強放決西被幹做必戰先回則任取據處隊南給色光門即保治北造百規熱領七海口東導器壓志世金增爭濟階油思術極交受聯什認六共權收證改清己美再采轉更單風切打白教速花帶安場身車例真務具萬每目至達走積示議聲報鬥完類八離華名確才科張信馬節話米整空元況今集溫傳土許步群廣石記需段研界拉林律叫且究觀越織裝影算低持音眾書布復容兒須際商非驗連斷深難近礦千周委素技備半辦青省列習響約支般史感勞便團往酸歷市克何除消構府稱太準精值號率族維劃選標寫存候毛親快效斯院查江型眼王按格養易置派層片始卻專狀育廠京識適屬圓包火住調滿縣局照參紅細引聽該鐵價嚴',
+    symbols: '!@#$%^&*()_+-=[]{}|;:\'",.<>?/~`'
+};
+
+// 存储原始文本
+const originalTexts = new WeakMap();
+const decodedFlags = new WeakSet();
+
+// 生成单个随机字符
+function getRandomChar(originalChar, lang) {
+    const pool = (lang === 'zh' ? glitchChars.zh :
+                  lang === 'hk' ? glitchChars.hk :
+                  glitchChars.en) + glitchChars.symbols;
+
+    // 如果原字符是空格或特殊字符，保持不变
+    if (originalChar === ' ' || originalChar === '\n' || originalChar === '\t') {
+        return originalChar;
+    }
+
+    // 随机返回乱码或原字符
+    return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// 执行乱码解码动画
+function animateDecode(element, originalText, lang) {
+    if (decodedFlags.has(element)) return;
+    decodedFlags.add(element);
+
+    // 锁定元素高度，防止布局抖动
+    const computedStyle = window.getComputedStyle(element);
+    const originalHeight = element.offsetHeight;
+    const originalLineHeight = computedStyle.lineHeight;
+    element.style.minHeight = originalHeight + 'px';
+    element.style.lineHeight = originalLineHeight;
+
+    const duration = 400; // 总动画时长 ms (缩短一半)
+    const interval = 16;  // 每帧间隔 ms (~60fps)
+    const steps = duration / interval;
+
+    let currentStep = 0;
+
+    const animate = () => {
+        currentStep++;
+        const progress = currentStep / steps;
+
+        // 计算当前应该显示的原字符数量
+        const revealCount = Math.floor(originalText.length * progress);
+
+        let result = '';
+        for (let i = 0; i < originalText.length; i++) {
+            const char = originalText[i];
+
+            // 已解码的部分显示原字符
+            if (i < revealCount) {
+                result += char;
+            }
+            // 未解码的部分显示乱码
+            else if (char !== ' ' && char !== '\n' && char !== '\t') {
+                result += getRandomChar(char, lang);
+            }
+            else {
+                result += char;
+            }
+        }
+
+        element.textContent = result;
+
+        if (currentStep < steps) {
+            requestAnimationFrame(() => setTimeout(animate, interval));
+        } else {
+            // 确保最后显示完整文本，并恢复样式
+            element.textContent = originalText;
+            element.style.minHeight = '';
+        }
+    };
+
+    animate();
+}
+
+// 初始化解码效果
+function initDecodeEffect() {
+    // 需要应用效果的元素选择器
+    const selectors = [
+        '.greeting', '.name', '.subtitle',
+        '.section-title',
+        '.about-text', '.skill-name', '.skill-desc',
+        '.timeline-title', '.timeline-company', '.timeline-desc',
+        '.project-title', '.project-desc',
+        '.paper-title', '.paper-journal', '.paper-status', '.paper-authors',
+        '.interest-item span',
+        '.contact-text',
+        '.nav-link',
+        '.logo-name', '.logo-title',
+        '.note-title', '.note-content', '.note-date',
+        '.thought-text', '.thought-quote', '.thought-date',
+        '.hidden-warning'
+    ];
+
+    // 收集所有需要效果的元素
+    const elements = document.querySelectorAll(selectors.join(', '));
+
+    // 存储原始文本
+    elements.forEach(el => {
+        // 获取当前语言对应的文本属性
+        const dataAttr = `data-${currentLang}`;
+        const text = el.getAttribute(dataAttr) || el.textContent;
+        originalTexts.set(el, { text, lang: currentLang });
+    });
+
+    // 创建 IntersectionObserver
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const stored = originalTexts.get(el);
+
+                if (stored && !decodedFlags.has(el)) {
+                    // 稍微延迟一下，让视觉效果更自然
+                    setTimeout(() => {
+                        animateDecode(el, stored.text, stored.lang);
+                    }, Math.random() * 150);
+                }
+
+                // 解码后不再观察
+                observer.unobserve(el);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    // 开始观察所有元素
+    elements.forEach(el => observer.observe(el));
+}
+
+// 页面加载后初始化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initDecodeEffect, 100);
+    });
+} else {
+    setTimeout(initDecodeEffect, 100);
+}
+
+// 语言切换时重新应用效果
+const originalUpdateLanguage = updateLanguage;
+updateLanguage = function(lang) {
+    // 先清除所有已解码标记
+    document.querySelectorAll('[data-en]').forEach(el => {
+        decodedFlags.delete(el);
+    });
+
+    // 调用原始函数
+    originalUpdateLanguage(lang);
+
+    // 重新存储文本
+    const selectors = [
+        '.greeting', '.name', '.subtitle',
+        '.section-title',
+        '.about-text', '.skill-name', '.skill-desc',
+        '.timeline-title', '.timeline-company', '.timeline-desc',
+        '.project-title', '.project-desc',
+        '.paper-title', '.paper-journal', '.paper-status', '.paper-authors',
+        '.interest-item span',
+        '.contact-text',
+        '.nav-link',
+        '.logo-name', '.logo-title',
+        '.note-title', '.note-content', '.note-date',
+        '.thought-text', '.thought-quote', '.thought-date',
+        '.hidden-warning'
+    ];
+
+    document.querySelectorAll(selectors.join(', ')).forEach(el => {
+        const dataAttr = `data-${lang}`;
+        const text = el.getAttribute(dataAttr) || el.textContent;
+        originalTexts.set(el, { text, lang });
+    });
+
+    // 重新初始化解码效果
+    setTimeout(initDecodeEffect, 50);
+};
