@@ -850,49 +850,46 @@ body {
    ============================================ */
 
 [data-style="frutiger"] {
-    --font-sans: 'Segoe UI', 'Microsoft YaHei', '微软雅黑', 'Tahoma', sans-serif;
+    --font-sans: 'Segoe UI', 'Nunito', 'Microsoft YaHei', '微软雅黑', 'Tahoma', sans-serif;
     --font-mono: 'Consolas', 'Microsoft YaHei Mono', monospace;
+    --aero-glass-bg: rgba(255, 255, 255, 0.45);
+    --aero-glass-border: rgba(255, 255, 255, 0.7);
+    --aero-text-dark: #1a3a4a;
+    --aero-text-mid: #2d6a7f;
 }
 
+/* Sky background - 纯蓝色天空渐变 */
 [data-style="frutiger"] body {
-    background: transparent;
+    background: #a8d8ea;
 }
 
 [data-style="frutiger"] body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background:
-        linear-gradient(180deg,
-            #3a8fc2 0%,
-            #5ba3d0 15%,
-            #7ec8e3 30%,
-            #a8d8ea 45%,
-            #c9e4de 55%,
-            #9cc9a0 65%,
-            #6eb56f 75%,
-            #4a9c4d 85%,
-            #357a38 100%
-        );
+    inset: 0;
     z-index: -2;
+    background:
+        radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.6) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 10%, rgba(180, 230, 255, 0.5) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #c9eeff 0%,
+            #87ceeb 30%,
+            #5bb8e8 55%,
+            #3a9fd1 75%,
+            #2d7fb5 90%,
+            #1a5f94 100%
+        );
+    pointer-events: none;
 }
 
 [data-style="frutiger"] body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background:
-        radial-gradient(ellipse 300px 100px at 15% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 70%),
-        radial-gradient(ellipse 200px 80px at 75% 15%, rgba(255, 255, 255, 0.7) 0%, transparent 70%),
-        radial-gradient(ellipse 400px 150px at 50% 40%, rgba(255, 255, 255, 0.5) 0%, transparent 60%);
-    z-index: -1;
-    pointer-events: none;
+    display: none;
+}
+
+/* 隐藏 canvas 背景 */
+[data-style="frutiger"] #bg-canvas {
+    opacity: 0 !important;
+    visibility: hidden;
 }
 
 [data-style="frutiger"] .sidebar {
@@ -920,11 +917,6 @@ body {
     color: #fff;
 }
 
-[data-style="frutiger"] .flat-btn {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-[data-style="frutiger"] .github-link,
 [data-style="frutiger"] .icon-btn {
     color: rgba(255, 255, 255, 0.8);
 }
@@ -934,6 +926,10 @@ body {
     background: rgba(255, 255, 255, 0.15);
 }
 
+/* ============================================
+   玻璃卡片效果 - 完全按照示例 HTML
+   ============================================ */
+
 [data-style="frutiger"] .education-item,
 [data-style="frutiger"] .timeline-item,
 [data-style="frutiger"] .publication-item,
@@ -942,28 +938,20 @@ body {
 [data-style="frutiger"] .thought-entry,
 [data-style="frutiger"] .hidden-warning,
 [data-style="frutiger"] .project-item {
-    background: linear-gradient(180deg,
-        rgba(255, 255, 255, 0.92) 0%,
-        rgba(250, 255, 255, 0.9) 40%,
-        rgba(240, 250, 255, 0.85) 50%,
-        rgba(250, 252, 255, 0.88) 60%,
-        rgba(255, 255, 255, 0.92) 100%
-    );
-    border-color: rgba(100, 160, 200, 0.4);
-    backdrop-filter: blur(10px);
+    background: var(--aero-glass-bg);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--aero-glass-border);
+    border-radius: 16px;
+    box-shadow:
+        0 8px 32px rgba(31, 120, 180, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
     position: relative;
+    overflow: hidden;
 }
 
-[data-style="frutiger"] .project-status {
-    background: linear-gradient(180deg, rgba(200, 235, 255, 0.9) 0%, rgba(180, 220, 250, 0.8) 100%);
-    border-color: rgba(100, 180, 220, 0.5);
-    color: #0a6080;
-}
-
-[data-style="frutiger"] .interest-list li::before {
-    color: #2a80a0;
-}
-
+/* 卡片顶部高光条纹 - 核心反光效果 */
 [data-style="frutiger"] .education-item::before,
 [data-style="frutiger"] .timeline-item::before,
 [data-style="frutiger"] .publication-item::before,
@@ -974,19 +962,31 @@ body {
     content: '';
     position: absolute;
     top: 0;
-    left: 5%;
-    right: 5%;
+    left: 0;
+    right: 0;
     height: 45%;
     background: linear-gradient(180deg,
-        rgba(255, 255, 255, 0.9) 0%,
-        rgba(255, 255, 255, 0.6) 20%,
-        rgba(200, 230, 255, 0.3) 40%,
-        transparent 60%
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(255, 255, 255, 0.1) 100%
     );
-    border-radius: 8px 8px 100% 100%;
+    border-radius: 16px 16px 80% 80% / 16px 16px 25px 25px;
     pointer-events: none;
+    z-index: 1;
 }
 
+/* 确保文字在高光之上 */
+[data-style="frutiger"] .education-item > *,
+[data-style="frutiger"] .timeline-item > *,
+[data-style="frutiger"] .publication-item > *,
+[data-style="frutiger"] .interest-item > *,
+[data-style="frutiger"] .note-entry > *,
+[data-style="frutiger"] .thought-entry > *,
+[data-style="frutiger"] .project-item > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Hover 效果 */
 [data-style="frutiger"] .education-item:hover,
 [data-style="frutiger"] .timeline-item:hover,
 [data-style="frutiger"] .publication-item:hover,
@@ -994,13 +994,16 @@ body {
 [data-style="frutiger"] .note-entry:hover,
 [data-style="frutiger"] .thought-entry:hover,
 [data-style="frutiger"] .project-item:hover {
-    transform: translateY(-3px);
-    border-color: rgba(100, 180, 220, 0.6);
-    box-shadow: 0 8px 25px rgba(0, 80, 120, 0.2);
+    transform: translateY(-4px);
+    box-shadow:
+        0 16px 48px rgba(31, 120, 180, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
 }
 
+/* 文字颜色 */
 [data-style="frutiger"] .section-title {
-    color: #0a4a5a;
+    color: var(--aero-text-dark);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
@@ -1008,23 +1011,24 @@ body {
     background: rgba(0, 100, 150, 0.2);
 }
 
-[data-style="frutiger"] .greeting { color: #2a80a0; text-shadow: none; }
-[data-style="frutiger"] .name { color: #0a3a5a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
-[data-style="frutiger"] .subtitle { color: #1a5a7a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); }
-[data-style="frutiger"] .description { color: #2a5a6a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); }
+[data-style="frutiger"] .greeting {
+    color: #2a80a0;
+    text-shadow: none;
+}
 
-[data-style="frutiger"] .cta-btn {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 250, 255, 0.8) 100%);
-    border-color: rgba(100, 180, 220, 0.5);
-    color: #0a5a7a;
+[data-style="frutiger"] .name {
+    color: #0a3a5a;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-[data-style="frutiger"] .cta-btn:hover {
-    background: linear-gradient(180deg, #5bc0de 0%, #3598dc 50%, #2980b9 100%);
-    color: #fff;
-    border-color: transparent;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+[data-style="frutiger"] .subtitle {
+    color: #1a5a7a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+[data-style="frutiger"] .description {
+    color: #2a5a6a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 [data-style="frutiger"] .about-text p,
@@ -1032,7 +1036,7 @@ body {
 [data-style="frutiger"] .contact-text,
 [data-style="frutiger"] .note-content,
 [data-style="frutiger"] .thought-text {
-    color: #2a5a6a;
+    color: var(--aero-text-mid);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -1046,27 +1050,53 @@ body {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-[data-style="frutiger"] .tag {
-    background: linear-gradient(180deg, rgba(200, 235, 255, 0.8) 0%, rgba(180, 225, 250, 0.7) 100%);
-    color: #0a6080;
-    border-color: rgba(100, 180, 220, 0.4);
+/* 按钮 - 3D 圆润风格 */
+[data-style="frutiger"] .cta-btn {
+    background: linear-gradient(180deg, #5dc8f0 0%, #2a9fd6 45%, #1a7bbf 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    box-shadow:
+        0 6px 20px rgba(30, 100, 200, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -2px 4px rgba(0, 60, 150, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 60, 120, 0.3);
 }
 
-[data-style="frutiger"] #bg-canvas {
-    opacity: 0.3;
+[data-style="frutiger"] .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(30, 100, 200, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Tags */
+[data-style="frutiger"] .tag {
+    background: rgba(77, 184, 232, 0.25);
+    color: #1a6a8a;
+    border: 1px solid rgba(77, 184, 232, 0.35);
+    border-radius: 15px;
+}
+
+[data-style="frutiger"] .project-status {
+    background: rgba(77, 184, 232, 0.25);
+    border: 1px solid rgba(77, 184, 232, 0.4);
+    color: #1a6a8a;
+}
+
+[data-style="frutiger"] .interest-list li::before {
+    color: #2a80a0;
 }
 
 /* ============================================
-   FRUTIGER AERO - Animations & Effects
+   Frutiger Aero 装饰元素
    ============================================ */
 
-/* Sun / Light Orb */
+/* 太阳 */
 [data-style="frutiger"] .aero-sun {
     position: fixed;
     top: -80px;
-    right: 10%;
-    width: 200px;
-    height: 200px;
+    right: 15%;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
     background: radial-gradient(circle at 40% 35%,
         #fffde0 0%,
@@ -1075,8 +1105,8 @@ body {
         #ff9500 100%
     );
     box-shadow:
-        0 0 80px 40px rgba(255, 200, 0, 0.25),
-        0 0 200px 100px rgba(255, 180, 0, 0.12);
+        0 0 80px 40px rgba(255, 200, 0, 0.3),
+        0 0 200px 100px rgba(255, 180, 0, 0.15);
     z-index: -1;
     pointer-events: none;
     opacity: 0;
@@ -1087,17 +1117,17 @@ body {
     opacity: 1;
 }
 
-/* Grass / Ground */
+/* 草地 */
 [data-style="frutiger"] .aero-ground {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 120px;
     z-index: -1;
     background: linear-gradient(180deg, #5cb85c 0%, #3d8b3d 40%, #2d6b2d 100%);
-    border-radius: 60% 60% 0 0 / 25px 25px 0 0;
-    box-shadow: 0 -10px 40px rgba(50, 150, 50, 0.25);
+    border-radius: 60% 60% 0 0 / 30px 30px 0 0;
+    box-shadow: 0 -10px 40px rgba(50, 150, 50, 0.3);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -1110,15 +1140,15 @@ body {
 [data-style="frutiger"] .aero-ground::before {
     content: '';
     position: absolute;
-    top: -12px;
+    top: -15px;
     left: -5%;
     right: -5%;
-    height: 25px;
+    height: 30px;
     background: radial-gradient(ellipse at center, #6dcf6d 0%, #5cb85c 60%, transparent 100%);
     border-radius: 50%;
 }
 
-/* Clouds Container */
+/* 云朵容器 */
 [data-style="frutiger"] .aero-clouds {
     position: fixed;
     inset: 0;
@@ -1127,13 +1157,13 @@ body {
     pointer-events: none;
 }
 
-/* Individual Cloud */
+/* 单个云朵 */
 [data-style="frutiger"] .aero-cloud {
     position: absolute;
     border-radius: 50px;
     background: rgba(255, 255, 255, 0.85);
     filter: blur(2px);
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.5), inset 0 -4px 10px rgba(180, 220, 255, 0.3);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6), inset 0 -4px 10px rgba(180, 220, 255, 0.3);
     animation: aeroCloudDrift linear infinite;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -1152,40 +1182,40 @@ body {
     box-shadow: inherit;
 }
 
-/* Cloud variations */
-[data-style="frutiger"] .aero-cloud.c1 { width: 180px; height: 50px; top: 6%; animation-duration: 50s; }
-[data-style="frutiger"] .aero-cloud.c1::before { width: 80px; height: 60px; top: -30px; left: 25px; }
-[data-style="frutiger"] .aero-cloud.c1::after { width: 60px; height: 50px; top: -22px; left: 80px; }
+/* 云朵变体 */
+[data-style="frutiger"] .aero-cloud.c1 { width: 200px; height: 55px; top: 8%; animation-duration: 55s; }
+[data-style="frutiger"] .aero-cloud.c1::before { width: 90px; height: 70px; top: -35px; left: 30px; }
+[data-style="frutiger"] .aero-cloud.c1::after { width: 70px; height: 55px; top: -25px; left: 90px; }
 
-[data-style="frutiger"] .aero-cloud.c2 { width: 250px; height: 60px; top: 12%; animation-duration: 65s; animation-delay: -20s; }
-[data-style="frutiger"] .aero-cloud.c2::before { width: 100px; height: 70px; top: -35px; left: 45px; }
-[data-style="frutiger"] .aero-cloud.c2::after { width: 80px; height: 55px; top: -28px; left: 130px; }
+[data-style="frutiger"] .aero-cloud.c2 { width: 280px; height: 65px; top: 15%; animation-duration: 70s; animation-delay: -20s; }
+[data-style="frutiger"] .aero-cloud.c2::before { width: 110px; height: 80px; top: -40px; left: 50px; }
+[data-style="frutiger"] .aero-cloud.c2::after { width: 90px; height: 60px; top: -30px; left: 140px; }
 
-[data-style="frutiger"] .aero-cloud.c3 { width: 140px; height: 40px; top: 4%; animation-duration: 40s; animation-delay: -8s; }
-[data-style="frutiger"] .aero-cloud.c3::before { width: 60px; height: 48px; top: -25px; left: 20px; }
+[data-style="frutiger"] .aero-cloud.c3 { width: 160px; height: 45px; top: 5%; animation-duration: 45s; animation-delay: -10s; }
+[data-style="frutiger"] .aero-cloud.c3::before { width: 70px; height: 55px; top: -28px; left: 25px; }
 
-[data-style="frutiger"] .aero-cloud.c4 { width: 300px; height: 65px; top: 18%; animation-duration: 75s; animation-delay: -35s; }
-[data-style="frutiger"] .aero-cloud.c4::before { width: 120px; height: 85px; top: -42px; left: 55px; }
-[data-style="frutiger"] .aero-cloud.c4::after { width: 90px; height: 65px; top: -32px; left: 160px; }
+[data-style="frutiger"] .aero-cloud.c4 { width: 320px; height: 70px; top: 22%; animation-duration: 80s; animation-delay: -35s; }
+[data-style="frutiger"] .aero-cloud.c4::before { width: 130px; height: 90px; top: -45px; left: 60px; }
+[data-style="frutiger"] .aero-cloud.c4::after { width: 100px; height: 70px; top: -35px; left: 170px; }
 
 @keyframes aeroCloudDrift {
     from { transform: translateX(-350px); }
-    to { transform: translateX(calc(100vw + 350px)); }
+    to { transform: translateX(calc(100vw + 400px)); }
 }
 
-/* Bubbles Container */
+/* 气泡容器 */
 [data-style="frutiger"] .aero-bubbles {
     position: fixed;
-    bottom: 100px;
+    bottom: 120px;
     left: 0;
     right: 0;
     pointer-events: none;
     z-index: -1;
     overflow: hidden;
-    height: 280px;
+    height: 300px;
 }
 
-/* Individual Bubble */
+/* 单个气泡 */
 [data-style="frutiger"] .aero-bubble {
     position: absolute;
     bottom: 0;
@@ -1195,7 +1225,7 @@ body {
         rgba(180, 230, 255, 0.2) 60%,
         transparent 100%
     );
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     animation: aeroBubbleRise linear infinite;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -1207,84 +1237,46 @@ body {
 
 @keyframes aeroBubbleRise {
     0% { transform: translateY(0) translateX(0); opacity: 0; }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.4; }
-    100% { transform: translateY(-300px) translateX(15px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-320px) translateX(20px); opacity: 0; }
 }
 
-/* Bubble variations */
-[data-style="frutiger"] .aero-bubble.b1 { width: 16px; height: 16px; left: 8%; animation-duration: 5.5s; }
-[data-style="frutiger"] .aero-bubble.b2 { width: 10px; height: 10px; left: 22%; animation-duration: 7s; animation-delay: -2s; }
-[data-style="frutiger"] .aero-bubble.b3 { width: 20px; height: 20px; left: 40%; animation-duration: 6s; animation-delay: -3.5s; }
-[data-style="frutiger"] .aero-bubble.b4 { width: 8px; height: 8px; left: 58%; animation-duration: 8s; animation-delay: -1s; }
-[data-style="frutiger"] .aero-bubble.b5 { width: 14px; height: 14px; left: 75%; animation-duration: 6s; animation-delay: -4s; }
-[data-style="frutiger"] .aero-bubble.b6 { width: 6px; height: 6px; left: 88%; animation-duration: 9s; animation-delay: -5s; }
-[data-style="frutiger"] .aero-bubble.b7 { width: 12px; height: 12px; left: 15%; animation-duration: 7.5s; animation-delay: -6s; }
-[data-style="frutiger"] .aero-bubble.b8 { width: 18px; height: 18px; left: 52%; animation-duration: 5s; animation-delay: -2.5s; }
+/* 气泡变体 */
+[data-style="frutiger"] .aero-bubble.b1 { width: 18px; height: 18px; left: 10%; animation-duration: 6s; }
+[data-style="frutiger"] .aero-bubble.b2 { width: 12px; height: 12px; left: 25%; animation-duration: 8s; animation-delay: -2s; }
+[data-style="frutiger"] .aero-bubble.b3 { width: 22px; height: 22px; left: 45%; animation-duration: 7s; animation-delay: -4s; }
+[data-style="frutiger"] .aero-bubble.b4 { width: 10px; height: 10px; left: 65%; animation-duration: 9s; animation-delay: -1s; }
+[data-style="frutiger"] .aero-bubble.b5 { width: 16px; height: 16px; left: 80%; animation-duration: 6.5s; animation-delay: -3s; }
+[data-style="frutiger"] .aero-bubble.b6 { width: 8px; height: 8px; left: 90%; animation-duration: 10s; animation-delay: -5s; }
 
-/* Water Drops on Cards */
+/* 卡片上的水滴装饰 */
 [data-style="frutiger"] .aero-drops {
     position: absolute;
     inset: 0;
     pointer-events: none;
     overflow: hidden;
-    z-index: 0;
+    z-index: 3;
 }
 
 [data-style="frutiger"] .aero-drop {
     position: absolute;
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     background: radial-gradient(circle at 35% 30%,
-        rgba(255, 255, 255, 0.65) 0%,
-        rgba(180, 230, 255, 0.25) 50%,
-        rgba(100, 180, 230, 0.08) 100%
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(180, 230, 255, 0.3) 50%,
+        rgba(100, 180, 230, 0.1) 100%
     );
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5);
 }
 
-[data-style="frutiger"] .aero-drop.d1 { width: 14px; height: 18px; top: 12%; right: 10%; }
-[data-style="frutiger"] .aero-drop.d2 { width: 10px; height: 12px; top: 30%; right: 6%; opacity: 0.7; }
-[data-style="frutiger"] .aero-drop.d3 { width: 18px; height: 22px; bottom: 18%; left: 6%; }
-[data-style="frutiger"] .aero-drop.d4 { width: 8px; height: 10px; bottom: 32%; left: 12%; opacity: 0.6; }
+[data-style="frutiger"] .aero-drop.d1 { width: 18px; height: 22px; top: 15%; right: 12%; opacity: 0.7; }
+[data-style="frutiger"] .aero-drop.d2 { width: 12px; height: 15px; top: 35%; right: 8%; opacity: 0.5; }
+[data-style="frutiger"] .aero-drop.d3 { width: 22px; height: 27px; bottom: 20%; left: 8%; opacity: 0.6; }
+[data-style="frutiger"] .aero-drop.d4 { width: 10px; height: 12px; bottom: 35%; left: 15%; opacity: 0.4; }
 
-/* Hero section enhanced for Frutiger */
-[data-style="frutiger"] .section:first-of-type {
-    position: relative;
-}
-
-/* Enhanced buttons for Frutiger */
-[data-style="frutiger"] .cta-btn {
-    background: linear-gradient(180deg, #5dc8f0 0%, #2a9fd6 45%, #1a7bbf 100%);
-    color: white;
-    border: none;
-    box-shadow:
-        0 6px 20px rgba(30, 100, 200, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -2px 4px rgba(0, 60, 150, 0.25);
-    text-shadow: 0 1px 2px rgba(0, 60, 120, 0.3);
-    border-radius: 25px;
-}
-
-[data-style="frutiger"] .cta-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(30, 100, 200, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-/* Progress bars with liquid effect */
-[data-style="frutiger"] .skill-group::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #4db8e8, #2ec4b6, #57cc99);
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(77, 184, 232, 0.4);
-}
-
-/* Hide these elements in other styles */
+/* 非 Frutiger 模式隐藏装饰元素 */
 :not([data-style="frutiger"]) .aero-sun,
 :not([data-style="frutiger"]) .aero-ground,
 :not([data-style="frutiger"]) .aero-clouds,
