@@ -74,6 +74,16 @@ function applyStyle(style) {
         }
     }
 
+    // 激活/非激活 Frutiger Aero 动画元素
+    const aeroElements = document.querySelectorAll('.aero-sun, .aero-ground, .aero-cloud, .aero-bubble');
+    aeroElements.forEach(el => {
+        if (style === 'frutiger') {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    });
+
     // 保存到 localStorage
     localStorage.setItem('preferredStyle', style);
 }

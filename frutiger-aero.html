@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frutiger Aero · 博客</title>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --aero-blue: #4db8e8;
+    --aero-teal: #2ec4b6;
+    --aero-green: #57cc99;
+    --aero-sky: #87ceeb;
+    --glass-white: rgba(255,255,255,0.45);
+    --glass-border: rgba(255,255,255,0.7);
+    --text-dark: #1a3a4a;
+    --text-mid: #2d6a7f;
+  }
+
+  body {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #a8d8ea;
+  }
+
+  /* Sky background with layered gradients */
+  .sky-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 10%, rgba(180,230,255,0.5) 0%, transparent 40%),
+      linear-gradient(180deg,
+        #c9eeff 0%,
+        #87ceeb 30%,
+        #5bb8e8 55%,
+        #3a9fd1 75%,
+        #2d7fb5 90%,
+        #1a5f94 100%
+      );
+  }
+
+  /* Animated clouds */
+  .clouds {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.85);
+    filter: blur(2px);
+    box-shadow: 0 0 40px rgba(255,255,255,0.6), inset 0 -4px 10px rgba(180,220,255,0.3);
+    animation: drift linear infinite;
+  }
+
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+    box-shadow: inherit;
+  }
+
+  .c1 { width: 200px; height: 55px; top: 8%; left: -220px; opacity: 0.9; animation-duration: 55s; animation-delay: 0s; }
+  .c1::before { width: 90px; height: 70px; top: -35px; left: 30px; }
+  .c1::after { width: 70px; height: 55px; top: -25px; left: 90px; }
+
+  .c2 { width: 280px; height: 65px; top: 15%; left: -300px; opacity: 0.7; animation-duration: 70s; animation-delay: -20s; }
+  .c2::before { width: 110px; height: 80px; top: -40px; left: 50px; }
+  .c2::after { width: 90px; height: 60px; top: -30px; left: 140px; }
+
+  .c3 { width: 160px; height: 45px; top: 5%; left: -180px; opacity: 0.6; animation-duration: 45s; animation-delay: -10s; }
+  .c3::before { width: 70px; height: 55px; top: -28px; left: 25px; }
+
+  .c4 { width: 320px; height: 70px; top: 22%; left: -340px; opacity: 0.5; animation-duration: 80s; animation-delay: -35s; }
+  .c4::before { width: 130px; height: 90px; top: -45px; left: 60px; }
+  .c4::after { width: 100px; height: 70px; top: -35px; left: 170px; }
+
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 400px)); }
+  }
+
+  /* Grass / ground */
+  .ground {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    z-index: -1;
+    background: linear-gradient(180deg, #5cb85c 0%, #3d8b3d 40%, #2d6b2d 100%);
+    border-radius: 60% 60% 0 0 / 30px 30px 0 0;
+    box-shadow: 0 -10px 40px rgba(50,150,50,0.3);
+  }
+
+  .ground::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -5%;
+    right: -5%;
+    height: 30px;
+    background: radial-gradient(ellipse at center, #6dcf6d 0%, #5cb85c 60%, transparent 100%);
+    border-radius: 50%;
+  }
+
+  /* Sun / light orb */
+  .sun {
+    position: fixed;
+    top: -80px;
+    right: 15%;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%,
+      #fffde0 0%,
+      #ffe066 30%,
+      #ffc000 60%,
+      #ff9500 100%
+    );
+    box-shadow:
+      0 0 80px 40px rgba(255,200,0,0.3),
+      0 0 200px 100px rgba(255,180,0,0.15);
+    z-index: -1;
+  }
+
+  /* Main layout */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 160px;
+  }
+
+  /* Glass card mixin */
+  .glass {
+    background: var(--glass-white);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow:
+      0 8px 32px rgba(31,120,180,0.15),
+      inset 0 1px 0 rgba(255,255,255,0.9),
+      inset 0 -1px 0 rgba(255,255,255,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Shine highlight stripe on glass */
+  .glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,255,255,0.1) 100%
+    );
+    border-radius: 20px 20px 80% 80% / 20px 20px 30px 30px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    padding: 28px 36px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-orb {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%,
+      #a8f0ff 0%,
+      #4db8e8 40%,
+      #1a7bbf 100%
+    );
+    box-shadow:
+      0 4px 15px rgba(30,120,200,0.4),
+      inset 0 2px 4px rgba(255,255,255,0.7),
+      inset 0 -2px 4px rgba(0,80,160,0.3);
+    position: relative;
+  }
+
+  .logo-orb::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    width: 14px;
+    height: 8px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-dark);
+    text-shadow: 0 1px 3px rgba(255,255,255,0.8);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text span {
+    color: #1a7bbf;
+  }
+
+  nav {
+    display: flex;
+    gap: 6px;
+    position: relative;
+    z-index: 2;
+  }
+
+  nav a {
+    text-decoration: none;
+    padding: 7px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.6);
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(30,120,200,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  nav a:hover {
+    background: rgba(255,255,255,0.7);
+    box-shadow: 0 4px 16px rgba(30,120,200,0.2), inset 0 1px 0 rgba(255,255,255,0.9);
+    transform: translateY(-1px);
+  }
+
+  nav a.active {
+    background: linear-gradient(180deg, rgba(77,184,232,0.3) 0%, rgba(30,120,200,0.15) 100%);
+    color: #1a5f9a;
+    border-color: rgba(77,184,232,0.5);
+  }
+
+  /* Hero section */
+  .hero {
+    padding: 44px 40px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(77,184,232,0.3), rgba(46,196,182,0.2));
+    border: 1px solid rgba(77,184,232,0.4);
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a6a8a;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text-dark);
+    text-shadow: 0 2px 8px rgba(255,255,255,0.6), 0 1px 2px rgba(0,60,120,0.1);
+    line-height: 1.2;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #1a7bbf, #2ec4b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto 28px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-primary {
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(180deg, #5dc8f0 0%, #2a9fd6 45%, #1a7bbf 100%);
+    box-shadow:
+      0 6px 20px rgba(30,100,200,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      inset 0 -2px 4px rgba(0,60,150,0.3);
+    text-shadow: 0 1px 2px rgba(0,60,120,0.3);
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(30,100,200,0.45), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  .btn-secondary {
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    border: 1px solid rgba(255,255,255,0.7);
+    cursor: pointer;
+    background: rgba(255,255,255,0.5);
+    box-shadow: 0 4px 14px rgba(30,100,200,0.1), inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.75);
+    transform: translateY(-2px);
+  }
+
+  /* Water droplet decorations */
+  .drops {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .drop {
+    position: absolute;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 35% 30%,
+      rgba(255,255,255,0.7) 0%,
+      rgba(180,230,255,0.3) 50%,
+      rgba(100,180,230,0.1) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);
+  }
+
+  .drop1 { width: 18px; height: 22px; top: 15%; right: 12%; opacity: 0.7; }
+  .drop2 { width: 12px; height: 15px; top: 35%; right: 8%; opacity: 0.5; }
+  .drop3 { width: 22px; height: 27px; bottom: 20%; left: 8%; opacity: 0.6; }
+  .drop4 { width: 10px; height: 12px; bottom: 35%; left: 15%; opacity: 0.4; }
+  .drop5 { width: 16px; height: 20px; top: 60%; right: 18%; opacity: 0.5; }
+
+  /* Article cards grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    padding: 28px;
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 16px 48px rgba(31,120,180,0.22),
+      inset 0 1px 0 rgba(255,255,255,0.95),
+      inset 0 -1px 0 rgba(255,255,255,0.4);
+  }
+
+  .card-tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tag-blue { background: rgba(77,184,232,0.25); color: #1a6a8a; border: 1px solid rgba(77,184,232,0.35); }
+  .tag-green { background: rgba(87,204,153,0.25); color: #1a6a3a; border: 1px solid rgba(87,204,153,0.35); }
+  .tag-teal { background: rgba(46,196,182,0.25); color: #0d5c55; border: 1px solid rgba(46,196,182,0.35); }
+  .tag-sky { background: rgba(135,206,235,0.3); color: #1a4a6a; border: 1px solid rgba(135,206,235,0.4); }
+
+  .card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    line-height: 1.35;
+    text-shadow: 0 1px 3px rgba(255,255,255,0.6);
+    position: relative;
+    z-index: 2;
+  }
+
+  .card p {
+    font-size: 13.5px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-date {
+    font-size: 12px;
+    color: #5a8a9f;
+    font-weight: 600;
+  }
+
+  .card-arrow {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(77,184,232,0.3), rgba(30,120,200,0.2));
+    border: 1px solid rgba(77,184,232,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #1a6a8a;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    transition: all 0.2s;
+  }
+
+  .card:hover .card-arrow {
+    background: linear-gradient(135deg, rgba(77,184,232,0.5), rgba(30,120,200,0.35));
+    transform: translateX(2px);
+  }
+
+  /* Featured wide card */
+  .card-wide {
+    grid-column: 1 / -1;
+    padding: 36px 40px;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .card-wide-content { flex: 1; }
+
+  .card-wide-visual {
+    width: 160px;
+    height: 120px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg,
+      rgba(77,184,232,0.4) 0%,
+      rgba(46,196,182,0.3) 50%,
+      rgba(87,204,153,0.4) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), 0 4px 16px rgba(30,120,180,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-wide-visual::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+    border-radius: 14px 14px 60% 60%;
+  }
+
+  .card-wide h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  /* Sidebar widget */
+  .layout-with-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 20px;
+  }
+
+  .widget {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .widget h4 {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #1a6a8a;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tag-pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tag-pill:hover { transform: translateY(-2px); }
+
+  .progress-item {
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+
+  .progress-track {
+    height: 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.7);
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,80,160,0.1);
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #4db8e8, #2ec4b6);
+    box-shadow: 0 0 8px rgba(77,184,232,0.5);
+    position: relative;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 4px;
+    right: 4px;
+    height: 3px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 10px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 24px 36px;
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .footer p {
+    font-size: 13px;
+    color: #5a8a9f;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Orb decorations floating */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .orb1 {
+    width: 300px; height: 300px;
+    bottom: 80px; left: -80px;
+    background: radial-gradient(circle at 40% 35%, rgba(87,204,153,0.4), rgba(46,196,182,0.1));
+    filter: blur(20px);
+  }
+
+  .orb2 {
+    width: 200px; height: 200px;
+    top: 200px; right: -50px;
+    background: radial-gradient(circle at 40% 35%, rgba(77,184,232,0.3), rgba(30,120,200,0.05));
+    filter: blur(15px);
+  }
+
+  /* Floating bubbles */
+  .bubbles {
+    position: fixed;
+    bottom: 120px;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+    height: 300px;
+  }
+
+  .bubble {
+    position: absolute;
+    bottom: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%,
+      rgba(255,255,255,0.6) 0%,
+      rgba(180,230,255,0.2) 60%,
+      transparent 100%
+    );
+    border: 1px solid rgba(255,255,255,0.5);
+    animation: rise linear infinite;
+  }
+
+  @keyframes rise {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-320px) translateX(20px); opacity: 0; }
+  }
+
+  .b1 { width:18px; height:18px; left:10%; animation-duration:6s; animation-delay:0s; }
+  .b2 { width:12px; height:12px; left:25%; animation-duration:8s; animation-delay:-2s; }
+  .b3 { width:22px; height:22px; left:45%; animation-duration:7s; animation-delay:-4s; }
+  .b4 { width:10px; height:10px; left:65%; animation-duration:9s; animation-delay:-1s; }
+  .b5 { width:16px; height:16px; left:80%; animation-duration:6.5s; animation-delay:-3s; }
+  .b6 { width:8px; height:8px; left:90%; animation-duration:10s; animation-delay:-5s; }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .card-wide { flex-direction: column; }
+    .card-wide-visual { width: 100%; }
+    .layout-with-sidebar { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 28px; }
+    nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sky-bg"></div>
+<div class="sun"></div>
+
+<div class="clouds">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="cloud c4"></div>
+</div>
+
+<div class="ground"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="bubbles">
+  <div class="bubble b1"></div>
+  <div class="bubble b2"></div>
+  <div class="bubble b3"></div>
+  <div class="bubble b4"></div>
+  <div class="bubble b5"></div>
+  <div class="bubble b6"></div>
+</div>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="glass header">
+    <div class="drops">
+      <div class="drop drop1"></div><div class="drop drop2"></div>
+    </div>
+    <div class="logo">
+      <div class="logo-orb"></div>
+      <div class="logo-text">Aero<span>Blog</span></div>
+    </div>
+    <nav>
+      <a href="#" class="active">首页</a>
+      <a href="#">技术</a>
+      <a href="#">医学</a>
+      <a href="#">项目</a>
+      <a href="#">关于</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="glass hero">
+    <div class="drops">
+      <div class="drop drop3"></div>
+      <div class="drop drop4"></div>
+      <div class="drop drop5"></div>
+    </div>
+    <div class="hero-tag">✦ 医学生的数字花园</div>
+    <h1>探索<em>科技与医学</em>的<br>无限可能</h1>
+    <p>分享3D打印、机器人、自动化与临床见习的交叉地带——这里是我的实验室日志。</p>
+    <div class="hero-btns">
+      <button class="btn-primary">📖 开始阅读</button>
+      <button class="btn-secondary">🔬 我的项目</button>
+    </div>
+  </section>
+
+  <!-- Main content + sidebar -->
+  <div class="layout-with-sidebar">
+    <main>
+      <!-- Wide featured card -->
+      <div class="grid">
+        <div class="glass card card-wide">
+          <div class="drops">
+            <div class="drop drop1"></div>
+          </div>
+          <div class="card-wide-content">
+            <span class="card-tag tag-blue">🌟 精选</span>
+            <h3>用3D打印制作骨科辅助夹板——从CT数据到实物的全流程</h3>
+            <p>记录我在见习期间尝试将DICOM影像数据转换为可打印模型的完整探索，包括Meshmixer处理与参数优化。</p>
+            <div class="card-meta">
+              <span class="card-date">📅 2025年11月 · 8分钟阅读</span>
+              <div class="card-arrow">→</div>
+            </div>
+          </div>
+          <div class="card-wide-visual">🦴</div>
+        </div>
+
+        <div class="glass card">
+          <div class="drops"><div class="drop drop2"></div></div>
+          <span class="card-tag tag-green">🤖 机器人</span>
+          <h3>用树莓派+Arduino搭建第一个医疗辅助机械臂</h3>
+          <p>从零开始的六轴机械臂项目记录，ROS2环境配置与逆运动学实现。</p>
+          <div class="card-meta">
+            <span class="card-date">📅 2025年10月</span>
+            <div class="card-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="glass card">
+          <div class="drops"><div class="drop drop3"></div></div>
+          <span class="card-tag tag-teal">⚡ 自动化</span>
+          <h3>用Python自动整理病历PDF：一个周末小工具</h3>
+          <p>几十行代码解决手工整理的痛苦，顺便学会了PyMuPDF和正则表达式。</p>
+          <div class="card-meta">
+            <span class="card-date">📅 2025年9月</span>
+            <div class="card-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="glass card">
+          <div class="drops"><div class="drop drop4"></div></div>
+          <span class="card-tag tag-sky">🏥 见习记</span>
+          <h3>骨科见习第一周：手术室里的观察笔记</h3>
+          <p>第一次站在手术台边，记录那些课本上没有的细节和感受。</p>
+          <div class="card-meta">
+            <span class="card-date">📅 2025年8月</span>
+            <div class="card-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="glass card">
+          <div class="drops"><div class="drop drop5"></div></div>
+          <span class="card-tag tag-blue">💡 工具</span>
+          <h3>Claude Code实战：让AI帮我写Arduino固件</h3>
+          <p>第一次用AI编程工具完成一个真实项目是什么体验，诚实的踩坑记录。</p>
+          <div class="card-meta">
+            <span class="card-date">📅 2025年12月</span>
+            <div class="card-arrow">→</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside>
+      <div class="glass widget">
+        <div class="drops"><div class="drop drop1"></div></div>
+        <h4>🏷 标签云</h4>
+        <div class="tag-cloud">
+          <span class="tag-pill tag-blue">3D打印</span>
+          <span class="tag-pill tag-green">机器人</span>
+          <span class="tag-pill tag-teal">Python</span>
+          <span class="tag-pill tag-sky">骨科</span>
+          <span class="tag-pill tag-blue">Arduino</span>
+          <span class="tag-pill tag-green">医学影像</span>
+          <span class="tag-pill tag-teal">自动化</span>
+          <span class="tag-pill tag-sky">AI工具</span>
+          <span class="tag-pill tag-blue">ROS2</span>
+        </div>
+      </div>
+
+      <div class="glass widget">
+        <div class="drops"><div class="drop drop2"></div></div>
+        <h4>📊 技能进度</h4>
+        <div class="progress-item">
+          <div class="progress-label"><span>3D建模</span><span>72%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Python</span><span>85%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>Arduino</span><span>60%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:60%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>临床技能</span><span>45%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:45%"></div></div>
+        </div>
+      </div>
+
+      <div class="glass widget">
+        <div class="drops"><div class="drop drop3"></div></div>
+        <h4>🌤 今日状态</h4>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.7;position:relative;z-index:2">
+          在骨科病房见习第23天 🏥<br>
+          今晚调试机械臂夹爪 🤖<br>
+          打印进度：87% ✅
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="glass footer">
+    <div class="drops"><div class="drop drop1"></div></div>
+    <p>☁️ AeroBlog · 用清澈的眼睛看技术与医学 · 2025</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
