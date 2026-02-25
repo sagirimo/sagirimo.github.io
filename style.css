@@ -858,19 +858,18 @@ body {
     --aero-text-mid: #2d6a7f;
 }
 
-/* Sky background - 纯蓝色天空渐变 */
+/* Sky background - 照抄原版 .sky-bg */
 [data-style="frutiger"] body {
-    background: #a8d8ea;
+    background: transparent;
 }
 
-[data-style="frutiger"] body::before {
-    content: '';
+[data-style="frutiger"] .aero-sky-bg {
     position: fixed;
     inset: 0;
-    z-index: -2;
+    z-index: 0;
     background:
-        radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.6) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 10%, rgba(180, 230, 255, 0.5) 0%, transparent 40%),
+        radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.6) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 10%, rgba(180,230,255,0.5) 0%, transparent 40%),
         linear-gradient(180deg,
             #c9eeff 0%,
             #87ceeb 30%,
@@ -882,6 +881,7 @@ body {
     pointer-events: none;
 }
 
+[data-style="frutiger"] body::before,
 [data-style="frutiger"] body::after {
     display: none;
 }
@@ -893,32 +893,35 @@ body {
 }
 
 [data-style="frutiger"] .sidebar {
-    background: transparent;
+    background: var(--aero-glass-bg);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-right: 1px solid var(--aero-glass-border);
 }
 
 [data-style="frutiger"] .logo-name {
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0, 50, 100, 0.3);
+    color: var(--aero-text-dark);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 [data-style="frutiger"] .logo-title,
 [data-style="frutiger"] .logo-desc {
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 1px 2px rgba(0, 50, 100, 0.3);
+    color: var(--aero-text-mid);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 [data-style="frutiger"] .nav-link {
-    color: rgba(255, 255, 255, 0.8);
-    text-shadow: 0 1px 2px rgba(0, 50, 100, 0.3);
+    color: var(--aero-text-mid);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 [data-style="frutiger"] .nav-link:hover,
 [data-style="frutiger"] .nav-link.active {
-    color: #fff;
+    color: var(--aero-text-dark);
 }
 
 [data-style="frutiger"] .icon-btn {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--aero-text-mid);
 }
 
 [data-style="frutiger"] .icon-btn:hover {
@@ -1107,7 +1110,7 @@ body {
     box-shadow:
         0 0 80px 40px rgba(255, 200, 0, 0.3),
         0 0 200px 100px rgba(255, 180, 0, 0.15);
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
 }
 
@@ -1118,7 +1121,7 @@ body {
     left: 0;
     right: 0;
     height: 120px;
-    z-index: -1;
+    z-index: 1;
     background: linear-gradient(180deg, #5cb85c 0%, #3d8b3d 40%, #2d6b2d 100%);
     border-radius: 60% 60% 0 0 / 30px 30px 0 0;
     box-shadow: 0 -10px 40px rgba(50, 150, 50, 0.3);
@@ -1140,7 +1143,7 @@ body {
 [data-style="frutiger"] .aero-clouds {
     position: fixed;
     inset: 0;
-    z-index: -1;
+    z-index: 1;
     overflow: hidden;
     pointer-events: none;
 }
@@ -1192,7 +1195,7 @@ body {
     left: 0;
     right: 0;
     pointer-events: none;
-    z-index: -1;
+    z-index: 1;
     overflow: hidden;
     height: 300px;
 }
@@ -1253,11 +1256,12 @@ body {
 [data-style="frutiger"] .aero-drop.d4 { width: 10px; height: 12px; bottom: 35%; left: 15%; opacity: 0.4; }
 
 /* 非 Frutiger 模式隐藏装饰元素 */
-:not([data-style="frutiger"]) .aero-sun,
-:not([data-style="frutiger"]) .aero-ground,
-:not([data-style="frutiger"]) .aero-clouds,
-:not([data-style="frutiger"]) .aero-bubbles,
-:not([data-style="frutiger"]) .aero-drops {
+html:not([data-style="frutiger"]) .aero-sky-bg,
+html:not([data-style="frutiger"]) .aero-sun,
+html:not([data-style="frutiger"]) .aero-ground,
+html:not([data-style="frutiger"]) .aero-clouds,
+html:not([data-style="frutiger"]) .aero-bubbles,
+html:not([data-style="frutiger"]) .aero-drops {
     display: none !important;
 }
 
