@@ -1090,7 +1090,7 @@ body {
    Frutiger Aero 装饰元素
    ============================================ */
 
-/* 太阳 */
+/* 太阳 - 默认显示 */
 [data-style="frutiger"] .aero-sun {
     position: fixed;
     top: -80px;
@@ -1109,15 +1109,9 @@ body {
         0 0 200px 100px rgba(255, 180, 0, 0.15);
     z-index: -1;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
 }
 
-[data-style="frutiger"] .aero-sun.active {
-    opacity: 1;
-}
-
-/* 草地 */
+/* 草地 - 默认显示 */
 [data-style="frutiger"] .aero-ground {
     position: fixed;
     bottom: 0;
@@ -1129,12 +1123,6 @@ body {
     border-radius: 60% 60% 0 0 / 30px 30px 0 0;
     box-shadow: 0 -10px 40px rgba(50, 150, 50, 0.3);
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-[data-style="frutiger"] .aero-ground.active {
-    opacity: 1;
 }
 
 [data-style="frutiger"] .aero-ground::before {
@@ -1157,7 +1145,7 @@ body {
     pointer-events: none;
 }
 
-/* 单个云朵 */
+/* 单个云朵 - 默认显示 */
 [data-style="frutiger"] .aero-cloud {
     position: absolute;
     border-radius: 50px;
@@ -1165,12 +1153,6 @@ body {
     filter: blur(2px);
     box-shadow: 0 0 40px rgba(255, 255, 255, 0.6), inset 0 -4px 10px rgba(180, 220, 255, 0.3);
     animation: aeroCloudDrift linear infinite;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-[data-style="frutiger"] .aero-cloud.active {
-    opacity: 1;
 }
 
 [data-style="frutiger"] .aero-cloud::before,
@@ -1182,24 +1164,24 @@ body {
     box-shadow: inherit;
 }
 
-/* 云朵变体 */
-[data-style="frutiger"] .aero-cloud.c1 { width: 200px; height: 55px; top: 8%; animation-duration: 55s; }
+/* 云朵变体 - 完全照抄原版 HTML */
+[data-style="frutiger"] .aero-cloud.c1 { width: 200px; height: 55px; top: 8%; left: -220px; opacity: 0.9; animation-duration: 55s; animation-delay: 0s; }
 [data-style="frutiger"] .aero-cloud.c1::before { width: 90px; height: 70px; top: -35px; left: 30px; }
 [data-style="frutiger"] .aero-cloud.c1::after { width: 70px; height: 55px; top: -25px; left: 90px; }
 
-[data-style="frutiger"] .aero-cloud.c2 { width: 280px; height: 65px; top: 15%; animation-duration: 70s; animation-delay: -20s; }
+[data-style="frutiger"] .aero-cloud.c2 { width: 280px; height: 65px; top: 15%; left: -300px; opacity: 0.7; animation-duration: 70s; animation-delay: -20s; }
 [data-style="frutiger"] .aero-cloud.c2::before { width: 110px; height: 80px; top: -40px; left: 50px; }
 [data-style="frutiger"] .aero-cloud.c2::after { width: 90px; height: 60px; top: -30px; left: 140px; }
 
-[data-style="frutiger"] .aero-cloud.c3 { width: 160px; height: 45px; top: 5%; animation-duration: 45s; animation-delay: -10s; }
+[data-style="frutiger"] .aero-cloud.c3 { width: 160px; height: 45px; top: 5%; left: -180px; opacity: 0.6; animation-duration: 45s; animation-delay: -10s; }
 [data-style="frutiger"] .aero-cloud.c3::before { width: 70px; height: 55px; top: -28px; left: 25px; }
 
-[data-style="frutiger"] .aero-cloud.c4 { width: 320px; height: 70px; top: 22%; animation-duration: 80s; animation-delay: -35s; }
+[data-style="frutiger"] .aero-cloud.c4 { width: 320px; height: 70px; top: 22%; left: -340px; opacity: 0.5; animation-duration: 80s; animation-delay: -35s; }
 [data-style="frutiger"] .aero-cloud.c4::before { width: 130px; height: 90px; top: -45px; left: 60px; }
 [data-style="frutiger"] .aero-cloud.c4::after { width: 100px; height: 70px; top: -35px; left: 170px; }
 
 @keyframes aeroCloudDrift {
-    from { transform: translateX(-350px); }
+    from { transform: translateX(0); }
     to { transform: translateX(calc(100vw + 400px)); }
 }
 
@@ -1215,7 +1197,7 @@ body {
     height: 300px;
 }
 
-/* 单个气泡 */
+/* 单个气泡 - 默认显示 */
 [data-style="frutiger"] .aero-bubble {
     position: absolute;
     bottom: 0;
@@ -1227,12 +1209,6 @@ body {
     );
     border: 1px solid rgba(255, 255, 255, 0.5);
     animation: aeroBubbleRise linear infinite;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-[data-style="frutiger"] .aero-bubble.active {
-    opacity: 1;
 }
 
 @keyframes aeroBubbleRise {
@@ -1242,8 +1218,8 @@ body {
     100% { transform: translateY(-320px) translateX(20px); opacity: 0; }
 }
 
-/* 气泡变体 */
-[data-style="frutiger"] .aero-bubble.b1 { width: 18px; height: 18px; left: 10%; animation-duration: 6s; }
+/* 气泡变体 - 完全照抄原版 HTML (只有 b1-b6) */
+[data-style="frutiger"] .aero-bubble.b1 { width: 18px; height: 18px; left: 10%; animation-duration: 6s; animation-delay: 0s; }
 [data-style="frutiger"] .aero-bubble.b2 { width: 12px; height: 12px; left: 25%; animation-duration: 8s; animation-delay: -2s; }
 [data-style="frutiger"] .aero-bubble.b3 { width: 22px; height: 22px; left: 45%; animation-duration: 7s; animation-delay: -4s; }
 [data-style="frutiger"] .aero-bubble.b4 { width: 10px; height: 10px; left: 65%; animation-duration: 9s; animation-delay: -1s; }
