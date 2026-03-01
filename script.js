@@ -566,6 +566,56 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ========================================
+// 雅思词库入口 - 输入 "ielts"
+// ========================================
+
+const ieltsCode = 'ielts';
+let ieltsBuffer = '';
+let ieltsTimer = null;
+
+document.addEventListener('keydown', (e) => {
+    // 只在首页生效
+    if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/' && !window.location.pathname.endsWith('/')) {
+        return;
+    }
+
+    // 忽略输入框内的按键
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+    }
+
+    // 累积按键
+    ieltsBuffer += e.key.toLowerCase();
+
+    // 只保留最后5个字符
+    if (ieltsBuffer.length > 5) {
+        ieltsBuffer = ieltsBuffer.slice(-5);
+    }
+
+    // 清除之前的计时器
+    if (ieltsTimer) clearTimeout(ieltsTimer);
+
+    // 3秒内无输入则重置
+    ieltsTimer = setTimeout(() => {
+        ieltsBuffer = '';
+    }, 3000);
+
+    // 匹配成功
+    if (ieltsBuffer === ieltsCode) {
+        ieltsBuffer = '';
+        // 终端风格绿光闪烁
+        document.body.style.transition = 'filter 0.2s';
+        document.body.style.filter = 'brightness(0.3) sepia(1) hue-rotate(70deg) saturate(3)';
+        setTimeout(() => {
+            document.body.style.filter = 'brightness(1.5)';
+            setTimeout(() => {
+                window.location.href = 'ielts.html';
+            }, 200);
+        }, 150);
+    }
+});
+
+// ========================================
 // 乱码解码动画效果
 // ========================================
 

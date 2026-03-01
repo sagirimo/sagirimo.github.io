@@ -1,0 +1,38 @@
+[
+  {
+    "word": "Mitigate",
+    "pronunciation": "/ˈmɪt̬.ə.ɡeɪt/",
+    "meaning": "缓解 / 减轻",
+    "context": "Use a 3D guide to mitigate the risk of drilling errors."
+  },
+  {
+    "word": "Vulnerable",
+    "pronunciation": "/ˈvʌl.nɚ.ə.bəl/",
+    "meaning": "极易受伤害的 / 有漏洞的",
+    "context": "A patient with osteoporosis is vulnerable to fractures."
+  },
+  {
+    "word": "Flaw",
+    "pronunciation": "/flɑː/",
+    "meaning": "设计缺陷",
+    "context": "A design flaw in the surgical guide mechanics."
+  },
+  {
+    "word": "Replicate",
+    "pronunciation": "/ˈrep.lɪ.keɪt/",
+    "meaning": "复现 (实验结果)",
+    "context": "We need to replicate the clinical results in rural hospitals."
+  },
+  {
+    "word": "Empirical",
+    "pronunciation": "/ɪmˈpɪr.ɪ.kəl/",
+    "meaning": "基于实证的 / 真实数据的",
+    "context": "An empirical study on robotic surgery learning curves."
+  },
+  {
+    "word": "Resilient",
+    "pronunciation": "/rɪˈzɪl.jənt/",
+    "meaning": "恢复力强的 / 有弹性的",
+    "context": "Silicone is a highly resilient material for prototyping."
+  }
+]
