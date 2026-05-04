@@ -103,12 +103,13 @@ body {
     color: var(--fg);
     letter-spacing: -0.02em;
     margin-bottom: 6px;
+    font-family: var(--font-serif);
 }
 
 .logo-title {
     font-size: 0.85rem;
     color: var(--accent);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     margin-bottom: 12px;
 }
 
@@ -303,8 +304,9 @@ body {
 }
 
 .section-title {
+    font-family: var(--font-serif);
     font-size: 1.6rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--fg);
     margin-bottom: 2.5rem;
     display: flex;
@@ -336,15 +338,17 @@ body {
 }
 
 .greeting {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 1rem;
     color: var(--accent);
     margin-bottom: 1.5rem;
+    font-weight: 400;
 }
 
 .name {
+    font-family: var(--font-serif);
     font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 600;
+    font-weight: 400;
     color: var(--fg);
     line-height: 1.1;
     margin-bottom: 0.5rem;
@@ -353,7 +357,7 @@ body {
 
 .subtitle {
     font-size: clamp(1.5rem, 4vw, 3rem);
-    font-weight: 600;
+    font-weight: 400;
     color: var(--fg-secondary);
     line-height: 1.2;
     margin-bottom: 1.5rem;
@@ -368,21 +372,39 @@ body {
     line-height: 1.7;
 }
 
+.subsection-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--fg);
+    margin: 2rem 0 1rem;
+}
+
+.description {
+    font-size: 1.1rem;
+    color: var(--fg-secondary);
+    max-width: 540px;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+}
+
 .cta-btn {
     display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--accent);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
     text-decoration: none;
-    padding: 18px 40px;
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    transition: all 0.25s ease;
-    background: transparent;
+    padding: 12px 28px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
 }
 
 .cta-btn:hover {
-    background: rgba(100, 255, 218, 0.1);
+    background: var(--accent-hover);
     transform: translateY(-2px);
 }
 
@@ -446,8 +468,9 @@ body {
 }
 
 .edu-header h3 {
-    font-size: 1.15rem;
-    font-weight: 500;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 400;
     color: var(--fg);
 }
 
@@ -500,10 +523,18 @@ body {
 }
 
 .timeline-content h3 {
-    font-size: 1.05rem;
-    font-weight: 500;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
     color: var(--fg);
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
+}
+
+.project-header h3 {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--fg);
 }
 
 .timeline-content p {
@@ -610,11 +641,11 @@ body {
 }
 
 .paper-title {
+    font-family: var(--font-serif);
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--fg);
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
+    margin-bottom: 0.15rem;
 }
 
 .paper-journal {
