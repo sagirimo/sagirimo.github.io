@@ -71,9 +71,8 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 2.5rem;
-    padding: 4rem 3rem 4rem 8rem;
+    justify-content: flex-start;
+    padding: 7rem 3rem 7rem 7rem;
 }
 
 .site-name {
@@ -100,6 +99,10 @@ body {
 }
 
 /* ── Navigation ── */
+.nav {
+    margin-top: calc((100vh - 14rem) * 0.618 - 7.5rem);
+}
+
 .nav ul {
     list-style: none;
     display: flex;
@@ -156,6 +159,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    margin-top: auto;
 }
 
 .social-link {
@@ -219,7 +223,7 @@ body {
 .content {
     margin-left: 48%;
     width: 52%;
-    padding: 5rem 4rem 5rem 2rem;
+    padding: 7rem 7rem 5rem 2rem;
     counter-reset: section;
 }
 
@@ -501,13 +505,10 @@ body {
 
 @media (max-width: 1080px) {
     .sidebar {
-        padding: 4rem 2rem 4rem 4rem;
+        padding: 4rem 2rem 4rem 3rem;
     }
     .content {
-        padding: 3rem 2.5rem 3rem 2rem;
-    }
-    :root {
-        --sidebar-w: 45%;
+        padding: 4rem 3rem 3rem 2rem;
     }
 }
 
@@ -521,8 +522,11 @@ body {
         width: 100%;
         height: auto;
         padding: 2rem 1.5rem;
-        gap: 1rem;
-        justify-content: flex-start;
+    }
+
+    .nav {
+        display: none;
+        margin-top: 0;
     }
 
     .site-name {
@@ -534,11 +538,8 @@ body {
         margin-bottom: 1rem;
     }
 
-    .nav {
-        display: none;
-    }
-
     .socials {
+        margin-top: 1rem;
         gap: 0.5rem;
     }
 
@@ -563,6 +564,10 @@ body {
         margin: 0 -0.75rem;
     }
 
+    .exp-item::before {
+        inset: -0.25rem -0.5rem;
+    }
+
     .exp-meta {
         width: 100%;
         display: flex;
@@ -577,9 +582,9 @@ body {
 
 @media (min-width: 1600px) {
     .sidebar {
-        padding: 4rem 4rem 4rem 9rem;
+        padding: 7rem 4rem 7rem 8rem;
     }
     .content {
-        padding: 6rem 6rem 6rem 3rem;
+        padding: 7rem 8rem 5rem 3rem;
     }
 }
