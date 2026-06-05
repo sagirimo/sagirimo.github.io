@@ -155,56 +155,54 @@ body {
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.25rem;
 }
 
 .social-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
     color: var(--slate-light);
     transition: var(--transition);
-    border-radius: 50%;
-    position: relative;
 }
 
 .social-link:hover {
     color: var(--accent);
-    background: var(--accent-tint);
     transform: translateY(-2px);
 }
 
 .social-link svg {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.35rem;
+    height: 1.35rem;
 }
 
-.lang-btn {
+.lang-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.lang-btn {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--slate-light);
-    background: transparent;
-    border: 1.5px solid var(--navy-lightest);
-    border-radius: 50%;
+    background: none;
+    border: none;
     cursor: pointer;
     transition: var(--transition);
-    position: relative;
-    overflow: hidden;
+    padding: 0;
+    line-height: 1;
+    letter-spacing: 0;
 }
 
 .lang-btn:hover {
     color: var(--accent);
-    border-color: var(--accent);
-    background: var(--accent-tint);
+    transform: translateY(-2px);
 }
 
 .lang-btn .lang-text {
