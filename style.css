@@ -67,7 +67,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 45%;
+    width: 48%;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -217,8 +217,8 @@ body {
 
 /* ── Main Content ── */
 .content {
-    margin-left: 45%;
-    width: 55%;
+    margin-left: 48%;
+    width: 52%;
     padding: 5rem 4rem 5rem 2rem;
     counter-reset: section;
 }
