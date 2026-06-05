@@ -268,7 +268,7 @@ body {
 
 /* ── About ── */
 .about-text p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--slate);
     line-height: 1.7;
     margin-bottom: 0.85rem;
