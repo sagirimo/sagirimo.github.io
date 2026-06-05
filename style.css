@@ -489,7 +489,10 @@ body {
 
 /* ── Footer ── */
 .footer {
-    padding: 0.5rem 0;
+    padding: 6rem 0 0.5rem;
+    min-height: 40vh;
+    display: flex;
+    align-items: flex-end;
 }
 
 .footer p {
