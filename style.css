@@ -72,7 +72,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 7rem 3rem 7rem 7rem;
+    padding: 7rem 3rem 7rem 9rem;
 }
 
 .site-name {
@@ -100,7 +100,7 @@ body {
 
 /* ── Navigation ── */
 .nav {
-    margin-top: calc((100vh - 14rem) * 0.618 - 7.5rem);
+    margin-top: calc((100vh - 14rem) * 0.35 - 4rem);
 }
 
 .nav ul {
@@ -116,9 +116,9 @@ body {
     gap: 0.75rem;
     text-decoration: none;
     color: var(--slate);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.55rem 0;
     transition: var(--transition);
@@ -166,8 +166,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     color: var(--slate-light);
     transition: var(--transition);
 }
@@ -178,21 +178,21 @@ body {
 }
 
 .social-link svg {
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .lang-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 .lang-btn {
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--slate-light);
     background: none;
@@ -582,7 +582,7 @@ body {
 
 @media (min-width: 1600px) {
     .sidebar {
-        padding: 7rem 4rem 7rem 8rem;
+        padding: 7rem 4rem 7rem 10rem;
     }
     .content {
         padding: 7rem 8rem 5rem 3rem;
