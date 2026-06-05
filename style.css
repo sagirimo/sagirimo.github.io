@@ -266,6 +266,18 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Group hover: dim all items, highlight the hovered one */
+#research:hover .exp-item,
+#publications:hover .pub-item {
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+}
+
+#research .exp-item:hover,
+#publications .pub-item:hover {
+    opacity: 1;
+}
+
 /* ── About ── */
 .about-text p {
     font-size: 1.05rem;
