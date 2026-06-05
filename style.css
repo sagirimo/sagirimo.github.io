@@ -330,6 +330,8 @@ body {
     flex-shrink: 0;
     width: 110px;
     padding-top: 0.1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .exp-date {
@@ -355,6 +357,8 @@ body {
 .exp-body {
     flex: 1;
     min-width: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .exp-title {
@@ -435,6 +439,8 @@ body {
     margin-bottom: 0.1rem;
     line-height: 1.4;
     transition: var(--transition);
+    position: relative;
+    z-index: 1;
 }
 
 .pub-meta {
@@ -442,6 +448,8 @@ body {
     font-size: 0.65rem;
     color: var(--slate);
     letter-spacing: 0.04em;
+    position: relative;
+    z-index: 1;
 }
 
 /* ── Contact ── */
