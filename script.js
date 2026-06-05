@@ -70,3 +70,26 @@ function updateNavHighlight() {
 
 window.addEventListener('scroll', updateNavHighlight, { passive: true });
 updateNavHighlight();
+
+/* ── Spotlight Follow ── */
+const spotlight = document.querySelector('.spotlight');
+let sx = window.innerWidth / 2;
+let sy = window.innerHeight / 2;
+let tx = sx;
+let ty = sy;
+
+document.addEventListener('mousemove', e => {
+    tx = e.clientX;
+    ty = e.clientY;
+});
+
+function animateSpotlight() {
+    sx += (tx - sx) * 0.08;
+    sy += (ty - sy) * 0.08;
+    if (spotlight) {
+        spotlight.style.background = `radial-gradient(600px at ${sx}px ${sy}px, rgba(100,255,218,0.07), transparent 80%)`;
+    }
+    requestAnimationFrame(animateSpotlight);
+}
+
+animateSpotlight();
