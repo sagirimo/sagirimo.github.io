@@ -6,541 +6,706 @@
 <title>Research Worldline — Zhan Pengyu</title>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
     --navy: #0a192f;
+    --navy-light: #112240;
+    --navy-dark: #061223;
     --accent: #64ffda;
+    --accent-dim: rgba(100,255,218,0.55);
+    --alpha: #64ffda;
+    --beta:  #e5b4ff;
     --slate: #8892b0;
+    --slate-light: #a8b2d1;
     --white: #e6f1ff;
-    --line-main: #64ffda;
-    --line-return: #8892b0;
-    --line-active: #e6f1ff;
-    --line-faded: #3a4a6a;
-    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --mono: 'SF Mono','Fira Code','JetBrains Mono','Consolas',monospace;
+    --sans: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   }
-
+  html { scroll-behavior: smooth; }
   body {
     background: var(--navy);
     color: var(--slate);
-    font-family: 'Inter', -apple-system, sans-serif;
-    overflow-x: hidden;
+    font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
   }
 
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 3rem 2rem 6rem;
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(100,255,218,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(100,255,218,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 3rem 1.2rem 6rem; position: relative; z-index: 1; }
+  .container .section, .container .hero, .container .stats, .container .legend { max-width: 980px; margin-left: auto; margin-right: auto; }
+  .container .footer { max-width: 980px; margin-left: auto; margin-right: auto; }
+
+  /* ═══ Hero ═══ */
+  .hero { text-align: center; margin-bottom: 2.5rem; }
+  .hero .tag { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.24em; margin-bottom: 0.6rem; opacity: 0.85; }
+  .hero h1 { font-size: 2rem; font-weight: 700; color: var(--white); letter-spacing: 0.02em; margin-bottom: 0.4rem; }
+  .hero h1 span { background: linear-gradient(90deg, var(--alpha), var(--beta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .subtitle { font-family: var(--mono); font-size: 0.68rem; color: var(--slate-light); letter-spacing: 0.14em; }
+
+  /* ═══ Stats ═══ */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 2rem auto 3rem; max-width: 720px; }
+  .stat { text-align: center; padding: 0.9rem 0.5rem; border: 1px solid rgba(100,255,218,0.12); border-radius: 6px; background: rgba(17,34,64,0.35); transition: border-color 0.25s, transform 0.25s; }
+  .stat:hover { border-color: rgba(100,255,218,0.35); transform: translateY(-2px); }
+  .stat .n { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
+  .stat .l { font-family: var(--mono); font-size: 0.55rem; color: var(--slate); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* ═══ Legend ═══ */
+  .legend { display: flex; justify-content: center; gap: 1.4rem; margin-bottom: 2rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; color: var(--slate); }
+  .legend .item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend .dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+  .legend .a { background: var(--alpha); color: var(--alpha); }
+  .legend .b { background: var(--beta);  color: var(--beta); }
+
+  /* ═══ Gitgraph host ═══ */
+  .graph-host {
     position: relative;
-  }
-
-  h1 {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 0.25rem;
-    letter-spacing: 0.03em;
-  }
-  .subtitle {
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 0.12em;
-    margin-bottom: 3rem;
-    text-transform: uppercase;
-  }
-
-  /* ── SVG Line Canvas ── */
-  .worldline-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .worldline-svg line,
-  .worldline-svg path {
-    fill: none;
-  }
-
-  /* ── Timeline nodes ── */
-  .timeline {
-    position: relative;
-    z-index: 1;
-  }
-
-  .node {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    min-height: 80px;
-  }
-  .node.center {
-    justify-content: center;
-    text-align: center;
-  }
-  .node.left {
-    justify-content: flex-start;
-  }
-  .node.right {
-    justify-content: flex-end;
-  }
-
-  /* Year marker */
-  .year-marker {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
     padding: 1rem 0;
-    position: relative;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: visible;
   }
-  .year-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 12px rgba(100,255,218,0.5);
-    position: relative;
-    z-index: 2;
-    flex-shrink: 0;
-  }
-  .year-line {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    background: linear-gradient(to bottom, var(--accent), var(--accent));
-    z-index: 0;
-  }
-  .year-label {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--accent);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    margin-left: 1rem;
-    white-space: nowrap;
-  }
-  .year-label-right { margin-left: 1rem; }
-  .year-label-left { margin-right: 1rem; }
+  .graph-host svg { display: block; overflow: visible; margin: 0 auto; }
+  .graph-host svg text { font-family: var(--mono) !important; fill: var(--slate-light); font-size: 12px; }
+  .graph-host svg foreignObject { overflow: visible; }
+  .graph-host svg foreignObject > .gg-card { pointer-events: auto; }
 
-  /* Branch card */
-  .branch {
-    background: rgba(17,34,64,0.7);
-    border: 1px solid rgba(100,255,218,0.12);
+  /* ═══ Card (rendered inside foreignObject) ═══ */
+  .gg-card {
+    background: linear-gradient(180deg, rgba(17,34,64,0.94), rgba(10,25,47,0.96));
+    border: 1px solid rgba(100,255,218,0.14);
     border-radius: 6px;
-    padding: 0.8rem 1rem;
-    max-width: 420px;
+    padding: 0.7rem 0.85rem;
+    color: var(--slate-light);
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
     position: relative;
-    transition: all 0.3s ease;
+    width: 380px;
+    max-width: 380px;
+    backdrop-filter: blur(4px);
   }
-  .branch:hover {
-    border-color: rgba(100,255,218,0.3);
-    background: rgba(17,34,64,0.95);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  .gg-card:hover {
+    border-color: rgba(100,255,218,0.45);
+    background: linear-gradient(180deg, rgba(17,34,64,1), rgba(10,25,47,1));
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    transform: translateX(2px);
   }
-  .branch.returned {
-    border-color: rgba(136,146,176,0.2);
+  .gg-card[data-track="beta"]  { border-color: rgba(229,180,255,0.18); }
+  .gg-card[data-track="beta"]:hover { border-color: rgba(229,180,255,0.55); }
+  .gg-card[data-track="milestone"] {
+    background: linear-gradient(180deg, rgba(100,255,218,0.08), rgba(10,25,47,0.94));
+    border-color: rgba(100,255,218,0.35);
   }
-  .branch.active {
-    border-color: rgba(230,241,255,0.2);
+  .gg-card[data-track="divergence"] {
+    background: linear-gradient(90deg, rgba(100,255,218,0.1), rgba(229,180,255,0.1));
+    border: 1px solid;
+    border-image: linear-gradient(90deg, var(--alpha), var(--beta)) 1;
+    text-align: center;
   }
-  .branch.major {
-    border-color: rgba(100,255,218,0.25);
-    border-width: 1.5px;
-  }
-
-  .branch-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.3rem;
-    line-height: 1.3;
-  }
-  .branch-date {
-    font-family: var(--font-mono);
+  .gg-card .year-tag {
+    display: inline-block;
+    font-family: var(--mono);
     font-size: 0.6rem;
     color: var(--accent);
-    letter-spacing: 0.06em;
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
-  }
-  .branch-desc {
-    font-size: 0.78rem;
-    color: var(--slate);
-    line-height: 1.5;
-    margin-bottom: 0.35rem;
-  }
-  .branch-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-top: 0.35rem;
-  }
-  .branch-skills span {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 10px;
+    letter-spacing: 0.16em;
     background: rgba(100,255,218,0.08);
-    color: var(--accent);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
   }
-  .branch.returned .branch-skills span {
-    background: rgba(136,146,176,0.08);
-    color: var(--slate);
-  }
+  .gg-card[data-track="beta"] .year-tag { color: var(--beta); background: rgba(229,180,255,0.08); }
+  .gg-card h3 { font-size: 0.82rem; font-weight: 700; color: var(--white); margin-bottom: 0.2rem; line-height: 1.3; }
+  .gg-card .meta { font-family: var(--mono); font-size: 0.56rem; color: var(--accent); letter-spacing: 0.05em; margin-bottom: 0.35rem; }
+  .gg-card[data-track="beta"] .meta { color: var(--beta); }
+  .gg-card p { font-size: 0.72rem; color: var(--slate-light); line-height: 1.55; margin-bottom: 0.25rem; }
+  .gg-card p em { color: var(--white); font-style: italic; }
+  .gg-card hr { border: none; border-top: 1px solid rgba(100,255,218,0.09); margin: 0.5rem 0; }
+  .gg-card .hl { color: var(--accent); font-weight: 500; }
+  .gg-card[data-track="beta"] .hl { color: var(--beta); }
 
-  /* ── Spacers for layout ── */
-  .gap-sm { height: 1.5rem; }
-  .gap-md { height: 2.5rem; }
-  .gap-lg { height: 3.5rem; }
+  .gg-card .badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.45rem; }
+  .gg-card .badge { font-family: var(--mono); font-size: 0.52rem; padding: 0.14rem 0.5rem; border-radius: 3px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; font-weight: 600; }
+  .gg-card .badge.published { background: rgba(100,255,218,0.15); color: var(--accent); border: 1px solid rgba(100,255,218,0.3); }
+  .gg-card .badge.submitted { background: rgba(255,200,100,0.13); color: #ffc864; border: 1px solid rgba(255,200,100,0.3); }
+  .gg-card .badge.in-prep   { background: rgba(255,140,100,0.12); color: #ff9878; border: 1px solid rgba(255,140,100,0.3); }
+  .gg-card .badge.ongoing   { background: rgba(180,180,255,0.12); color: #b0b8ff; border: 1px solid rgba(180,180,255,0.3); }
+  .gg-card .badge.first-author { background: rgba(100,255,218,0.2); color: var(--accent); border: 1px solid var(--accent); box-shadow: 0 0 6px rgba(100,255,218,0.25); }
+  .gg-card .badge.co-author { background: rgba(200,220,255,0.08); color: var(--slate-light); border: 1px solid rgba(200,220,255,0.2); }
+  .gg-card .badge.track-a { background: rgba(100,255,218,0.13); color: var(--alpha); border: 1px solid var(--alpha); }
+  .gg-card .badge.track-b { background: rgba(229,180,255,0.13); color: var(--beta);  border: 1px solid var(--beta); }
 
-  /* ── Track Split ── */
-  .split-container {
-    display: flex;
-    gap: 3rem;
-    justify-content: center;
-    padding: 2rem 0;
-  }
-  .track {
-    flex: 0 1 380px;
-    border-top: 2px solid;
-    padding-top: 1rem;
-  }
-  .track.clinical { border-color: rgba(100,255,218,0.5); }
-  .track.csai { border-color: rgba(230,241,255,0.5); }
-  .track h3 {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-    letter-spacing: 0.04em;
-  }
-  .track.clinical h3 { color: var(--accent); }
-  .track.csai h3 { color: var(--white); }
+  .gg-card .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+  .gg-card .tags span { font-family: var(--mono); font-size: 0.54rem; padding: 0.16rem 0.5rem; border-radius: 10px; background: rgba(100,255,218,0.07); color: var(--accent); letter-spacing: 0.03em; white-space: nowrap; }
+  .gg-card[data-track="beta"] .tags span { background: rgba(229,180,255,0.08); color: var(--beta); }
 
-  /* ── Legend ── */
-  .legend {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    margin-bottom: 2.5rem;
-    flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.68rem;
-    font-family: var(--font-mono);
-    color: var(--slate);
-    letter-spacing: 0.04em;
-  }
-  .legend-line {
-    width: 28px;
-    height: 0;
-    border-top: 2px solid;
-    border-radius: 2px;
-  }
-  .legend-line.main { border-color: var(--accent); }
-  .legend-line.active { border-color: var(--white); }
-  .legend-line.returned { border-color: var(--slate); border-style: dashed; }
+  .gg-card .diverge-title { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.22em; color: var(--white); font-weight: 700; margin-bottom: 0.4rem; }
+  .gg-card .diverge-sub   { font-size: 0.78rem; color: var(--slate-light); }
+  .gg-card .diverge-sub .a { color: var(--alpha); font-weight: 600; }
+  .gg-card .diverge-sub .b { color: var(--beta);  font-weight: 600; }
 
-  /* ── S-curve connector (CSS approximation) ── */
+  /* ═══ Sections ═══ */
+  .section { margin-top: 5.5rem; }
+  .section-hdr { text-align: center; margin-bottom: 2rem; }
+  .section-hdr .l { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); letter-spacing: 0.16em; margin-bottom: 0.4rem; }
+  .section-hdr h2 { font-size: 1.4rem; font-weight: 700; color: var(--white); }
+
+  .pub-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.75rem; }
+  .pub-table thead { font-family: var(--mono); font-size: 0.58rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+  .pub-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid rgba(100,255,218,0.15); font-weight: 600; }
+  .pub-table td { padding: 0.75rem 0.8rem; border-bottom: 1px solid rgba(100,255,218,0.05); color: var(--slate-light); vertical-align: top; }
+  .pub-table tr:hover td { background: rgba(100,255,218,0.03); }
+  .pub-table .title { color: var(--white); font-weight: 500; line-height: 1.4; }
+  .pub-table .venue { font-family: var(--mono); font-size: 0.68rem; color: var(--accent); }
+  .pub-table .badge { display: inline-block; font-family: var(--mono); font-size: 0.52rem; padding: 0.14rem 0.5rem; border-radius: 3px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; font-weight: 600; }
+  .pub-table .badge.published { background: rgba(100,255,218,0.15); color: var(--accent); border: 1px solid rgba(100,255,218,0.3); }
+  .pub-table .badge.submitted { background: rgba(255,200,100,0.13); color: #ffc864; border: 1px solid rgba(255,200,100,0.3); }
+  .pub-table .badge.in-prep   { background: rgba(255,140,100,0.12); color: #ff9878; border: 1px solid rgba(255,140,100,0.3); }
+  .pub-table .badge.ongoing   { background: rgba(180,180,255,0.12); color: #b0b8ff; border: 1px solid rgba(180,180,255,0.3); }
+  .pub-table .badge.first-author { background: rgba(100,255,218,0.2); color: var(--accent); border: 1px solid var(--accent); }
+  .pub-table .badge.co-author { background: rgba(200,220,255,0.08); color: var(--slate-light); border: 1px solid rgba(200,220,255,0.2); }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+  .skill-block { background: rgba(17,34,64,0.5); border: 1px solid rgba(100,255,218,0.1); border-radius: 6px; padding: 1rem 1.1rem; transition: border-color 0.25s; }
+  .skill-block:hover { border-color: rgba(100,255,218,0.3); }
+  .skill-block h4 { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.7rem; }
+  .skill-block .skill-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .skill-block .skill-tags span { font-family: var(--mono); font-size: 0.58rem; padding: 0.2rem 0.55rem; border-radius: 10px; background: rgba(100,255,218,0.08); color: var(--slate-light); letter-spacing: 0.03em; }
+
+  .footer { text-align: center; padding: 4rem 0 0; font-family: var(--mono); font-size: 0.62rem; color: #3a4a6a; letter-spacing: 0.1em; position: relative; z-index: 1; }
+  .footer .divider { color: var(--accent); margin: 0 0.6rem; opacity: 0.5; }
+
+  .to-top {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 30;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(17,34,64,0.9); border: 1px solid rgba(100,255,218,0.25); color: var(--accent);
+    font-family: var(--mono); font-size: 0.9rem; cursor: pointer;
+    opacity: 0; transform: translateY(10px); transition: all 0.25s;
+    backdrop-filter: blur(6px);
+  }
+  .to-top.show { opacity: 1; transform: translateY(0); }
+  .to-top:hover { border-color: var(--accent); box-shadow: 0 0 14px rgba(100,255,218,0.35); }
+
   @media (max-width: 768px) {
-    .branch { max-width: 280px; }
-    .split-container { flex-direction: column; align-items: center; }
+    .container { padding: 2rem 0.5rem 4rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 1.5rem; }
+    .pub-table { font-size: 0.68rem; }
+    .pub-table th, .pub-table td { padding: 0.5rem 0.4rem; }
+    .graph-host { overflow-x: auto; }
   }
 </style>
 </head>
 <body>
-
 <div class="container">
-  <h1>Research Worldline</h1>
-  <p class="subtitle">Divergence · Convergence · Growth</p>
 
-  <div class="legend">
-    <div class="legend-item"><span class="legend-line main"></span> Main Worldline</div>
-    <div class="legend-item"><span class="legend-line active"></span> Active Branch</div>
-    <div class="legend-item"><span class="legend-line returned"></span> Returning Branch</div>
+  <div class="hero">
+    <div class="tag">◆ WORLD LINE · DIVERGENCE 1.130426 ◆</div>
+    <h1>Research <span>Worldline</span></h1>
+    <p class="subtitle">Divergence · Convergence · Growth</p>
   </div>
 
-  <!-- ═══════ SVG for curves ═══════ -->
-  <svg class="worldline-svg" viewBox="0 0 1100 1750" preserveAspectRatio="xMidYMin slice">
-    <defs>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="2" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="glowStrong">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
+  <div class="stats">
+    <div class="stat"><div class="n">6</div><div class="l">Publications</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Institutions</div></div>
+    <div class="stat"><div class="n">5+</div><div class="l">Mentors</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Years</div></div>
+  </div>
 
-    <!-- Main Worldline (vertical, center) -->
-    <line x1="550" y1="80" x2="550" y2="1680" stroke="#64ffda" stroke-width="2" filter="url(#glow)" opacity="0.8"/>
+  <div class="legend">
+    <div class="item"><span class="dot a"></span>TRACK α · CLINICAL (Prof. Chen Jing)</div>
+    <div class="item"><span class="dot b"></span>TRACK β · CS / AI (Independent)</div>
+  </div>
 
-    <!-- ═══ Branch 1: 2023 Biochemistry (RIGHT, returns) ═══ -->
-    <!-- S-curve out: (550,130) → (750,160) then parallel → return at (750,190) → (550,220) -->
-    <path d="M 550 130 C 620 130, 720 150, 750 170
-             L 750 200
-             C 720 220, 620 240, 550 240"
-          stroke="#8892b0" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+  <!-- ═══ Gitgraph ═══ -->
+  <div class="graph-host" id="gitgraph"></div>
 
-    <!-- ═══ Branch 2: 2024 Summer Psych (LEFT with sub-branch) ═══ -->
-    <!-- Main branch out left: (550,280) → (350,310) parallel to (350,340) → return at (350,370) → (550,400) -->
-    <path d="M 550 280 C 480 280, 380 300, 350 320
-             L 350 350
-             C 380 370, 480 390, 550 390"
-          stroke="#8892b0" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
-    <!-- Sub-branch: BMC Psych paper — from the parallel segment going further left -->
-    <path d="M 350 335 C 280 350, 250 380, 260 420
-             L 260 440"
-          stroke="#e6f1ff" stroke-width="1.2" opacity="0.5"/>
+  <!-- ═══ Publications ═══ -->
+  <section class="section" id="publications">
+    <div class="section-hdr">
+      <div class="l">◆ PUBLICATIONS ◆</div>
+      <h2>Peer-reviewed Output</h2>
+    </div>
+    <table class="pub-table">
+      <thead>
+        <tr>
+          <th style="width:5%;">#</th>
+          <th style="width:48%;">Title</th>
+          <th style="width:20%;">Venue</th>
+          <th style="width:14%;">Role</th>
+          <th style="width:13%;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td class="title">AI-based 3D identification of safe harvesting area of perpendicular plate of ethmoid in rhinoplasty</td>
+          <td><span class="venue">JPRAS</span></td>
+          <td><span class="badge co-author">CO-AUTHOR</span></td>
+          <td><span class="badge published">PUBLISHED 2025</span></td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td class="title">Effectiveness of MFGT for school refusal in adolescents with depressive disorders: RCT study protocol</td>
+          <td><span class="venue">BMC Psychology</span></td>
+          <td><span class="badge co-author">CO-AUTHOR</span></td>
+          <td><span class="badge published">PUBLISHED 2026</span></td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td class="title">High-Precision Universality? Learning curve, accuracy, and implant interchangeability of robotic UKA</td>
+          <td><span class="venue">Frontiers Bioeng.</span></td>
+          <td><span class="badge first-author">FIRST AUTHOR</span></td>
+          <td><span class="badge submitted">SUBMITTED</span></td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td class="title">Breast tumor localization: prone MRI to supine prediction with PointNet++ and point-cloud registration</td>
+          <td><span class="venue">IEEE JBHI</span></td>
+          <td><span class="badge first-author">FIRST AUTHOR</span></td>
+          <td><span class="badge ongoing">IN PROGRESS</span></td>
+        </tr>
+        <tr>
+          <td>05</td>
+          <td class="title">Atrial septal pacing reduces AF compared with right atrial appendage pacing</td>
+          <td><span class="venue">TBD</span></td>
+          <td><span class="badge co-author">CO-AUTHOR</span></td>
+          <td><span class="badge in-prep">IN PREP</span></td>
+        </tr>
+        <tr>
+          <td>06</td>
+          <td class="title">《读懂气胸，掌握康复的秘诀》 — Pneumothorax patient education handbook</td>
+          <td><span class="venue">Medical Popular Science</span></td>
+          <td><span class="badge co-author">EDITOR</span></td>
+          <td><span class="badge published">PUBLISHED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-    <!-- ═══ Branch 3: 2024 Sept Plastic Surgery PKU 3rd (RIGHT, MAJOR) ═══ -->
-    <!-- S-curve out: (550,420) → (720,450) — long parallel segment — continues to 2026 -->
-    <path d="M 550 420 C 650 420, 720 440, 740 460
-             L 740 750"
-          stroke="#e6f1ff" stroke-width="1.8" opacity="0.7" filter="url(#glow)"/>
-    <!-- Sub: JPRAS paper node on this branch -->
-    <circle cx="740" cy="580" r="4" fill="#64ffda" opacity="0.8"/>
-
-    <!-- ═══ Branch 4: 2025 April Aerospace Center Hospital — MAIN LINE continues ═══ -->
-    <!-- Main line is already drawn. Small accent at the entry point -->
-    <circle cx="550" cy="500" r="5" fill="#64ffda" filter="url(#glowStrong)"/>
-
-    <!-- ═══ Branch 5: 2025 Cardiology meta (LEFT, returns) ═══ -->
-    <path d="M 550 570 C 500 570, 420 590, 400 610
-             L 400 630
-             C 420 650, 500 670, 550 670"
-          stroke="#8892b0" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
-
-    <!-- ═══ Branch 6: 2025 Clinical Reasoning (RIGHT, small, returns) ═══ -->
-    <path d="M 550 620 C 590 620, 650 635, 670 650
-             L 670 665
-             C 650 680, 590 695, 550 695"
-          stroke="#8892b0" stroke-width="1.2" stroke-dasharray="3,3" opacity="0.5"/>
-
-    <!-- ═══ TRACK SPLIT: 2025 → ═══ -->
-    <!-- Split point -->
-    <circle cx="550" cy="780" r="6" fill="#64ffda" filter="url(#glowStrong)"/>
-
-    <!-- Left Track: Clinical Research -->
-    <path d="M 550 780 C 470 800, 400 820, 380 850
-             L 380 1050"
-          stroke="#64ffda" stroke-width="2" opacity="0.6"/>
-
-    <!-- Right Track: CS/AI Research -->
-    <path d="M 550 780 C 630 800, 700 820, 720 850
-             L 720 1050"
-          stroke="#e6f1ff" stroke-width="2" opacity="0.7"/>
-
-    <!-- ═══ Left Track sub-branches (Clinical) ═══ -->
-    <!-- UKA Study -->
-    <circle cx="380" cy="890" r="4" fill="#64ffda"/>
-    <!-- ACL NSFC -->
-    <circle cx="380" cy="930" r="4" fill="#64ffda"/>
-    <!-- 3D Guide -->
-    <circle cx="380" cy="970" r="4" fill="#64ffda"/>
-
-    <!-- ═══ Right Track sub-branches (CS/AI) ═══ -->
-    <!-- Breast Tumor -->
-    <circle cx="720" cy="890" r="4" fill="#e6f1ff"/>
-    <!-- Graphiti -->
-    <circle cx="720" cy="930" r="4" fill="#e6f1ff"/>
-    <!-- Embodied AI -->
-    <circle cx="720" cy="970" r="4" fill="#e6f1ff"/>
-
-    <!-- ═══ Branch labels (positioned via SVG text) ═══ -->
-    <g font-family="'SF Mono','Fira Code',monospace" font-size="9" fill="#8892b0" letter-spacing="0.5">
-      <!-- Year markers on main line -->
-      <text x="570" y="95" fill="#64ffda" font-size="11" font-weight="600">2023</text>
-      <text x="570" y="270" fill="#64ffda" font-size="11" font-weight="600">2024</text>
-      <text x="570" y="490" fill="#64ffda" font-size="11" font-weight="600">2025</text>
-      <text x="570" y="775" fill="#64ffda" font-size="11" font-weight="600">2026</text>
-
-      <!-- Return annotations -->
-      <text x="760" y="188" fill="#8892b0" font-size="7" opacity="0.6">↺ RETURN</text>
-      <text x="330" y="365" fill="#8892b0" font-size="7" opacity="0.6">↺ RETURN</text>
-      <text x="380" y="640" fill="#8892b0" font-size="7" opacity="0.6">↺ RETURN</text>
-    </g>
-  </svg>
-
-  <!-- ═══════ HTML Overlay: Branch Cards ═══════ -->
-  <div class="timeline">
-
-    <!-- ── 2023 ── -->
-    <div style="display:flex;justify-content:center;padding:1rem 0 3rem;">
-      <div class="branch returned" style="margin-left:auto;margin-right:0;width:380px;">
-        <div class="branch-title">Basic Biochemistry Research</div>
-        <div class="branch-date">2023 · Independent Exploration</div>
-        <div class="branch-desc">
-          Wrote first &amp; second literature reviews. Learned the fundamentals of academic workflow — from literature retrieval to citation management. Though unpublished, this phase laid the groundwork for all subsequent research.
-        </div>
-        <div class="branch-skills">
-          <span>Endnote</span><span>Zotero</span><span>PubMed</span><span>Citation Format</span><span>Literature Review</span><span>Paper Structure</span>
-        </div>
+  <!-- ═══ Skill Matrix ═══ -->
+  <section class="section" id="skills">
+    <div class="section-hdr">
+      <div class="l">◆ SKILL MATRIX ◆</div>
+      <h2>Competencies</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-block">
+        <h4>Clinical Research</h4>
+        <div class="skill-tags"><span>RCT Design</span><span>Meta-Analysis (PRISMA)</span><span>SPSS</span><span>NSFC Grant</span><span>Clinical Data Collection</span><span>Study Protocol</span></div>
+      </div>
+      <div class="skill-block">
+        <h4>Medical Imaging</h4>
+        <div class="skill-tags"><span>3D Slicer</span><span>Mimics</span><span>SimpleITK</span><span>Open3D</span><span>DICOM / NIfTI / STL</span><span>CT / MRI Segmentation</span></div>
+      </div>
+      <div class="skill-block">
+        <h4>Deep Learning · AI</h4>
+        <div class="skill-tags"><span>PyTorch</span><span>PointNet++</span><span>Diffusion Models</span><span>GraphRAG</span><span>Knowledge Graph</span><span>LLM Agents</span></div>
+      </div>
+      <div class="skill-block">
+        <h4>Academic Craft</h4>
+        <div class="skill-tags"><span>Scientific Writing</span><span>Peer Review</span><span>Presentation</span><span>Endnote / Zotero</span><span>PubMed / MeSH</span></div>
+      </div>
+      <div class="skill-block">
+        <h4>Clinical Practice</h4>
+        <div class="skill-tags"><span>Orthopedic Robotics</span><span>CT Pre-op Planning</span><span>Differential Diagnosis</span><span>Bayesian Reasoning</span></div>
+      </div>
+      <div class="skill-block">
+        <h4>Programming</h4>
+        <div class="skill-tags"><span>Python</span><span>PyTorch</span><span>C++</span><span>Git</span><span>Linux / Bash</span><span>LaTeX</span></div>
       </div>
     </div>
+  </section>
 
-    <!-- ── 2024 Summer: Psych ── -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:1.5rem 0 3rem;">
-      <!-- Psych branch — LEFT -->
-      <div>
-        <div class="branch returned" style="width:370px;">
-          <div class="branch-title">Psychiatry &amp; Clinical Research @ PKU Sixth Hospital</div>
-          <div class="branch-date">2024.07 – 2024.10 · Prof. Qian Ying</div>
-          <div class="branch-desc">
-            First exposure to clinical research methodology. Learned statistical analysis, meta-analysis workflows, methodology &amp; results interpretation. Psychiatry's rigorous statistical tradition shaped my understanding of evidence quality.
-          </div>
-          <div class="branch-skills">
-            <span>Statistics</span><span>Meta-Analysis</span><span>RCT</span><span>MFGT</span><span>Clinical Methodology</span><span>Data Collection</span><span>SPSS</span>
-          </div>
-        </div>
-        <!-- Sub-branch: BMC Psych paper -->
-        <div style="margin-top:0.6rem;margin-left:2rem;">
-          <div class="branch active" style="width:320px;">
-            <div class="branch-title">📄 BMC Psychology Publication</div>
-            <div class="branch-date">Published 2026</div>
-            <div class="branch-desc">
-              Effectiveness of Multi-Family Group Therapy for School Refusal in Adolescents with Depressive Disorders: RCT Study Protocol.
-            </div>
-            <div class="branch-skills">
-              <span>BMC Psychology</span><span>Co-Author</span><span>Study Protocol</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Main line context — RIGHT, empty spacer -->
-      <div style="width:370px;"></div>
-    </div>
+  <div class="footer">WORLD LINE <span class="divider">·</span> CONTINUING <span class="divider">·</span> 2026 →</div>
 
-    <!-- ── 2024 Sept: Plastic Surgery (MAJOR BRANCH) ── -->
-    <div style="display:flex;justify-content:flex-end;padding:1.5rem 0 4rem;">
-      <div>
-        <div class="branch major active" style="width:390px;">
-          <div class="branch-title">Plastic Surgery AI Lab @ PKU Third Hospital</div>
-          <div class="branch-date">2024.09 – 2026.05 · Prof. An Yang · First Formal Research Group</div>
-          <div class="branch-desc">
-            Weekly journal clubs covering plastic surgery advances — basic research, clinical study design, surgical techniques, and imaging. Read extensively and built foundational knowledge in academic plastic surgery. Assisted with textbook editing, surgical video narration, and peer review (co-authored numerous reviews).
-          </div>
-          <div class="branch-desc" style="margin-top:0.4rem;">
-            <strong style="color:#e6f1ff;">Key contribution:</strong> Co-authored AI-guided surgical navigation paper (JPRAS 2025). Performed 1/3 of patient nasal septum segmentation. First exposure to medical imaging &amp; machine learning.
-          </div>
-          <div class="branch-skills">
-            <span>3D Slicer</span><span>Mimics</span><span>STL</span><span>CT Imaging</span><span>Segmentation</span><span>Machine Learning</span><span>Peer Review</span><span>JPRAS</span><span>Academic Writing</span><span>Journal Club</span>
-          </div>
-        </div>
-      </div>
-    </div>
+</div><!-- /.container -->
 
-    <!-- ── 2025 April: Aerospace Center Hospital (MAIN LINE) ── -->
-    <div style="display:flex;justify-content:center;padding:2rem 0 3rem;">
-      <div style="text-align:center;max-width:500px;">
-        <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;color:#64ffda;letter-spacing:0.1em;margin-bottom:0.6rem;">◆ MAIN WORLDLINE ENTRY POINT ◆</div>
-        <div style="font-size:0.9rem;font-weight:600;color:#e6f1ff;margin-bottom:0.3rem;">Aerospace Center Hospital</div>
-        <div style="font-size:0.78rem;color:#8892b0;line-height:1.5;">
-          2025.04 – 2025.09 · Clinical rotations &amp; exploration period<br>
-          Met mentors, explored diverse research directions, discovered orthopedic robotics.
-        </div>
-        <div class="branch-skills" style="justify-content:center;margin-top:0.5rem;">
-          <span>Clinical Practice</span><span>Orthopedics</span><span>Mentorship</span><span>Direction Finding</span>
-        </div>
-      </div>
-    </div>
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
 
-    <!-- ── 2025 Divergent Branches ── -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:1rem 0 3rem;">
-      <!-- Cardiology — LEFT -->
-      <div class="branch returned" style="width:340px;">
-        <div class="branch-title">Cardiology Meta-Analysis</div>
-        <div class="branch-date">2025 · Co-Author, Manuscript in Preparation</div>
-        <div class="branch-desc">
-          Atrial septal pacing vs. right atrial appendage pacing — clinical evidence synthesis. Gained experience in systematic review methodology and manuscript drafting.
-        </div>
-        <div class="branch-skills">
-          <span>Meta-Analysis</span><span>Cardiology</span><span>Systematic Review</span><span>Manuscript Writing</span>
-        </div>
-      </div>
-      <!-- Clinical Reasoning — RIGHT -->
-      <div class="branch returned" style="width:340px;">
-        <div class="branch-title">Clinical Reasoning &amp; Diagnostic Thinking</div>
-        <div class="branch-date">2025 · Course: Innovation Comprehensive Experiment</div>
-        <div class="branch-desc">
-          Mastering diagnostic logic and differential diagnosis frameworks — a cognitive skill directly transferable to AI-assisted clinical decision systems. Scored 97/100.
-        </div>
-        <div class="branch-skills">
-          <span>Diagnostic Logic</span><span>Differential Diagnosis</span><span>Clinical AI</span><span>Decision Systems</span>
-        </div>
-      </div>
-    </div>
+<script src="node_modules/@gitgraph/js/lib/gitgraph.umd.min.js"></script>
+<script>
+(function() {
+  var GG = window.GitgraphJS;
+  var SVGNS = 'http://www.w3.org/2000/svg';
 
-    <!-- ═══════ TRACK SPLIT ═══════ -->
-    <div style="text-align:center;padding:2rem 0 1.5rem;">
-      <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;color:#64ffda;letter-spacing:0.1em;margin-bottom:0.6em;">◆ WORLDLINE DIVERGENCE ◆</div>
-      <div style="font-size:0.85rem;color:#8892b0;">The main worldline splits into two parallel tracks</div>
-    </div>
+  // ═══ Card renderer ═══
+  //  Year is rendered as a SVG axis marker on the LEFT of the timeline (see renderDotCard),
+  //  NOT inside the card. The `year` field in data is repurposed as the meta date range.
+  function cardHTML(d) {
+    var badges = (d.badges || []).map(function(b){ return '<span class="badge '+b.type+'">'+b.text+'</span>'; }).join('');
+    var tags   = (d.tags   || []).map(function(t){ return '<span>'+t+'</span>'; }).join('');
+    var badgesHTML = badges ? '<div class="badges">'+badges+'</div>' : '';
+    var tagsHTML   = tags ? '<div class="tags">'+tags+'</div>' : '';
+    var extra = d.extra || '';
 
-    <div class="split-container">
-      <!-- Left Track: Clinical -->
-      <div class="track clinical">
-        <h3>Track α: Clinical Research</h3>
-        <div class="branch" style="max-width:100%;margin-bottom:0.6rem;">
-          <div class="branch-title">Robotic-Assisted UKA Accuracy Study</div>
-          <div class="branch-date">2025.04 – Present · Orthopedic Robotics &amp; AI Lab</div>
-          <div class="branch-desc">20 robotic UKA procedures. 40-case learning curve analysis. Submitted to Frontiers in Bioengineering. <strong style="color:#64ffda;">First author.</strong></div>
-        </div>
-        <div class="branch" style="max-width:100%;margin-bottom:0.6rem;">
-          <div class="branch-title">Robotic ACL Reconstruction — Multi-Center RCT</div>
-          <div class="branch-date">2025.10 – Present · w/ Jishuitan Hospital</div>
-          <div class="branch-desc">n=120 RCT protocol. TiRobot validation roadmap. 2026 NSFC grant in progress.</div>
-        </div>
-        <div class="branch" style="max-width:100%;margin-bottom:0.6rem;">
-          <div class="branch-title">3D-Printed Surgical Guide System</div>
-          <div class="branch-date">2026.01 – Present · Joint w/ BIT Multi-Modal Lab</div>
-          <div class="branch-desc">CV-based personalized guides. Challenge Cup 2026. Clinical &amp; product lead.</div>
-        </div>
-      </div>
+    if (d.track === 'divergence') {
+      return '<div class="diverge-title">'+ (d.title || '◆ WORLDLINE DIVERGENCE ◆') +'</div>' +
+             '<div class="diverge-sub">'+ (d.body || '') +'</div>';
+    }
+    return badgesHTML +
+           '<h3>'+d.title+'</h3>' +
+           '<div class="meta">'+d.meta+'</div>' +
+           '<p>'+d.body+'</p>' +
+           extra +
+           tagsHTML;
+  }
 
-      <!-- Right Track: CS/AI -->
-      <div class="track csai">
-        <h3>Track β: Computational Research</h3>
-        <div class="branch" style="max-width:100%;margin-bottom:0.6rem;">
-          <div class="branch-title">Breast Tumor Localization</div>
-          <div class="branch-date">2026.03 – Present · Independent Research</div>
-          <div class="branch-desc">Prone MRI → Supine prediction. PointNet++ + ICP/CPD. 314 cases. Targeting JBHI 2026. <strong style="color:#e6f1ff;">First author.</strong></div>
-        </div>
-        <div class="branch" style="max-width:100%;margin-bottom:0.6rem;">
-          <div class="branch-title">Graphiti — Memory Graph for LLM Reasoning</div>
-          <div class="branch-date">2026.05 – Present · Independent Research</div>
-          <div class="branch-desc">Dynamic knowledge graphs for LLM episodic memory. GraphRAG. Targeting ICLR 2026.</div>
-        </div>
-        <div class="branch" style="max-width:100%;margin-bottom:0.6rem;">
-          <div class="branch-title">Embodied AI — Motion Recognition</div>
-          <div class="branch-date">2026.05 – Present · BIT Multi-Modal Lab (Prof. Ma Kang)</div>
-          <div class="branch-desc">Multi-modal sensor fusion for surgical skill assessment &amp; rehabilitation monitoring.</div>
-        </div>
-      </div>
-    </div>
+  // ═══ Dot+Card renderer: put BOTH the commit dot AND its card inside renderDot's g ═══
+  //  → renderDot's returned g is placed at (commit.x, commit.y) by gitgraph.
+  //     So the card is ALWAYS attached to its own dot, no matter the branch column.
+  function renderDotCard(data, opts) {
+    opts = opts || {};
+    return function(commit) {
+      // gitgraph translates branch line paths by (dot.size, dot.size) — so the
+      // BRANCH LINE'S visual center is at (dot.size, dot.size) in commit-local coords.
+      // Wrap everything in a matching translate so our custom dot sits on the line.
+      var offset = (commit.style && commit.style.dot && commit.style.dot.size) || 6;
+      var g = document.createElementNS(SVGNS, 'g');
+      g.setAttribute('transform', 'translate(' + offset + ', ' + offset + ')');
+      var color = (commit.style && commit.style.dot && commit.style.dot.color) || '#64ffda';
 
-    <!-- ── Footer ── -->
-    <div style="text-align:center;padding:3rem 0 1rem;">
-      <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;color:#3a4a6a;letter-spacing:0.08em;">
-        WORLD LINE · CONTINUING · 2026 →
-      </div>
-    </div>
+      // ─── Optional milestone glow ring ───
+      if (opts.big) {
+        var ring = document.createElementNS(SVGNS, 'circle');
+        ring.setAttribute('cx', 0); ring.setAttribute('cy', 0);
+        ring.setAttribute('r', 16);
+        ring.setAttribute('fill', 'none');
+        ring.setAttribute('stroke', color);
+        ring.setAttribute('stroke-width', 1);
+        ring.setAttribute('opacity', 0.45);
+        g.appendChild(ring);
+      }
 
-  </div><!-- .timeline -->
-</div><!-- .container -->
+      // ─── Commit dot ───
+      var dot = document.createElementNS(SVGNS, 'circle');
+      dot.setAttribute('cx', 0); dot.setAttribute('cy', 0);
+      dot.setAttribute('r', opts.big ? 8 : 6);
+      dot.setAttribute('fill', color);
+      dot.setAttribute('stroke', '#0a192f');
+      dot.setAttribute('stroke-width', 3);
+      g.appendChild(dot);
 
+      // ─── Year axis marker on the FAR LEFT (fixed SVG x, regardless of branch column) ───
+      if (data.yearMark) {
+        //  commit.x is the branch column's X. To land the label at a FIXED SVG x, we
+        //  offset by -commit.x - offset - <padding>. Any branch column produces same X.
+        var labelX = -commit.x - offset - 24;
+        var yearText = document.createElementNS(SVGNS, 'text');
+        yearText.textContent = data.yearMark;
+        yearText.setAttribute('x', labelX);
+        yearText.setAttribute('y', 5);
+        yearText.setAttribute('fill', '#64ffda');
+        yearText.setAttribute('font-family', '"SF Mono","Fira Code",monospace');
+        yearText.setAttribute('font-size', '17');
+        yearText.setAttribute('font-weight', '700');
+        yearText.setAttribute('letter-spacing', '3');
+        yearText.setAttribute('text-anchor', 'end');
+        yearText.setAttribute('opacity', '0.95');
+        g.appendChild(yearText);
+
+        // Dashed tick from year label toward the dot
+        var yTick = document.createElementNS(SVGNS, 'line');
+        yTick.setAttribute('x1', labelX + 10);
+        yTick.setAttribute('y1', 0);
+        yTick.setAttribute('x2', -12);
+        yTick.setAttribute('y2', 0);
+        yTick.setAttribute('stroke', '#64ffda');
+        yTick.setAttribute('stroke-width', 1);
+        yTick.setAttribute('opacity', 0.3);
+        yTick.setAttribute('stroke-dasharray', '4 4');
+        g.appendChild(yTick);
+      }
+
+      // ─── Short horizontal connector from dot to card ───
+      var stub = document.createElementNS(SVGNS, 'line');
+      stub.setAttribute('x1', 6); stub.setAttribute('y1', 0);
+      stub.setAttribute('x2', 20); stub.setAttribute('y2', 0);
+      stub.setAttribute('stroke', color);
+      stub.setAttribute('stroke-width', 1.4);
+      stub.setAttribute('opacity', 0.65);
+      g.appendChild(stub);
+
+      // ─── Card as foreignObject, to the right of the dot ───
+      //   y offset small (dot aligns near card top) so that computeOffsets
+      //   (which stacks by measured card height starting from dot Y) doesn't
+      //   underestimate spacing and cause visual overlap.
+      var fo = document.createElementNS(SVGNS, 'foreignObject');
+      fo.setAttribute('x', 22);                // 22px right of dot
+      fo.setAttribute('y', -12);               // dot sits just above card top edge
+      fo.setAttribute('width', 400);
+      fo.setAttribute('height', 300);          // resized by post-render pass
+      fo.setAttribute('overflow', 'visible');
+
+      var div = document.createElement('div');
+      div.className = 'gg-card';
+      if (data.track) div.setAttribute('data-track', data.track);
+      div.innerHTML = cardHTML(data);
+      fo.appendChild(div);
+      g.appendChild(fo);
+
+      return g;
+    };
+  }
+
+  // ═══ Build the gitgraph ═══
+  var container = document.getElementById('gitgraph');
+
+  //  Palette per branch column:
+  //   col 0 main / α  = teal        (throughline)
+  //   col 1 psychiatry = green-teal
+  //   col 2 plastic    = amber
+  //   col 3 cardio     = coral
+  //   col 4 reasoning  = pale blue
+  //   col 5 track-β    = purple
+  var sgTemplate = GG.templateExtend(GG.TemplateName.Metro, {
+    //   col 0 main / α = teal      col 1 psychiatry = green-teal
+    //   col 2 plastic  = amber     col 3 cardio     = coral
+    //   col 4 reasoning= pale blue col 5 β main     = purple
+    //   col 6 graphiti = deep purple  col 7 embodied = light purple
+    colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#d9a3f0', '#f0c9ff'],
+    branch: {
+      lineWidth: 2.5,
+      spacing: 70,
+      mergeStyle: GG.MergeStyle.Bezier,
+      label: { display: false }
+    },
+    commit: {
+      //  NOTE: gitgraph's computeOffsets adds each card's *measured* height to this,
+      //  so the actual dot-to-dot spacing = spacing + card_height.
+      //  Keep spacing small — it's just the extra gap between cards.
+      spacing: 24,
+      hasTooltipInCompactMode: false,
+      dot: { size: 6, strokeColor: '#0a192f', strokeWidth: 3 },
+      message: { display: false }   // ← hide default messages; we render cards via renderDot
+    }
+  });
+
+  var gitgraph = GG.createGitgraph(container, {
+    template: sgTemplate,
+    orientation: GG.Orientation.VerticalReverse,   // ← 2023 at BOTTOM, 2026 at TOP → fan out UP
+    mode: GG.Mode.Extended,
+    responsive: false
+  });
+
+  // ─── Helper: attach a card to a branch commit ───
+  function C(branch, data, big) {
+    branch.commit({
+      subject: data.title,
+      renderDot: renderDotCard(data, { big: !!big })
+    });
+  }
+
+  // ─── main — foundation & throughline (later reinterpreted as Track α) ───
+  var main = gitgraph.branch('main');
+
+  C(main, {
+    yearMark: '2023',
+    title: 'Basic Biochemistry Research',
+    meta: '2023 · Independent · Unpublished',
+    body: 'Wrote two literature reviews. Self-taught PubMed / MeSH, Endnote / Zotero, AMA / Vancouver citation. Reviews unpublished but <span class="hl">established the literature-retrieval habits underlying every later project</span>.',
+    badges: [{type:'co-author', text:'FOUNDATION'}, {type:'in-prep', text:'UNPUBLISHED'}],
+    tags: ['PubMed','MeSH','Endnote','Zotero','Citation'],
+    track: 'foundation'
+  });
+
+  // ─── 2024 psychiatry branch (persistent, no merge back) ───
+  var psychiatry = gitgraph.branch({ name: 'psychiatry', from: main });
+  C(psychiatry, {
+    yearMark: '2024',
+    title: 'Psychiatry & Clinical Research @ PKU 6th',
+    meta: '2024.07 – 2024.10 · Prof. Qian Ying',
+    body: 'Adolescent psychiatry shadowing. Weekly journal clubs on MFGT & school refusal. <span class="hl">Learned RCT design, SPSS, meta-analysis, evidence-quality assessment.</span>',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'co-author', text:'CO-AUTHOR'}],
+    tags: ['SPSS','RCT','Meta-Analysis','MFGT'],
+    track: 'alpha'
+  });
+  C(psychiatry, {
+    title: 'BMC Psychology Publication',
+    meta: 'MFGT for School Refusal — RCT Study Protocol · 2026',
+    body: 'First complete research cycle: <span class="hl">design → ethics → data → publication</span>. Established the workflow reused in every later project.',
+    badges: [{type:'published', text:'PUBLISHED 2026'}, {type:'co-author', text:'CO-AUTHOR'}],
+    tags: ['BMC Psychology','RCT','Study Protocol'],
+    track: 'alpha'
+  });
+
+  // ─── 2024 plastic surgery branch (persistent, no merge back) ───
+  var plastic = gitgraph.branch({ name: 'plastic', from: main });
+  C(plastic, {
+    year: '2024 – 2026',
+    title: 'Plastic Surgery AI Lab @ PKU 3rd',
+    meta: '2024.09 – 2026.05 · Prof. An Yang · First formal research group',
+    body: 'Journal clubs, textbook editing, video narration, peer review — <span class="hl">systematic reading + writing skills</span>. Segmented ~1/3 of nasal septum CT data (3D Slicer / Mimics). First DICOM / STL / ML exposure.',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'published', text:'JPRAS · 2025'}, {type:'co-author', text:'CO-AUTHOR'}],
+    tags: ['3D Slicer','Mimics','CT','Segmentation','JPRAS','Diffusion Models'],
+    track: 'alpha'
+  });
+
+  // ─── 2025 Aerospace milestone on main ───
+  C(main, {
+    yearMark: '2025',
+    title: 'Aerospace Center — Direction Finding',
+    meta: '2025.04 – 2025.09 · Entry point',
+    body: 'Explored multiple directions, met mentors. <span class="hl">Discovered orthopedic robotics</span> — Changmugu™ UKA — and identified <span class="hl">surgical robotics + AI</span> as the core direction.',
+    badges: [{type:'first-author', text:'◆ MAIN WORLDLINE ENTRY POINT'}],
+    tags: ['Clinical Practice','Orthopedics','Surgical Robotics','Direction Finding'],
+    track: 'milestone'
+  }, true);
+
+  // ─── 2025 cardio branch ───
+  var cardio = gitgraph.branch({ name: 'cardio', from: main });
+  C(cardio, {
+    year: '2025',
+    title: 'Cardiology Meta-Analysis',
+    meta: '2025 · Manuscript in preparation',
+    body: '<em>Atrial septal pacing vs. right atrial appendage pacing for AF reduction.</em> PRISMA systematic review — heterogeneity, forest plots, publication-bias assessment.',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'in-prep', text:'IN PREP'}, {type:'co-author', text:'CO-AUTHOR'}],
+    tags: ['PRISMA','Meta-Analysis','Forest Plot'],
+    track: 'alpha'
+  });
+
+  // ─── 2025 clinical reasoning branch ───
+  var reasoning = gitgraph.branch({ name: 'reasoning', from: main });
+  C(reasoning, {
+    year: '2025',
+    title: 'Clinical Reasoning & Diagnostic Thinking',
+    meta: '2025 · Innovation Comprehensive Experiment · 97/100',
+    body: 'Differential diagnosis framework: complaint → list → likelihood → Bayesian updating. <span class="hl">Formal diagnostic logic directly applicable to AI clinical decision systems.</span>',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'published', text:'GRADE 97/100'}],
+    tags: ['Differential Diagnosis','Bayesian Reasoning','Clinical AI'],
+    track: 'alpha'
+  });
+
+  // ─── 2026 divergence marker ───
+  C(main, {
+    yearMark: '2026',
+    title: '◆ WORLDLINE DIVERGENCE — 2026 ◆',
+    body: 'Main line continues as <span class="a">Track α</span> (Clinical, w/ Prof. Chen Jing) · <span class="b">Track β</span> (CS / AI) diverges — parallel, non-convergent.',
+    track: 'divergence'
+  }, true);
+
+  // ─── Track β diverges (never merges) ───
+  var beta = gitgraph.branch({ name: 'track-beta', from: main });
+
+  // ─── Interleave α (main) & β chronologically ───
+  C(main, {
+    year: '2025.04 – Present',
+    title: 'Robotic-Assisted UKA Accuracy Study',
+    meta: 'Orthopedic Robotics & AI Lab · Chen Jing',
+    body: '20 Changmugu™ robotic UKA procedures with CT pre-planning & intra-op execution. 40-case learning-curve analysis (CUSUM). <span class="hl">Submitted to Frontiers in Bioengineering & Biotechnology</span>.',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'submitted', text:'SUBMITTED'}, {type:'first-author', text:'FIRST AUTHOR'}],
+    tags: ['Robotic Surgery','UKA','CT Planning','CUSUM'],
+    track: 'alpha'
+  });
+
+  //  β main line: Breast Tumor Localization — the flagship of Track β
+  C(beta, {
+    year: '2026.03 – Present',
+    title: 'Breast Tumor Localization',
+    meta: 'Independent · target JBHI 2026',
+    body: 'Prone MRI → Supine prediction. <span class="hl">314 paired cases</span> (Shenzhen No.2 Hospital). Pipeline: point cloud → ICP → CPD → <span class="hl">PointNet++</span> → 3D coordinate prediction.',
+    badges: [{type:'track-b', text:'TRACK β'}, {type:'ongoing', text:'ONGOING'}, {type:'first-author', text:'FIRST AUTHOR'}],
+    tags: ['PointNet++','ICP/CPD','3D Point Cloud','n=314','PyTorch','JBHI'],
+    track: 'beta'
+  });
+
+  C(main, {
+    year: '2025.10 – Present',
+    title: 'Robotic ACL Reconstruction — Multi-Center RCT',
+    meta: 'w/ Jishuitan Hospital · NSFC 2026',
+    body: 'Co-designed <span class="hl">n=120 RCT</span> protocol. TiRobot validation roadmap: sawbone → cadaver → clinical. Participating in 2026 NSFC grant application.',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'ongoing', text:'ONGOING'}, {type:'co-author', text:'CO-INVESTIGATOR'}],
+    tags: ['RCT n=120','TiRobot','ACL','NSFC Grant'],
+    track: 'alpha'
+  });
+
+  C(main, {
+    year: '2026.01 – Present',
+    title: '3D-Printed Surgical Guide System',
+    meta: 'BIT Multi-Modal Lab (Prof. Ma Kang)',
+    body: 'CV-driven personalized 3D-printed guides for UKA / ACL. Market research, competitor analysis (Shikang / Changmugu / Anying), <span class="hl">physician needs interviews</span>. Entered "Challenge Cup 2026".',
+    badges: [{type:'track-a', text:'TRACK α'}, {type:'ongoing', text:'ONGOING'}, {type:'first-author', text:'CLINICAL & PRODUCT LEAD'}],
+    tags: ['3D Printing','CV','Surgical Guide','MedTech','Challenge Cup'],
+    track: 'alpha'
+  });
+
+  //  ─── β sub-branches: forked FROM the β line (not from main) ───
+  //  Graphiti and Embodied AI are both explorations spawned by the β world line
+  var graphiti = gitgraph.branch({ name: 'graphiti', from: beta });
+  C(graphiti, {
+    year: '2026.05 – Present',
+    title: 'Graphiti — Memory Graph for LLM Reasoning',
+    meta: 'Independent · target ICLR 2026',
+    body: 'Dynamic knowledge graphs for LLM episodic memory. <span class="hl">Graphiti</span> pipeline: entity extraction → KG construction → graph embedding → multi-hop RAG.',
+    badges: [{type:'track-b', text:'β · SUB'}, {type:'ongoing', text:'ONGOING'}, {type:'first-author', text:'INDEPENDENT'}],
+    tags: ['GraphRAG','Knowledge Graph','LLM','Graphiti','ICLR 2026'],
+    track: 'beta'
+  });
+
+  var embodied = gitgraph.branch({ name: 'embodied', from: beta });
+  C(embodied, {
+    year: '2026.05 – Present',
+    title: 'Embodied AI — Motion Recognition',
+    meta: 'BIT Multi-Modal Lab (Prof. Ma Kang)',
+    body: 'Multi-modal sensor fusion (<span class="hl">IMU + vision + pressure</span>) for surgical skill assessment and rehabilitation monitoring. Currently in literature review + sensor setup.',
+    badges: [{type:'track-b', text:'β · SUB'}, {type:'ongoing', text:'ONGOING'}, {type:'co-author', text:'COLLABORATOR'}],
+    tags: ['Embodied AI','IMU','Sensor Fusion','Surgical Skill'],
+    track: 'beta'
+  });
+
+  // ═══ Post-render: resize foreignObjects to fit actual card height + expand SVG ═══
+  function resizeCards() {
+    var svg = container.querySelector('svg');
+    if (!svg) return;
+    var fos = svg.querySelectorAll('foreignObject');
+    fos.forEach(function(fo) {
+      var inner = fo.firstElementChild;
+      if (inner && inner.offsetHeight) {
+        fo.setAttribute('height', inner.offsetHeight + 6);
+      }
+    });
+    // Widen SVG to fit all content including left-side year labels
+    try {
+      var bbox = svg.getBBox();
+      var padL = 30, padR = 30, padT = 20, padB = 20;
+      var vbX = bbox.x - padL;
+      var vbY = bbox.y - padT;
+      var vbW = bbox.width + padL + padR;
+      var vbH = bbox.height + padT + padB;
+      svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
+      svg.setAttribute('width', vbW);
+      svg.setAttribute('height', vbH);
+    } catch(e) {}
+  }
+  // Multiple passes: initial layout, after fonts, after images
+  setTimeout(resizeCards, 50);
+  setTimeout(resizeCards, 300);
+  setTimeout(resizeCards, 900);
+  window.addEventListener('resize', resizeCards);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeCards);
+
+  // ═══ Back to top button ═══
+  var toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 400) toTop.classList.add('show');
+    else toTop.classList.remove('show');
+  });
+  toTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
 </body>
 </html>

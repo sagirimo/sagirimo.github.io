@@ -71,6 +71,32 @@ function updateNavHighlight() {
 window.addEventListener('scroll', updateNavHighlight, { passive: true });
 updateNavHighlight();
 
+/* ── Sidebar scroll-off past .layout ──
+   Sidebar is position:fixed. When the user scrolls past .layout's bottom,
+   we translate the sidebar upward so it rides away with the content, revealing
+   the full-width Worldline section that follows.
+*/
+const sidebar = document.querySelector('.sidebar');
+const layout = document.querySelector('.layout');
+function updateSidebarScrollOff() {
+    if (!sidebar || !layout) return;
+    // getBoundingClientRect gives viewport-relative positions.
+    // .bottom < viewportHeight means layout has scrolled past the bottom of viewport.
+    const viewH = window.innerHeight;
+    const layoutBottomInViewport = layout.getBoundingClientRect().bottom;
+    const overshoot = viewH - layoutBottomInViewport;
+    if (overshoot > 0) {
+        sidebar.style.transform = `translate3d(0, ${-overshoot}px, 0)`;
+    } else {
+        sidebar.style.transform = 'translate3d(0, 0, 0)';
+    }
+}
+window.addEventListener('scroll', updateSidebarScrollOff, { passive: true });
+window.addEventListener('resize', updateSidebarScrollOff);
+// Run on load + after fonts settle
+updateSidebarScrollOff();
+window.addEventListener('load', updateSidebarScrollOff);
+
 /* ── Spotlight Follow ── */
 const spotlight = document.querySelector('.spotlight');
 let sx = window.innerWidth / 2;

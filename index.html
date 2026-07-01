@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zhan Pengyu — Clinical Researcher & Ph.D. Applicant</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="timeline.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="spotlight"></div>
@@ -186,6 +187,11 @@
                 </div>
             </div>
 
+            <a href="#worldline" class="worldline-jump"
+               data-en="View Detailed Timeline →"
+               data-zh="查看完整研究世界线 →"
+               data-hk="查看完整研究世界線 →">View Detailed Timeline →</a>
+
         </section>
 
         <!-- Publications -->
@@ -212,13 +218,24 @@
             </div>
         </section>
 
-        <footer class="footer">
-            <p data-en="Built with care. © 2026 Zhan Pengyu" data-zh="用心打造。© 2026 战鹏宇" data-hk="用心製作。© 2026 戰鵬宇">Built with care. © 2026 Zhan Pengyu</p>
-        </footer>
-
     </main>
 </div>
 
+<!-- ═══ Full-width Worldline section (outside .layout — sidebar unsticks here) ═══ -->
+<section id="worldline" class="worldline-section">
+    <div class="worldline-header">
+        <span class="worldline-tag" data-en="◆ RESEARCH WORLDLINE ◆" data-zh="◆ 研究世界线 ◆" data-hk="◆ 研究世界線 ◆">◆ RESEARCH WORLDLINE ◆</span>
+        <p class="worldline-sub" data-en="Divergence · Convergence · Growth" data-zh="分支 · 汇入 · 生长" data-hk="分支 · 匯入 · 生長">Divergence · Convergence · Growth</p>
+    </div>
+    <div class="graph-host" id="gitgraph"></div>
+</section>
+
+<footer class="footer worldline-footer">
+    <p data-en="Built with care. © 2026 Zhan Pengyu" data-zh="用心打造。© 2026 战鹏宇" data-hk="用心製作。© 2026 戰鵬宇">Built with care. © 2026 Zhan Pengyu</p>
+</footer>
+
 <script src="script.js"></script>
+<script src="vendor/gitgraph.umd.min.js"></script>
+<script src="timeline.js"></script>
 </body>
 </html>

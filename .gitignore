@@ -2,3 +2,6 @@ aceternity-demo
 .playwright-mcp/
 resume.html
 resume.pdf
+node_modules/
+_verify-*
+*.log

@@ -23,8 +23,18 @@
     --accent-tint: rgba(100, 255, 218, 0.1);
     --accent-tint-hover: rgba(100, 255, 218, 0.05);
 
-    --font-sans: 'Inter', 'Calibre', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Consolas', monospace;
+    /* Latin: Inter.  Chinese: prefer JhengHei (both SC and TC look consistent in it)
+       → Noto Sans SC/TC (Google Fonts) → PingFang (Apple) → YaHei (Windows SC default).
+       JhengHei is put FIRST for CJK so simplified and traditional share one visual style. */
+    --font-sans: 'Inter',
+                 'Microsoft JhengHei UI', 'Microsoft JhengHei',
+                 'PingFang TC', 'PingFang SC',
+                 'Noto Sans TC', 'Noto Sans SC',
+                 'Microsoft YaHei UI', 'Microsoft YaHei',
+                 'Hiragino Sans GB',
+                 'Calibre', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Consolas',
+                 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', monospace;
 
     --easing: cubic-bezier(0.645, 0.045, 0.355, 1);
     --transition: all 0.25s var(--easing);
@@ -73,6 +83,8 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     padding: 7rem 3rem 7rem 9rem;
+    will-change: transform;
+    transition: none;
 }
 
 .site-name {
