@@ -128,28 +128,13 @@
       fo.setAttribute('y', -12);
       fo.setAttribute('overflow', 'visible');
 
+      fo.setAttribute('width', 400);
+      fo.setAttribute('height', 300);
+
       var div = document.createElement('div');
       div.className = 'gg-card';
       if (data.track) div.setAttribute('data-track', data.track);
       div.innerHTML = cardHTML(data);
-
-      //  Inline mobile styles directly on the div so CSS-in-SVG loading order
-      //  on iOS Safari can't break the card dimensions.  The external stylesheet
-      //  will still apply (or override) once loaded, but these guarantee a baseline.
-      if (isMobileViewport) {
-        div.style.cssText = [
-          'width:280px', 'max-width:280px', 'box-sizing:border-box',
-          'padding:0.55rem 0.7rem', 'font-size:0.68rem', 'line-height:1.45',
-          'background:linear-gradient(180deg,rgba(17,34,64,.94),rgba(10,25,47,.96))',
-          'border:1px solid rgba(100,255,218,.14)', 'border-radius:6px',
-          'color:#a8b2d1', 'font-family:Inter,sans-serif', 'position:relative'
-        ].join(';');
-        fo.setAttribute('width', 310);
-        fo.setAttribute('height', 600);   // generous; real height measured by forceMobileRelayout
-      } else {
-        fo.setAttribute('width', 400);
-        fo.setAttribute('height', 300);
-      }
 
       fo.appendChild(div);
       g.appendChild(fo);
@@ -158,19 +143,18 @@
     };
   }
 
-  //  Real iOS Safari has a timing bug where foreignObject.getBoundingClientRect() can
-  //  return 0 during gitgraph's internal auto-spacing pass — Playwright WebKit doesn't
-  //  reproduce it, but iPhones do. Two layers of defence below:
-  //    (1) mobile branch spacing is tighter so narrow viewport doesn't require huge scroll
-  //    (2) forceRelayoutIfStacked() runs post-render as a safety net if commits stacked
+  //  On iOS Safari, foreignObject.getBoundingClientRect() returns 0 during gitgraph's
+  //  internal height-measurement pass (timing + WebKit quirk).  Since gitgraph adds
+  //  measured_height + commit.spacing for each step, a 0 measurement collapses all
+  //  commits to commit.spacing apart (24 px) — causing visible card overlap.
+  //  Fix: on mobile set commit.spacing to 280 so even with a 0 measurement, 280 px
+  //  between dots is enough to clear a ~220 px card.  Playwright WebKit correctly
+  //  measures heights so spacing there = 280 + measured ≈ 480 px (a touch generous
+  //  but acceptable for a portrait scroll timeline).
   var isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
 
   // ─── Template ───
   var sgTemplate = GG.templateExtend(GG.TemplateName.Metro, {
-    //  col 0 main / α = teal      col 1 psychiatry = green-teal
-    //  col 2 plastic  = amber     col 3 cardio     = coral
-    //  col 4 reasoning= pale blue col 5 β main     = purple
-    //  col 6 graphiti = deep purple  col 7 embodied = light purple
     colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#d9a3f0', '#f0c9ff'],
     branch: {
       lineWidth: 2.5,
@@ -179,7 +163,7 @@
       label: { display: false }
     },
     commit: {
-      spacing: 24,       // gitgraph adds measured card height on top of this
+      spacing: isMobileViewport ? 280 : 24,
       hasTooltipInCompactMode: false,
       dot: { size: 6, strokeColor: '#0a192f', strokeWidth: 3 },
       message: { display: false }
@@ -491,9 +475,9 @@
   var graphiti = gitgraph.branch({ name: 'graphiti', from: beta });
   C(graphiti, {
     title: t(
-      'Graphiti — Memory Graph for LLM Reasoning',
-      'Graphiti — 大模型记忆图谱推理',
-      'Graphiti — 大模型記憶圖譜推理'
+      'LLM Long-term Memory via Dynamic KG',
+      '大模型长期记忆 · 动态知识图谱',
+      '大模型長期記憶 · 動態知識圖譜'
     ),
     meta: t(
       '2026.05 – Present · Independent · target ICLR 2027',
@@ -501,16 +485,16 @@
       '2026.05 – 至今 · 獨立研究 · 目標 ICLR 2027'
     ),
     body: t(
-      'Dynamic knowledge graphs for LLM episodic memory. <span class="hl">Graphiti</span> pipeline: entity extraction → KG construction → graph embedding → multi-hop RAG.',
-      '为大语言模型构建动态知识图谱作为情景记忆。基于 <span class="hl">Graphiti</span> 框架：实体抽取 → 图谱构建 → 图嵌入 → 多跳 RAG。',
-      '為大語言模型構建動態知識圖譜作為情景記憶。基於 <span class="hl">Graphiti</span> 框架：實體抽取 → 圖譜構建 → 圖嵌入 → 多跳 RAG。'
+      'Building on temporal knowledge-graph frameworks, propose improvements to <span class="hl">episodic memory</span> for LLM agents: entity deduplication, temporal decay, and multi-hop RAG over evolving graphs.',
+      '在时序知识图谱框架基础上，研究大语言模型 Agent 的<span class="hl">情景记忆</span>改进方向：实体去重、时间衰减策略，以及基于动态图的多跳 RAG 检索。',
+      '在時序知識圖譜框架基礎上，研究大語言模型 Agent 的<span class="hl">情景記憶</span>改進方向：實體去重、時間衰減策略，以及基於動態圖的多跳 RAG 檢索。'
     ),
     badges: [
       { type:'track-b',      text: t('β · SUB', 'β · 子分支', 'β · 子分支') },
       { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
       { type:'first-author', text: t('INDEPENDENT', '独立', '獨立') }
     ],
-    tags: ['GraphRAG','Knowledge Graph','LLM','Graphiti','ICLR 2027'],
+    tags: ['Knowledge Graph','LLM Memory','GraphRAG','Temporal KG','ICLR 2027'],
     track: 'beta'
   });
 
@@ -572,95 +556,6 @@
     } catch(e) {}
   }
 
-  // ═══ Mobile relayout: always runs on mobile viewports.
-  //  iOS Safari measures foreignObject children unreliably during gitgraph's internal
-  //  auto-spacing pass (getBoundingClientRect can return clipped or zero heights).
-  //  We bypass gitgraph's layout entirely on mobile: measure card heights via
-  //  scrollHeight (viewport-independent), then reposition every commit group and
-  //  redraw branch lines as simple verticals.
-  function forceMobileRelayout() {
-    if (!window.matchMedia('(max-width: 768px)').matches) return;
-    var svg = container.querySelector('svg');
-    if (!svg) return;
-
-    //  Commit group DOM structure from gitgraph:
-    //  <g transform="translate(bx, by)">   ← outerG (what we reposition)
-    //    <g transform="translate(6, 6)">   ← innerG (our renderDot content)
-    //      <circle/>  <line/>  <foreignObject><div.gg-card/></foreignObject>
-    //    </g>
-    //  </g>
-    var fos = svg.querySelectorAll('g > g > foreignObject');
-    if (!fos.length) return;
-
-    var groups = [];
-    fos.forEach(function(fo) {
-      var innerG = fo.parentElement;
-      var outerG = innerG && innerG.parentElement;
-      if (!outerG) return;
-      var tr = outerG.getAttribute('transform') || '';
-      var m = /translate\(\s*([-\d.]+)[\s,]+([-\d.]+)/.exec(tr);
-      if (!m) return;
-      var inner = fo.firstElementChild;
-      //  scrollHeight is immune to viewport clipping, overflow:hidden, and off-screen
-      //  positioning — the only reliable height on iOS Safari.
-      var h = (inner && inner.scrollHeight > 10) ? inner.scrollHeight
-            : (inner && inner.offsetHeight > 10)  ? inner.offsetHeight
-            : 260;   // hard fallback for completely-unrendered cards
-      groups.push({ outer: outerG, fo: fo, bx: parseFloat(m[1]), h: h });
-    });
-    if (groups.length < 2) return;
-
-    //  Assign y positions top-to-bottom in DOM (creation) order, using measured heights
-    var gap = 18;
-    var y = 40;
-    groups.forEach(function(g) {
-      g.newY = y;
-      y += g.h + gap;
-      g.outer.setAttribute('transform', 'translate(' + g.bx + ', ' + g.newY + ')');
-    });
-
-    //  Remove gitgraph's paths and any previously-inserted relayout lines, then draw
-    //  one vertical connector per branch column.
-    svg.querySelectorAll('path').forEach(function(p) { p.remove(); });
-    svg.querySelectorAll('line.wl-branch').forEach(function(l) { l.remove(); });
-
-    var byColumn = {};
-    groups.forEach(function(g) {
-      var key = String(Math.round(g.bx));
-      if (!byColumn[key]) byColumn[key] = [];
-      byColumn[key].push(g);
-    });
-    Object.keys(byColumn).forEach(function(key) {
-      var col = byColumn[key];
-      col.sort(function(a, b) { return a.newY - b.newY; });
-      if (col.length < 2) return;
-      var first = col[0], last = col[col.length - 1];
-      var cx = first.bx + 6;   // center x of the branch dot
-      var line = document.createElementNS(SVGNS, 'line');
-      line.setAttribute('x1', cx);  line.setAttribute('y1', first.newY + 6);
-      line.setAttribute('x2', cx);  line.setAttribute('y2', last.newY + 6);
-      line.setAttribute('class', 'wl-branch');
-      var dot = first.fo.parentElement.querySelector('circle');
-      var color = (dot && dot.getAttribute('fill')) || '#64ffda';
-      line.setAttribute('stroke', color);
-      line.setAttribute('stroke-width', '2.5');
-      line.setAttribute('opacity', '0.65');
-      svg.insertBefore(line, svg.firstChild);
-    });
-
-    //  Recompute viewBox to encompass the new layout
-    try {
-      var bbox = svg.getBBox();
-      var padL = 30, padR = 30, padT = 20, padB = 20;
-      var vbX = bbox.x - padL, vbY = bbox.y - padT;
-      var vbW = bbox.width + padL + padR, vbH = bbox.height + padT + padB;
-      svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
-      svg.setAttribute('width', vbW);
-      svg.setAttribute('height', vbH);
-      container.style.height = vbH + 'px';
-    } catch(e) {}
-  }
-
   //  After the graph mounts, apply the current language from the site's toggle.
   //  script.js has already run and set root.lang; re-run its swap for our newly-
   //  injected data-en/data-zh/data-hk nodes inside foreignObjects.
@@ -675,11 +570,10 @@
     });
   }
 
-  function fullPass() { resizeCards(); syncLangFromRoot(); forceMobileRelayout(); }
+  function fullPass() { resizeCards(); syncLangFromRoot(); }
   setTimeout(fullPass, 50);
   setTimeout(fullPass, 300);
   setTimeout(fullPass, 900);
-  setTimeout(fullPass, 1800);   // extra safety pass for slow iOS layout
   window.addEventListener('resize', fullPass);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fullPass);
 
