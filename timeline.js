@@ -538,6 +538,14 @@
       svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
       svg.setAttribute('width', vbW);
       svg.setAttribute('height', vbH);
+      //  On mobile the container's overflow-y is hidden (to allow overflow-x scroll).
+      //  Force the container's height to match the SVG's natural height so nothing is
+      //  clipped vertically — page scroll handles vertical progression.
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        container.style.height = vbH + 'px';
+      } else {
+        container.style.height = '';
+      }
     } catch(e) {}
   }
 

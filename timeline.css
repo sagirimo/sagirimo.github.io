@@ -184,27 +184,26 @@
     padding: 0 1rem;
   }
 
-  /* Horizontal-swipe container */
+  /* Horizontal-swipe container. NOTE: on WebKit `overflow-x:auto` + `overflow-y:visible`
+     collapses per CSS spec — we accept clipping of the SVG's vertical bleed and let
+     natural page scroll handle vertical progression by using a wrapper approach:
+     .graph-host is the horizontal scroller (block-level), SVG inside is at natural size. */
   .graph-host {
+    display: block;                 /* not flex — flex + overflow-x quirks on WebKit */
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     touch-action: pan-x pan-y;
-    justify-content: flex-start;
-    padding: 1rem 0.5rem;
-    mask-image: linear-gradient(to right,
-                transparent 0,
-                black 12px,
-                black calc(100% - 12px),
-                transparent 100%);
-    -webkit-mask-image: linear-gradient(to right,
-                transparent 0,
-                black 12px,
-                black calc(100% - 12px),
-                transparent 100%);
+    padding: 0 0.5rem;
+    height: auto;                    /* let SVG dictate height */
+    min-height: 0;                   /* override desktop 400px so container hugs content */
   }
-  .graph-host svg { margin: 0; }
+  .graph-host svg {
+    display: block;
+    margin: 0;
+    /* SVG's natural width/height come from resizeCards() in timeline.js */
+  }
 
   /* Compact cards */
   .gg-card {
