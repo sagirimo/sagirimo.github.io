@@ -126,14 +126,31 @@
       var fo = document.createElementNS(SVGNS, 'foreignObject');
       fo.setAttribute('x', 22);
       fo.setAttribute('y', -12);
-      fo.setAttribute('width', 400);
-      fo.setAttribute('height', 300);
       fo.setAttribute('overflow', 'visible');
 
       var div = document.createElement('div');
       div.className = 'gg-card';
       if (data.track) div.setAttribute('data-track', data.track);
       div.innerHTML = cardHTML(data);
+
+      //  Inline mobile styles directly on the div so CSS-in-SVG loading order
+      //  on iOS Safari can't break the card dimensions.  The external stylesheet
+      //  will still apply (or override) once loaded, but these guarantee a baseline.
+      if (isMobileViewport) {
+        div.style.cssText = [
+          'width:280px', 'max-width:280px', 'box-sizing:border-box',
+          'padding:0.55rem 0.7rem', 'font-size:0.68rem', 'line-height:1.45',
+          'background:linear-gradient(180deg,rgba(17,34,64,.94),rgba(10,25,47,.96))',
+          'border:1px solid rgba(100,255,218,.14)', 'border-radius:6px',
+          'color:#a8b2d1', 'font-family:Inter,sans-serif', 'position:relative'
+        ].join(';');
+        fo.setAttribute('width', 310);
+        fo.setAttribute('height', 600);   // generous; real height measured by forceMobileRelayout
+      } else {
+        fo.setAttribute('width', 400);
+        fo.setAttribute('height', 300);
+      }
+
       fo.appendChild(div);
       g.appendChild(fo);
 
@@ -555,109 +572,88 @@
     } catch(e) {}
   }
 
-  // ═══ Mobile safety-net: force-relayout on iOS Safari where gitgraph's internal
-  //     foreignObject height measurement can return 0, stacking all cards ═══
-  //  If we detect that commits share very close y-positions (stacked), we manually
-  //  reposition each commit group by cumulative measured card heights, and redraw
-  //  branch paths as simple straight vertical lines per branch column.
-  function forceRelayoutIfStacked() {
+  // ═══ Mobile relayout: always runs on mobile viewports.
+  //  iOS Safari measures foreignObject children unreliably during gitgraph's internal
+  //  auto-spacing pass (getBoundingClientRect can return clipped or zero heights).
+  //  We bypass gitgraph's layout entirely on mobile: measure card heights via
+  //  scrollHeight (viewport-independent), then reposition every commit group and
+  //  redraw branch lines as simple verticals.
+  function forceMobileRelayout() {
     if (!window.matchMedia('(max-width: 768px)').matches) return;
     var svg = container.querySelector('svg');
     if (!svg) return;
 
-    //  Find all commit groups. Structure produced by gitgraph:
-    //  <g transform="translate(bx, by)"><g transform="translate(6, 6)">[dot, stub, fo, ...]</g></g>
-    var candidates = svg.querySelectorAll('g > g > foreignObject');
-    if (!candidates.length) return;
+    //  Commit group DOM structure from gitgraph:
+    //  <g transform="translate(bx, by)">   ← outerG (what we reposition)
+    //    <g transform="translate(6, 6)">   ← innerG (our renderDot content)
+    //      <circle/>  <line/>  <foreignObject><div.gg-card/></foreignObject>
+    //    </g>
+    //  </g>
+    var fos = svg.querySelectorAll('g > g > foreignObject');
+    if (!fos.length) return;
+
     var groups = [];
-    candidates.forEach(function(fo) {
+    fos.forEach(function(fo) {
       var innerG = fo.parentElement;
       var outerG = innerG && innerG.parentElement;
-      if (!outerG || outerG.tagName.toLowerCase() !== 'g') return;
+      if (!outerG) return;
       var tr = outerG.getAttribute('transform') || '';
       var m = /translate\(\s*([-\d.]+)[\s,]+([-\d.]+)/.exec(tr);
       if (!m) return;
-      groups.push({
-        outer: outerG,
-        fo: fo,
-        bx: parseFloat(m[1]),
-        by: parseFloat(m[2])
-      });
+      var inner = fo.firstElementChild;
+      //  scrollHeight is immune to viewport clipping, overflow:hidden, and off-screen
+      //  positioning — the only reliable height on iOS Safari.
+      var h = (inner && inner.scrollHeight > 10) ? inner.scrollHeight
+            : (inner && inner.offsetHeight > 10)  ? inner.offsetHeight
+            : 260;   // hard fallback for completely-unrendered cards
+      groups.push({ outer: outerG, fo: fo, bx: parseFloat(m[1]), h: h });
     });
     if (groups.length < 2) return;
 
-    //  Detect stacking: sort by y and see if adjacent commits are closer than a typical
-    //  card height (< 100px). If so, gitgraph failed to space them.
-    var sortedByY = groups.slice().sort(function(a,b){return a.by - b.by;});
-    var closeCount = 0;
-    for (var i = 1; i < sortedByY.length; i++) {
-      if (Math.abs(sortedByY[i].by - sortedByY[i-1].by) < 100) closeCount++;
-    }
-    var stacked = closeCount >= sortedByY.length * 0.4;
-
-    //  Even if not obviously stacked, ensure no card overlaps its neighbour.
-    //  Measure each card height first.
+    //  Assign y positions top-to-bottom in DOM (creation) order, using measured heights
+    var gap = 18;
+    var y = 40;
     groups.forEach(function(g) {
-      var inner = g.fo.firstElementChild;
-      var h = 0;
-      if (inner) h = inner.getBoundingClientRect().height || inner.offsetHeight || 0;
-      if (!h) h = 260;   // fallback
-      g.h = h;
+      g.newY = y;
+      y += g.h + gap;
+      g.outer.setAttribute('transform', 'translate(' + g.bx + ', ' + g.newY + ')');
     });
 
-    if (!stacked) return;   // desktop or lucky mobile — leave gitgraph's layout alone
+    //  Remove gitgraph's paths and any previously-inserted relayout lines, then draw
+    //  one vertical connector per branch column.
+    svg.querySelectorAll('path').forEach(function(p) { p.remove(); });
+    svg.querySelectorAll('line.wl-branch').forEach(function(l) { l.remove(); });
 
-    //  Manual re-layout: assign y positions per branch column, laid out top-to-bottom
-    //  in original creation order (which sortedByY preserves closely — but to be safe,
-    //  keep DOM order which matches creation order).
-    var gap = 20;
     var byColumn = {};
     groups.forEach(function(g) {
       var key = String(Math.round(g.bx));
       if (!byColumn[key]) byColumn[key] = [];
       byColumn[key].push(g);
     });
-
-    //  Global cursor: y increases monotonically across all commits (in DOM order).
-    var cursor = 40;
-    groups.forEach(function(g) {
-      g.newY = cursor;
-      cursor += g.h + gap;
-      g.outer.setAttribute('transform', 'translate(' + g.bx + ', ' + g.newY + ')');
-    });
-
-    //  Redraw branch line paths: gitgraph put them in <g><path/></g> before the commit group.
-    //  Simplest, robust: remove all existing <path> elements and draw one straight line per
-    //  branch column connecting the first to last commit in that column.
-    svg.querySelectorAll('path').forEach(function(p) { p.remove(); });
     Object.keys(byColumn).forEach(function(key) {
       var col = byColumn[key];
-      col.sort(function(a,b){return a.newY - b.newY;});
+      col.sort(function(a, b) { return a.newY - b.newY; });
       if (col.length < 2) return;
-      var first = col[0], last = col[col.length-1];
+      var first = col[0], last = col[col.length - 1];
+      var cx = first.bx + 6;   // center x of the branch dot
       var line = document.createElementNS(SVGNS, 'line');
-      line.setAttribute('x1', first.bx + 6);
-      line.setAttribute('y1', first.newY);
-      line.setAttribute('x2', last.bx + 6);
-      line.setAttribute('y2', last.newY);
-      //  Approximate branch color from the commit's dot fill (first child of innerG that's a circle).
+      line.setAttribute('x1', cx);  line.setAttribute('y1', first.newY + 6);
+      line.setAttribute('x2', cx);  line.setAttribute('y2', last.newY + 6);
+      line.setAttribute('class', 'wl-branch');
       var dot = first.fo.parentElement.querySelector('circle');
-      var color = dot ? (dot.getAttribute('fill') || '#64ffda') : '#64ffda';
+      var color = (dot && dot.getAttribute('fill')) || '#64ffda';
       line.setAttribute('stroke', color);
-      line.setAttribute('stroke-width', 2);
-      line.setAttribute('opacity', 0.6);
-      //  Insert at start so lines render behind commit groups
+      line.setAttribute('stroke-width', '2.5');
+      line.setAttribute('opacity', '0.65');
       svg.insertBefore(line, svg.firstChild);
     });
 
-    //  Recompute viewBox to encompass new layout
+    //  Recompute viewBox to encompass the new layout
     try {
       var bbox = svg.getBBox();
       var padL = 30, padR = 30, padT = 20, padB = 20;
-      var vbX = bbox.x - padL;
-      var vbY = bbox.y - padT;
-      var vbW = bbox.width + padL + padR;
-      var vbH = bbox.height + padT + padB;
+      var vbX = bbox.x - padL, vbY = bbox.y - padT;
+      var vbW = bbox.width + padL + padR, vbH = bbox.height + padT + padB;
       svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
       svg.setAttribute('width', vbW);
       svg.setAttribute('height', vbH);
@@ -679,7 +675,7 @@
     });
   }
 
-  function fullPass() { resizeCards(); syncLangFromRoot(); forceRelayoutIfStacked(); }
+  function fullPass() { resizeCards(); syncLangFromRoot(); forceMobileRelayout(); }
   setTimeout(fullPass, 50);
   setTimeout(fullPass, 300);
   setTimeout(fullPass, 900);
