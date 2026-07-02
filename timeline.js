@@ -143,44 +143,72 @@
     };
   }
 
-  //  On iOS Safari, foreignObject.getBoundingClientRect() returns 0 during gitgraph's
-  //  internal height-measurement pass (timing + WebKit quirk).  Since gitgraph adds
-  //  measured_height + commit.spacing for each step, a 0 measurement collapses all
-  //  commits to commit.spacing apart (24 px) — causing visible card overlap.
-  //  Fix: on mobile set commit.spacing to 280 so even with a 0 measurement, 280 px
-  //  between dots is enough to clear a ~220 px card.  Playwright WebKit correctly
-  //  measures heights so spacing there = 280 + measured ≈ 480 px (a touch generous
-  //  but acceptable for a portrait scroll timeline).
+  //  iOS Safari has a persistent WebKit bug where SVG foreignObject layout is
+  //  unreliable: getBoundingClientRect() returns 0 during gitgraph's height pass,
+  //  so commits stack. No spacing tweak survives this — foreignObject on iOS is
+  //  fundamentally broken for complex CSS layouts inside it.
+  //
+  //  Solution: on mobile, skip SVG/gitgraph entirely. Collect card data in
+  //  mobileCards[], then render a plain HTML vertical list after all commits
+  //  are defined. Regular HTML divs work perfectly on every iOS browser.
   var isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+  var mobileCards = [];   // filled by C() regardless of platform
 
-  // ─── Template ───
+  // ─── Build a plain-HTML timeline for mobile ───
+  function renderMobileHTML() {
+    var trackColor = { beta: '#e5b4ff', divergence: '#64ffda', foundation: '#64ffda' };
+    var html = '<div class="wl-m-list">';
+    mobileCards.forEach(function(d) {
+      if (d.yearMark) {
+        html += '<div class="wl-m-year" aria-hidden="true">' + d.yearMark + '</div>';
+      }
+      var track = d.track || 'alpha';
+      var dotCol = trackColor[track] || '#64ffda';
+      html += '<div class="wl-m-row">';
+      html += '<div class="wl-m-dot" style="background:' + dotCol + '" aria-hidden="true"></div>';
+      html += '<div class="gg-card" data-track="' + track + '">' + cardHTML(d) + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // ─── Template (desktop only) ───
   var sgTemplate = GG.templateExtend(GG.TemplateName.Metro, {
     colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#d9a3f0', '#f0c9ff'],
     branch: {
       lineWidth: 2.5,
-      spacing: isMobileViewport ? 60 : 70,
+      spacing: 70,
       mergeStyle: GG.MergeStyle.Bezier,
       label: { display: false }
     },
     commit: {
-      spacing: isMobileViewport ? 280 : 24,
+      spacing: 24,
       hasTooltipInCompactMode: false,
       dot: { size: 6, strokeColor: '#0a192f', strokeWidth: 3 },
       message: { display: false }
     }
   });
 
-  var gitgraph = GG.createGitgraph(container, {
-    template: sgTemplate,
-    orientation: GG.Orientation.VerticalReverse,   // 2023 bottom → 2026 top; fan out UP
-    responsive: false
-  });
+  //  On mobile: dummy gitgraph so branch/commit calls are no-ops.
+  //  On desktop: real gitgraph renders into the SVG container.
+  var _noop = { commit: function() { return _noop; } };
+  var gitgraph = isMobileViewport
+    ? { branch: function() { return _noop; } }
+    : GG.createGitgraph(container, {
+        template: sgTemplate,
+        orientation: GG.Orientation.VerticalReverse,
+        responsive: false
+      });
 
   function C(branch, data, big) {
-    branch.commit({
-      subject: (typeof data.title === 'string' ? data.title : data.title.en),
-      renderDot: renderDotCard(data, { big: !!big })
-    });
+    mobileCards.push(data);   // always collect for mobile HTML
+    if (!isMobileViewport) {
+      branch.commit({
+        subject: (typeof data.title === 'string' ? data.title : data.title.en),
+        renderDot: renderDotCard(data, { big: !!big })
+      });
+    }
   }
 
   // ═══ Build the timeline ═══
@@ -524,41 +552,7 @@
     track: 'beta'
   });
 
-  // ═══ Post-render: resize foreignObjects, expand SVG viewBox, sync language ═══
-  function resizeCards() {
-    var svg = container.querySelector('svg');
-    if (!svg) return;
-    var fos = svg.querySelectorAll('foreignObject');
-    fos.forEach(function(fo) {
-      var inner = fo.firstElementChild;
-      if (inner && inner.offsetHeight) {
-        fo.setAttribute('height', inner.offsetHeight + 6);
-      }
-    });
-    try {
-      var bbox = svg.getBBox();
-      var padL = 30, padR = 30, padT = 20, padB = 20;
-      var vbX = bbox.x - padL;
-      var vbY = bbox.y - padT;
-      var vbW = bbox.width + padL + padR;
-      var vbH = bbox.height + padT + padB;
-      svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
-      svg.setAttribute('width', vbW);
-      svg.setAttribute('height', vbH);
-      //  On mobile the container's overflow-y is hidden (to allow overflow-x scroll).
-      //  Force the container's height to match the SVG's natural height so nothing is
-      //  clipped vertically — page scroll handles vertical progression.
-      if (window.matchMedia('(max-width: 768px)').matches) {
-        container.style.height = vbH + 'px';
-      } else {
-        container.style.height = '';
-      }
-    } catch(e) {}
-  }
-
-  //  After the graph mounts, apply the current language from the site's toggle.
-  //  script.js has already run and set root.lang; re-run its swap for our newly-
-  //  injected data-en/data-zh/data-hk nodes inside foreignObjects.
+  // ─── Apply current language to all [data-en] nodes in container ───
   function syncLangFromRoot() {
     var lang = document.documentElement.lang === 'zh-CN' ? 'zh'
              : document.documentElement.lang === 'zh-HK' ? 'hk'
@@ -570,20 +564,50 @@
     });
   }
 
-  function fullPass() { resizeCards(); syncLangFromRoot(); }
-  setTimeout(fullPass, 50);
-  setTimeout(fullPass, 300);
-  setTimeout(fullPass, 900);
-  window.addEventListener('resize', fullPass);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fullPass);
+  if (isMobileViewport) {
+    // ─── Mobile: inject plain HTML, skip all SVG logic ───
+    container.innerHTML = renderMobileHTML();
+    setTimeout(syncLangFromRoot, 50);
 
-  //  Re-run resize after the site language toggle — Chinese text often differs
-  //  in length from English, so card heights (and SVG bbox) shift.
-  var langBtn = document.getElementById('lang-toggle');
-  if (langBtn) {
-    langBtn.addEventListener('click', function() {
-      setTimeout(fullPass, 350);
-      setTimeout(fullPass, 700);
-    });
+    var langBtn = document.getElementById('lang-toggle');
+    if (langBtn) {
+      langBtn.addEventListener('click', function() {
+        setTimeout(syncLangFromRoot, 250);
+      });
+    }
+
+  } else {
+    // ─── Desktop: SVG gitgraph — resize foreignObjects and sync viewBox ───
+    function resizeCards() {
+      var svg = container.querySelector('svg');
+      if (!svg) return;
+      svg.querySelectorAll('foreignObject').forEach(function(fo) {
+        var inner = fo.firstElementChild;
+        if (inner && inner.offsetHeight) fo.setAttribute('height', inner.offsetHeight + 6);
+      });
+      try {
+        var bbox = svg.getBBox();
+        var vbX = bbox.x - 30, vbY = bbox.y - 20;
+        var vbW = bbox.width + 60, vbH = bbox.height + 40;
+        svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
+        svg.setAttribute('width', vbW);
+        svg.setAttribute('height', vbH);
+      } catch(e) {}
+    }
+
+    function fullPass() { resizeCards(); syncLangFromRoot(); }
+    setTimeout(fullPass, 50);
+    setTimeout(fullPass, 300);
+    setTimeout(fullPass, 900);
+    window.addEventListener('resize', fullPass);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fullPass);
+
+    var langBtn = document.getElementById('lang-toggle');
+    if (langBtn) {
+      langBtn.addEventListener('click', function() {
+        setTimeout(fullPass, 350);
+        setTimeout(fullPass, 700);
+      });
+    }
   }
 })();

@@ -172,6 +172,24 @@
    order: later rule wins on equal specificity).
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+  /* ── Mobile: plain HTML vertical list replaces SVG gitgraph ── */
+  .graph-host { overflow: visible; min-height: 0; padding: 0; }
+  .wl-m-list  { display: flex; flex-direction: column; gap: 12px; padding: 0 0.5rem; }
+  .wl-m-year  {
+    font-family: var(--font-mono,'SF Mono',monospace);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--tl-alpha); letter-spacing: 0.2em;
+    margin-top: 1.2rem; margin-bottom: -4px;
+  }
+  .wl-m-row { display: flex; align-items: flex-start; gap: 10px; }
+  .wl-m-dot {
+    width: 10px; min-width: 10px; height: 10px;
+    border-radius: 50%; border: 2px solid #0a192f;
+    margin-top: 11px; flex-shrink: 0;
+    box-shadow: 0 0 5px rgba(100,255,218,0.35);
+  }
+  .wl-m-row .gg-card { flex: 1; min-width: 0; width: auto; max-width: none; }
+
   .worldline-section {
     padding: 3rem 0.5rem 2.5rem;
   }
@@ -180,8 +198,7 @@
   .worldline-section .worldline-sub    { font-size: 0.6rem;  letter-spacing: 0.1em; }
 
   .worldline-scrollhint {
-    display: block;
-    padding: 0 1rem;
+    display: none;   /* no longer needed — HTML list needs no scroll hint */
   }
 
   /* Horizontal-swipe container. NOTE: on WebKit `overflow-x:auto` + `overflow-y:visible`
