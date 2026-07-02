@@ -141,6 +141,13 @@
     };
   }
 
+  //  Real iOS Safari has a timing bug where foreignObject.getBoundingClientRect() can
+  //  return 0 during gitgraph's internal auto-spacing pass — Playwright WebKit doesn't
+  //  reproduce it, but iPhones do. Two layers of defence below:
+  //    (1) mobile branch spacing is tighter so narrow viewport doesn't require huge scroll
+  //    (2) forceRelayoutIfStacked() runs post-render as a safety net if commits stacked
+  var isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+
   // ─── Template ───
   var sgTemplate = GG.templateExtend(GG.TemplateName.Metro, {
     //  col 0 main / α = teal      col 1 psychiatry = green-teal
@@ -150,12 +157,12 @@
     colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#d9a3f0', '#f0c9ff'],
     branch: {
       lineWidth: 2.5,
-      spacing: 70,
+      spacing: isMobileViewport ? 60 : 70,
       mergeStyle: GG.MergeStyle.Bezier,
       label: { display: false }
     },
     commit: {
-      spacing: 24,       // extra gap; actual dot-to-dot = spacing + measured card height
+      spacing: 24,       // gitgraph adds measured card height on top of this
       hasTooltipInCompactMode: false,
       dot: { size: 6, strokeColor: '#0a192f', strokeWidth: 3 },
       message: { display: false }
@@ -165,7 +172,6 @@
   var gitgraph = GG.createGitgraph(container, {
     template: sgTemplate,
     orientation: GG.Orientation.VerticalReverse,   // 2023 bottom → 2026 top; fan out UP
-    mode: GG.Mode.Extended,
     responsive: false
   });
 
@@ -473,9 +479,9 @@
       'Graphiti — 大模型記憶圖譜推理'
     ),
     meta: t(
-      '2026.05 – Present · Independent · target ICLR 2026',
-      '2026.05 – 至今 · 独立研究 · 目标 ICLR 2026',
-      '2026.05 – 至今 · 獨立研究 · 目標 ICLR 2026'
+      '2026.05 – Present · Independent · target ICLR 2027',
+      '2026.05 – 至今 · 独立研究 · 目标 ICLR 2027',
+      '2026.05 – 至今 · 獨立研究 · 目標 ICLR 2027'
     ),
     body: t(
       'Dynamic knowledge graphs for LLM episodic memory. <span class="hl">Graphiti</span> pipeline: entity extraction → KG construction → graph embedding → multi-hop RAG.',
@@ -487,7 +493,7 @@
       { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
       { type:'first-author', text: t('INDEPENDENT', '独立', '獨立') }
     ],
-    tags: ['GraphRAG','Knowledge Graph','LLM','Graphiti','ICLR 2026'],
+    tags: ['GraphRAG','Knowledge Graph','LLM','Graphiti','ICLR 2027'],
     track: 'beta'
   });
 
@@ -549,6 +555,116 @@
     } catch(e) {}
   }
 
+  // ═══ Mobile safety-net: force-relayout on iOS Safari where gitgraph's internal
+  //     foreignObject height measurement can return 0, stacking all cards ═══
+  //  If we detect that commits share very close y-positions (stacked), we manually
+  //  reposition each commit group by cumulative measured card heights, and redraw
+  //  branch paths as simple straight vertical lines per branch column.
+  function forceRelayoutIfStacked() {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    var svg = container.querySelector('svg');
+    if (!svg) return;
+
+    //  Find all commit groups. Structure produced by gitgraph:
+    //  <g transform="translate(bx, by)"><g transform="translate(6, 6)">[dot, stub, fo, ...]</g></g>
+    var candidates = svg.querySelectorAll('g > g > foreignObject');
+    if (!candidates.length) return;
+    var groups = [];
+    candidates.forEach(function(fo) {
+      var innerG = fo.parentElement;
+      var outerG = innerG && innerG.parentElement;
+      if (!outerG || outerG.tagName.toLowerCase() !== 'g') return;
+      var tr = outerG.getAttribute('transform') || '';
+      var m = /translate\(\s*([-\d.]+)[\s,]+([-\d.]+)/.exec(tr);
+      if (!m) return;
+      groups.push({
+        outer: outerG,
+        fo: fo,
+        bx: parseFloat(m[1]),
+        by: parseFloat(m[2])
+      });
+    });
+    if (groups.length < 2) return;
+
+    //  Detect stacking: sort by y and see if adjacent commits are closer than a typical
+    //  card height (< 100px). If so, gitgraph failed to space them.
+    var sortedByY = groups.slice().sort(function(a,b){return a.by - b.by;});
+    var closeCount = 0;
+    for (var i = 1; i < sortedByY.length; i++) {
+      if (Math.abs(sortedByY[i].by - sortedByY[i-1].by) < 100) closeCount++;
+    }
+    var stacked = closeCount >= sortedByY.length * 0.4;
+
+    //  Even if not obviously stacked, ensure no card overlaps its neighbour.
+    //  Measure each card height first.
+    groups.forEach(function(g) {
+      var inner = g.fo.firstElementChild;
+      var h = 0;
+      if (inner) h = inner.getBoundingClientRect().height || inner.offsetHeight || 0;
+      if (!h) h = 260;   // fallback
+      g.h = h;
+    });
+
+    if (!stacked) return;   // desktop or lucky mobile — leave gitgraph's layout alone
+
+    //  Manual re-layout: assign y positions per branch column, laid out top-to-bottom
+    //  in original creation order (which sortedByY preserves closely — but to be safe,
+    //  keep DOM order which matches creation order).
+    var gap = 20;
+    var byColumn = {};
+    groups.forEach(function(g) {
+      var key = String(Math.round(g.bx));
+      if (!byColumn[key]) byColumn[key] = [];
+      byColumn[key].push(g);
+    });
+
+    //  Global cursor: y increases monotonically across all commits (in DOM order).
+    var cursor = 40;
+    groups.forEach(function(g) {
+      g.newY = cursor;
+      cursor += g.h + gap;
+      g.outer.setAttribute('transform', 'translate(' + g.bx + ', ' + g.newY + ')');
+    });
+
+    //  Redraw branch line paths: gitgraph put them in <g><path/></g> before the commit group.
+    //  Simplest, robust: remove all existing <path> elements and draw one straight line per
+    //  branch column connecting the first to last commit in that column.
+    svg.querySelectorAll('path').forEach(function(p) { p.remove(); });
+    Object.keys(byColumn).forEach(function(key) {
+      var col = byColumn[key];
+      col.sort(function(a,b){return a.newY - b.newY;});
+      if (col.length < 2) return;
+      var first = col[0], last = col[col.length-1];
+      var line = document.createElementNS(SVGNS, 'line');
+      line.setAttribute('x1', first.bx + 6);
+      line.setAttribute('y1', first.newY);
+      line.setAttribute('x2', last.bx + 6);
+      line.setAttribute('y2', last.newY);
+      //  Approximate branch color from the commit's dot fill (first child of innerG that's a circle).
+      var dot = first.fo.parentElement.querySelector('circle');
+      var color = dot ? (dot.getAttribute('fill') || '#64ffda') : '#64ffda';
+      line.setAttribute('stroke', color);
+      line.setAttribute('stroke-width', 2);
+      line.setAttribute('opacity', 0.6);
+      //  Insert at start so lines render behind commit groups
+      svg.insertBefore(line, svg.firstChild);
+    });
+
+    //  Recompute viewBox to encompass new layout
+    try {
+      var bbox = svg.getBBox();
+      var padL = 30, padR = 30, padT = 20, padB = 20;
+      var vbX = bbox.x - padL;
+      var vbY = bbox.y - padT;
+      var vbW = bbox.width + padL + padR;
+      var vbH = bbox.height + padT + padB;
+      svg.setAttribute('viewBox', vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH);
+      svg.setAttribute('width', vbW);
+      svg.setAttribute('height', vbH);
+      container.style.height = vbH + 'px';
+    } catch(e) {}
+  }
+
   //  After the graph mounts, apply the current language from the site's toggle.
   //  script.js has already run and set root.lang; re-run its swap for our newly-
   //  injected data-en/data-zh/data-hk nodes inside foreignObjects.
@@ -563,19 +679,21 @@
     });
   }
 
-  setTimeout(function() { resizeCards(); syncLangFromRoot(); }, 50);
-  setTimeout(function() { resizeCards(); syncLangFromRoot(); }, 300);
-  setTimeout(function() { resizeCards(); syncLangFromRoot(); }, 900);
-  window.addEventListener('resize', resizeCards);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function() { resizeCards(); syncLangFromRoot(); });
+  function fullPass() { resizeCards(); syncLangFromRoot(); forceRelayoutIfStacked(); }
+  setTimeout(fullPass, 50);
+  setTimeout(fullPass, 300);
+  setTimeout(fullPass, 900);
+  setTimeout(fullPass, 1800);   // extra safety pass for slow iOS layout
+  window.addEventListener('resize', fullPass);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fullPass);
 
   //  Re-run resize after the site language toggle — Chinese text often differs
   //  in length from English, so card heights (and SVG bbox) shift.
   var langBtn = document.getElementById('lang-toggle');
   if (langBtn) {
     langBtn.addEventListener('click', function() {
-      setTimeout(resizeCards, 350);   // after script.js's 200ms swap delay
-      setTimeout(resizeCards, 700);
+      setTimeout(fullPass, 350);
+      setTimeout(fullPass, 700);
     });
   }
 })();
