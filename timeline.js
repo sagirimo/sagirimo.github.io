@@ -284,26 +284,52 @@
   var plastic = gitgraph.branch({ name: 'plastic', from: main });
   C(plastic, {
     title: t(
-      'Plastic Surgery AI Lab @ PKU 3rd',
-      '整形外科 AI 实验室 @ 北医三院',
-      '整形外科 AI 實驗室 @ 北醫三院'
+      'PPE Safe Harvesting Area — nnU-Net CT Segmentation',
+      'PPE 安全取骨区 — nnU-Net CT 分割',
+      'PPE 安全取骨區 — nnU-Net CT 分割'
     ),
     meta: t(
-      '2024.09 – 2026.05 · Prof. An Yang · First formal research group',
-      '2024.09 – 2026.05 · 安阳教授 · 第一个正式研究组',
-      '2024.09 – 2026.05 · 安陽教授 · 第一個正式研究組'
+      '2024.09 – 2025.09 · Plastic Surgery AI Lab @ PKU 3rd · Prof. An Yang',
+      '2024.09 – 2025.09 · 整形外科 AI 实验室 @ 北医三院 · 安阳教授',
+      '2024.09 – 2025.09 · 整形外科 AI 實驗室 @ 北醫三院 · 安陽教授'
     ),
     body: t(
-      'Journal clubs, textbook editing, video narration, peer review — <span class="hl">systematic reading + writing skills</span>. Segmented ~1/3 of nasal septum CT data (3D Slicer / Mimics). First DICOM / STL / ML exposure.',
-      '文献汇报、教材编辑、手术视频旁白、辅助审稿——<span class="hl">系统的阅读、写作、评审能力</span>。独立完成约 1/3 的鼻中隔 CT 数据分割标注（3D Slicer / Mimics）。首次接触 DICOM / STL 与机器学习基础。',
-      '文獻匯報、教材編輯、手術視頻旁白、輔助審稿——<span class="hl">系統的閱讀、寫作、評審能力</span>。獨立完成約 1/3 的鼻中隔 CT 數據分割標註（3D Slicer / Mimics）。首次接觸 DICOM / STL 與機器學習基礎。'
+      'AI 3D segmentation of the perpendicular plate of ethmoid (PPE) safe harvesting area for rhinoplasty, from CT. <span class="hl">nnU-Net</span>: train n=121 / val n=31 / test n=39 (200 total). Annotated ~1/3 of dataset (3D Slicer / Mimics). First DICOM / STL / ML exposure. Journal clubs, textbook editing, peer review — systematic academic foundation.',
+      '鼻部整形手术中，基于 CT 识别鼻中隔垂直板（PPE）安全取骨区的 AI 三维分割模型。<span class="hl">nnU-Net</span>：训练 n=121 / 验证 n=31 / 测试 n=39（共 200 例）。独立完成约 1/3 数据标注（3D Slicer / Mimics）。首次接触 DICOM / STL / ML 工作流。文献汇报、教材编辑、辅助审稿——建立系统学术基础。',
+      '鼻部整形手術中，基於 CT 識別鼻中隔垂直板（PPE）安全取骨區的 AI 三維分割模型。<span class="hl">nnU-Net</span>：訓練 n=121 / 驗證 n=31 / 測試 n=39（共 200 例）。獨立完成約 1/3 數據標註（3D Slicer / Mimics）。首次接觸 DICOM / STL / ML 工作流。文獻匯報、教材編輯、輔助審稿——建立系統學術基礎。'
     ),
     badges: [
       { type:'track-a',   text: t('TRACK α', '主线 α', '主線 α') },
       { type:'published', text: t('JPRAS · 2025', 'JPRAS · 2025', 'JPRAS · 2025') },
       { type:'co-author', text: t('CO-AUTHOR', '共同作者', '共同作者') }
     ],
-    tags: ['3D Slicer','Mimics','CT','Segmentation','JPRAS','Diffusion Models'],
+    tags: ['nnU-Net','CT Segmentation','3D Slicer','Mimics','JPRAS','n=200'],
+    track: 'alpha'
+  });
+
+  var plasticDiff = gitgraph.branch({ name: 'plastic-diffusion', from: plastic });
+  C(plasticDiff, {
+    title: t(
+      'Diffusion Point Cloud — Nose 3D Model',
+      '扩散模型点云 — 鼻部三维建模',
+      '擴散模型點雲 — 鼻部三維建模'
+    ),
+    meta: t(
+      '2025 · Independent exploration · Discontinued',
+      '2025 · 个人探索 · 已中止',
+      '2025 · 個人探索 · 已中止'
+    ),
+    body: t(
+      'Personal exploration: diffusion model pipeline for <span class="hl">2D → 3D point cloud</span> generation of nose shape from medical images. Prototype attempted — not continued.',
+      '个人探索：扩散模型驱动的 <span class="hl">2D → 3D 点云</span>生成管道，尝试从医学图像重建鼻部三维形状。原型尝试后未继续推进。',
+      '個人探索：擴散模型驅動的 <span class="hl">2D → 3D 點雲</span>生成管道，嘗試從醫學圖像重建鼻部三維形狀。原型嘗試後未繼續推進。'
+    ),
+    badges: [
+      { type:'track-a',      text: t('TRACK α', '主线 α', '主線 α') },
+      { type:'discontinued', text: t('DISCONTINUED', '已中止', '已中止') },
+      { type:'first-author', text: t('INDEPENDENT', '独立', '獨立') }
+    ],
+    tags: ['Diffusion Models','Point Cloud','3D Reconstruction','PyTorch'],
     track: 'alpha'
   });
 
@@ -424,6 +450,8 @@
     track: 'alpha'
   });
 
+  var alphaTang = gitgraph.branch({ name: 'alpha-tang', from: main });
+
   C(beta, {
     title: t(
       'Breast Tumor Localization',
@@ -449,7 +477,7 @@
     track: 'beta'
   });
 
-  C(main, {
+  C(alphaTang, {
     title: t(
       'Robotic ACL Reconstruction — Multi-Center RCT',
       '机器人辅助 ACL 重建 — 多中心 RCT',
@@ -474,16 +502,16 @@
     track: 'alpha'
   });
 
-  C(main, {
+  C(alphaTang, {
     title: t(
       '3D-Printed Surgical Guide System',
       '3D 打印手术导板系统',
       '3D 打印手術導板系統'
     ),
     meta: t(
-      '2026.01 – Present · BIT Multi-Modal Lab (Prof. Ma Kang)',
-      '2026.01 – 至今 · 北理工多模态实验室（马康教授）',
-      '2026.01 – 至今 · 北理工多模態實驗室（馬康教授）'
+      '2026.01 – Present · Tang Zhengjie × BIT Multi-Modal Lab (Prof. Ma Kang)',
+      '2026.01 – 至今 · 唐政杰 × 北理工多模态实验室（马康教授）',
+      '2026.01 – 至今 · 唐政杰 × 北理工多模態實驗室（馬康教授）'
     ),
     body: t(
       'CV-driven personalized 3D-printed guides for UKA / ACL. Market research, competitor analysis (Shikang / Changmugu / Anying), <span class="hl">physician needs interviews</span>. Entered "Challenge Cup 2026".',

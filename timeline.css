@@ -154,6 +154,7 @@
 .gg-card .badge.co-author    { background: rgba(200,220,255,0.08); color: var(--slate-light,#a8b2d1); border: 1px solid rgba(200,220,255,0.2); }
 .gg-card .badge.track-a      { background: rgba(100,255,218,0.13); color: var(--tl-alpha); border: 1px solid var(--tl-alpha); }
 .gg-card .badge.track-b      { background: rgba(229,180,255,0.13); color: var(--tl-beta);  border: 1px solid var(--tl-beta); }
+.gg-card .badge.discontinued { background: rgba(140,140,140,0.10); color: #888; border: 1px solid rgba(140,140,140,0.25); text-decoration: line-through; }
 
 .gg-card .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
 .gg-card .tags span { font-family: var(--font-mono,'SF Mono',monospace); font-size: 0.54rem; padding: 0.16rem 0.5rem; border-radius: 10px; background: rgba(100,255,218,0.07); color: var(--tl-alpha); letter-spacing: 0.03em; white-space: nowrap; }
