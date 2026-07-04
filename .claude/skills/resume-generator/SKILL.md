@@ -22,7 +22,11 @@ Ask the user:
 3. **Length preference**: 1 page compact or 2 pages with full detail? (default: 1 page for 套磁, 2 pages for PhD application)
 
 ### Step 3: Generate Resume HTML
-Create `resume.html` in the project root. Use the guidelines below:
+Get today's date (YYYY-MM-DD format). Create the output directory and files at:
+- `resumes/YYYY-MM-DD/CV_Pengyu_Zhan.html`
+- `resumes/YYYY-MM-DD/CV_Pengyu_Zhan.pdf`
+
+Do NOT create any files in the project root. Use the guidelines below:
 
 **Design (Academic CV Standard):**
 - Clean, minimal, black text on white background
@@ -49,7 +53,7 @@ Create `resume.html` in the project root. Use the guidelines below:
    - For early-stage projects, mention the direction and methodology
 4. **Publications** — Full citations in standard academic format. Bold your name (Zhan P) in author lists where applicable.
 5. **Skills** — Categorize: **Computational** (Python, PyTorch, PointNet++, Diffusion Models, etc.) and **Clinical** (Robotic Surgery, UKA, ACL, CT Planning, RCT Design, etc.)
-6. **Languages** — Chinese (Native), English (TOEFL iBT: 4.5/6.0)
+6. **Languages** — Chinese (Native), English (TOEFL iBT: 5.0/6.0)
 
 **Content Guidelines:**
 - Use the extracted JSON data — don't make up new achievements
@@ -60,32 +64,34 @@ Create `resume.html` in the project root. Use the guidelines below:
 - Bold your name in author lists
 
 ### Step 4: Generate PDF
-Use Playwright MCP to convert the HTML to PDF:
+Use Node.js + Playwright to convert the HTML to PDF. Replace `YYYY-MM-DD` with today's date:
 
-1. **Navigate** to the local file:
-   ```
-   mcp__plugin_playwright_playwright__browser_navigate
-   url: file:///Users/moliex/projects/personal-site/resume.html
-   ```
+```js
+const { chromium } = require('playwright');
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  const absPath = path.resolve('resumes/YYYY-MM-DD/CV_Pengyu_Zhan.html').split(path.sep).join('/');
+  await page.goto('file:///' + absPath, { waitUntil: 'networkidle' });
+  await page.pdf({
+    path: 'resumes/YYYY-MM-DD/CV_Pengyu_Zhan.pdf',
+    format: 'A4',
+    printBackground: false,
+    margin: { top: '0.6in', bottom: '0.6in', left: '0.7in', right: '0.7in' }
+  });
+  await browser.close();
+  console.log('PDF saved');
+})();
+```
 
-2. **Generate PDF** using `browser_run_code_unsafe`:
-   ```js
-   async (page) => {
-     await page.pdf({
-       path: '/Users/moliex/projects/personal-site/resume.pdf',
-       format: 'A4',
-       printBackground: false,
-       margin: { top: '0.6in', bottom: '0.6in', left: '0.7in', right: '0.7in' }
-     });
-     return 'PDF saved';
-   }
-   ```
+Run via: `node -e "<above code>"`
 
-3. Verify the PDF was created: check file size > 0
+Verify the PDF was created: check file size > 0
 
 ### Step 5: Summary
 Tell the user:
-- Where the files are: `resume.html` and `resume.pdf`
+- Where the files are: `resumes/YYYY-MM-DD/CV_Pengyu_Zhan.html` and `.pdf`
 - Page count
 - Key sections included
 - Remind them to add phone number if needed
