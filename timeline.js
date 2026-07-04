@@ -175,7 +175,7 @@
 
   // ─── Template (desktop only) ───
   var sgTemplate = GG.templateExtend(GG.TemplateName.Metro, {
-    colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#7ecba5', '#d9a3f0', '#f0c9ff'],
+    colors: ['#64ffda', '#7ecba5', '#d9a3f0', '#b87ae0', '#c490e8'],
     branch: {
       lineWidth: 2.5,
       spacing: 70,
@@ -232,8 +232,7 @@
     track: 'foundation'
   });
 
-  var psychiatry = gitgraph.branch({ name: 'psychiatry', from: main });
-  C(psychiatry, {
+  C(main, {
     yearMark: '2024',
     title: t(
       'Psychiatry & Clinical Research @ PKU 6th',
@@ -257,7 +256,7 @@
     tags: ['SPSS','RCT','Meta-Analysis','MFGT'],
     track: 'alpha'
   });
-  C(psychiatry, {
+  C(main, {
     title: t(
       'BMC Psychology Publication',
       'BMC Psychology 发表',
@@ -281,8 +280,7 @@
     track: 'alpha'
   });
 
-  var plastic = gitgraph.branch({ name: 'plastic', from: main });
-  C(plastic, {
+  C(main, {
     title: t(
       'PPE Safe Harvesting Area — nnU-Net CT Segmentation',
       'PPE 安全取骨区 — nnU-Net CT 分割',
@@ -307,8 +305,7 @@
     track: 'alpha'
   });
 
-  var plasticDiff = gitgraph.branch({ name: 'plastic-diffusion', from: plastic });
-  C(plasticDiff, {
+  C(main, {
     title: t(
       'Diffusion Point Cloud — Nose 3D Model',
       '扩散模型点云 — 鼻部三维建模',
@@ -357,8 +354,7 @@
     track: 'milestone'
   }, true);
 
-  var cardio = gitgraph.branch({ name: 'cardio', from: main });
-  C(cardio, {
+  C(main, {
     title: t(
       'Cardiology Meta-Analysis',
       '心内科 Meta 分析',
@@ -383,8 +379,7 @@
     track: 'alpha'
   });
 
-  var reasoning = gitgraph.branch({ name: 'reasoning', from: main });
-  C(reasoning, {
+  C(main, {
     title: t(
       'Clinical Reasoning & Diagnostic Thinking',
       '临床推理与诊断思维',
