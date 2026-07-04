@@ -175,7 +175,7 @@
 
   // ─── Template (desktop only) ───
   var sgTemplate = GG.templateExtend(GG.TemplateName.Metro, {
-    colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#d9a3f0', '#f0c9ff'],
+    colors: ['#64ffda', '#7ee3b8', '#ffd085', '#ff9db0', '#a0d8ff', '#e5b4ff', '#7ecba5', '#d9a3f0', '#f0c9ff'],
     branch: {
       lineWidth: 2.5,
       spacing: 70,
@@ -423,6 +423,7 @@
     track: 'divergence'
   }, true);
 
+  var alphaTang = gitgraph.branch({ name: 'alpha-tang', from: main });
   var beta = gitgraph.branch({ name: 'track-beta', from: main });
 
   C(main, {
@@ -449,8 +450,6 @@
     tags: ['Robotic Surgery','UKA','CT Planning','CUSUM'],
     track: 'alpha'
   });
-
-  var alphaTang = gitgraph.branch({ name: 'alpha-tang', from: main });
 
   C(beta, {
     title: t(
