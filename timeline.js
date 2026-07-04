@@ -451,31 +451,6 @@
     track: 'alpha'
   });
 
-  C(beta, {
-    title: t(
-      'Breast Tumor Localization',
-      '乳腺肿瘤定位：俯卧位 → 仰卧位预测',
-      '乳腺腫瘤定位：俯臥位 → 仰臥位預測'
-    ),
-    meta: t(
-      '2026.03 – Present · Independent · target JBHI 2026',
-      '2026.03 – 至今 · 独立研究 · 目标 JBHI 2026',
-      '2026.03 – 至今 · 獨立研究 · 目標 JBHI 2026'
-    ),
-    body: t(
-      'Prone MRI → Supine prediction. <span class="hl">314 paired cases</span> (Shenzhen No.2 Hospital). Pipeline: point cloud → ICP → CPD → <span class="hl">PointNet++</span> → 3D coordinate prediction.',
-      '俯卧位 MRI → 仰卧位定位预测。<span class="hl">314 对配对病例</span>（深圳市第二人民医院）。技术路线：表面点云 → ICP 刚性配准 → CPD 非刚性变形 → <span class="hl">PointNet++</span> → 三维坐标预测。',
-      '俯臥位 MRI → 仰臥位定位預測。<span class="hl">314 對配對病例</span>（深圳市第二人民醫院）。技術路線：表面點雲 → ICP 剛性配準 → CPD 非剛性變形 → <span class="hl">PointNet++</span> → 三維坐標預測。'
-    ),
-    badges: [
-      { type:'track-b',      text: t('TRACK β', '分支 β', '分支 β') },
-      { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
-      { type:'first-author', text: t('FIRST AUTHOR', '第一作者', '第一作者') }
-    ],
-    tags: ['PointNet++','ICP/CPD','3D Point Cloud','n=314','PyTorch','JBHI'],
-    track: 'beta'
-  });
-
   C(alphaTang, {
     title: t(
       'Robotic ACL Reconstruction — Multi-Center RCT',
@@ -524,6 +499,31 @@
     ],
     tags: ['3D Printing','CV','Surgical Guide','MedTech','Challenge Cup'],
     track: 'alpha'
+  });
+
+  C(beta, {
+    title: t(
+      'Breast Tumor Localization',
+      '乳腺肿瘤定位：俯卧位 → 仰卧位预测',
+      '乳腺腫瘤定位：俯臥位 → 仰臥位預測'
+    ),
+    meta: t(
+      '2026.03 – Present · Independent · target JBHI 2026',
+      '2026.03 – 至今 · 独立研究 · 目标 JBHI 2026',
+      '2026.03 – 至今 · 獨立研究 · 目標 JBHI 2026'
+    ),
+    body: t(
+      'Prone MRI → Supine prediction. <span class="hl">314 paired cases</span> (Shenzhen No.2 Hospital). Pipeline: point cloud → ICP → CPD → <span class="hl">PointNet++</span> → 3D coordinate prediction.',
+      '俯卧位 MRI → 仰卧位定位预测。<span class="hl">314 对配对病例</span>（深圳市第二人民医院）。技术路线：表面点云 → ICP 刚性配准 → CPD 非刚性变形 → <span class="hl">PointNet++</span> → 三维坐标预测。',
+      '俯臥位 MRI → 仰臥位定位預測。<span class="hl">314 對配對病例</span>（深圳市第二人民醫院）。技術路線：表面點雲 → ICP 剛性配準 → CPD 非剛性變形 → <span class="hl">PointNet++</span> → 三維坐標預測。'
+    ),
+    badges: [
+      { type:'track-b',      text: t('TRACK β', '分支 β', '分支 β') },
+      { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
+      { type:'first-author', text: t('FIRST AUTHOR', '第一作者', '第一作者') }
+    ],
+    tags: ['PointNet++','ICP/CPD','3D Point Cloud','n=314','PyTorch','JBHI'],
+    track: 'beta'
   });
 
   C(main, {
