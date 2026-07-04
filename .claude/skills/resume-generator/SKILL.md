@@ -49,7 +49,7 @@ Create `resume.html` in the project root. Use the guidelines below:
    - For early-stage projects, mention the direction and methodology
 4. **Publications** — Full citations in standard academic format. Bold your name (Zhan P) in author lists where applicable.
 5. **Skills** — Categorize: **Computational** (Python, PyTorch, PointNet++, Diffusion Models, etc.) and **Clinical** (Robotic Surgery, UKA, ACL, CT Planning, RCT Design, etc.)
-6. **Languages** — Chinese (Native), English (Professional proficiency)
+6. **Languages** — Chinese (Native), English (TOEFL iBT: 4.5/6.0)
 
 **Content Guidelines:**
 - Use the extracted JSON data — don't make up new achievements

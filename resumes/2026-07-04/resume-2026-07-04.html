@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zhan Pengyu — CV</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.38;
+    color: #1a1a1a;
+    background: #fff;
+    max-width: 190mm;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  a { color: #1a1a1a; text-decoration: none; }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 8mm 0 4mm;
+  }
+  .header h1 {
+    font-size: 17pt;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 2.5mm;
+    color: #000;
+  }
+  .header .contact {
+    font-size: 9pt;
+    color: #333;
+    line-height: 1.55;
+  }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 3.2mm; }
+  .section-title {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #000;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.6mm;
+    margin-bottom: 2mm;
+  }
+
+  /* ── Education ── */
+  .edu-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8mm; }
+  .edu-header strong { font-size: 10pt; }
+  .edu-header .date { font-size: 9pt; color: #444; white-space: nowrap; }
+  .edu-detail { font-size: 8.5pt; color: #333; }
+  .edu-detail ul { list-style: disc; padding-left: 1.6em; margin: 0.8mm 0; }
+  .edu-detail ul li { margin-bottom: 0.2mm; }
+
+  /* ── Research Interests ── */
+  .interest-list { list-style: disc; padding-left: 1.6em; font-size: 9pt; }
+  .interest-list li { margin-bottom: 0.3mm; }
+
+  /* ── Research Experience ── */
+  .lab-group { margin-bottom: 2.8mm; }
+  .lab-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .lab-name { font-weight: 700; font-size: 10pt; color: #000; }
+  .lab-location { font-size: 8.5pt; color: #555; font-style: italic; }
+  .lab-role { display: flex; justify-content: space-between; align-items: baseline; font-size: 9pt; font-style: italic; color: #333; margin-bottom: 1.2mm; }
+  .lab-role .date { font-size: 8.5pt; color: #555; white-space: nowrap; }
+
+  .project { margin-bottom: 1.8mm; margin-left: 0.5em; }
+  .project-title { font-weight: 600; font-size: 9pt; color: #000; margin-bottom: 0.2mm; }
+  .project-desc { font-size: 8.5pt; color: #333; line-height: 1.38; }
+  .project-desc .label { font-weight: 600; font-style: italic; color: #000; }
+
+  /* ── Publications ── */
+  .pub-category { font-weight: 600; font-style: italic; font-size: 9pt; color: #000; margin: 2mm 0 0.8mm; }
+  .pub-category:first-child { margin-top: 0; }
+  .pub-item { font-size: 8.5pt; margin-bottom: 1.2mm; line-height: 1.38; padding-left: 1.4em; text-indent: -1.4em; }
+  .pub-num { font-weight: 600; }
+
+  /* ── Skills ── */
+  .skills-grid { display: flex; gap: 2em; }
+  .skills-col { flex: 1; }
+  .skills-col h4 { font-size: 9pt; font-weight: 600; color: #000; margin-bottom: 0.8mm; }
+  .skills-col ul { list-style: disc; padding-left: 1.4em; font-size: 8.5pt; line-height: 1.4; color: #333; }
+  .skills-col ul li { margin-bottom: 0.2mm; }
+
+  /* ── Print ── */
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { size: A4; margin: 14mm 17mm 14mm 17mm; }
+    a { color: #1a1a1a; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+  <h1>Zhan Pengyu</h1>
+  <div class="contact">
+    Mobile: (+86) 19806332048 &nbsp;|&nbsp; Email: 2210122911@stu.pku.edu.cn<br>
+    Address: Teaching Building, Aerospace Center Hospital (PKU Aerospace School of Clinical Medicine),<br>
+    No. 15 Yuquan Road, Haidian District, Beijing, China
+  </div>
+</div>
+
+<!-- ═══════ EDUCATION ═══════ -->
+<div class="section">
+  <div class="section-title">Education</div>
+  <div class="edu-header">
+    <strong>Peking University Health Science Center (PKUHSC)</strong>
+    <span class="date">Beijing, China</span>
+  </div>
+  <div class="edu-header" style="margin-bottom:1.5mm;">
+    <span>Candidate for M.D. in Clinical Medicine</span>
+    <span class="date">Sept 2022 – July 2027 (Expected)</span>
+  </div>
+  <div class="edu-detail">
+    • <strong>Key Academic Highlights (Core Competencies):</strong>
+    <ul>
+      <li><strong>Computer Science &amp; Engineering:</strong> Introduction to Computing (94/100), General Physics (92/100), Electronic Info Tech Practice (91/100), Rapid Prototyping (89/100).</li>
+      <li><strong>Research &amp; Clinical Reasoning (PBL):</strong> Innovation Comprehensive Experiment (97/100), Innovation Thinking III (93/100), General Surgery (88/100).</li>
+    </ul>
+    • English Proficiency: TOEFL iBT: 4.5/6.0 (completed June 2026)
+  </div>
+</div>
+
+<!-- ═══════ RESEARCH INTERESTS ═══════ -->
+<div class="section">
+  <div class="section-title">Research Interests</div>
+  <ul class="interest-list">
+    <li>Multimodal Learning in Healthcare &amp; Medical Foundation Models (VLM/LLM);</li>
+    <li>Clinical Reasoning Logic powered by Artificial Intelligence;</li>
+    <li>Medical Vision &amp; Generative AI (2D-to-3D Reconstruction, Point Cloud Processing);</li>
+    <li>Surgical Robotics &amp; Precision Navigation (Translational Research &amp; Tech-transfer).</li>
+  </ul>
+</div>
+
+<!-- ═══════ RESEARCH EXPERIENCE ═══════ -->
+<div class="section">
+  <div class="section-title">Research Experience</div>
+
+  <!-- ── Lab 1: Orthopedic Robotics ── -->
+  <div class="lab-group">
+    <div class="lab-header">
+      <span class="lab-name">Orthopedic Robotics &amp; AI Research Group</span>
+      <span class="lab-location">Aerospace Center Hospital</span>
+    </div>
+    <div class="lab-role">
+      <span>Core Student Investigator &amp; Project Lead</span>
+      <span class="date">April 2025 – Present</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project 1: AI-Driven 3D-Printed Surgical Guide System (Joint w/ BIT)</div>
+      <div class="project-desc">
+        <span class="label">Overview:</span> Spearheading the development of personalized 3D-printed surgical guides for UKA/ACL procedures, acting as a bridge between clinical pain points and multimodal algorithmic solutions.<br>
+        <span class="label">Role &amp; Execution:</span> Serving as Clinical Tech Coordinator. Leading a cross-functional team to integrate AI-based bone segmentation with rapid prototyping (3D printing) to achieve robotic-level precision at a lower cost.<br>
+        <span class="label">Cross-Disciplinary Collaboration:</span> Collaborating directly with the Multi-Modal Lab at Beijing Institute of Technology (BIT) for algorithm validation and technical implementation. Competed in 2026 Innovation Beijing Challenge Cup.
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project 2: Robotic-Assisted UKA (Translational Research)</div>
+      <div class="project-desc">
+        <span class="label">Overview:</span> Leading a translational study evaluating the surgical accuracy and learning curve of the Changmugu™ Robotic System (Fixed-Bearing Platform).<br>
+        <span class="label">Primary Operator:</span> Served as the primary student operator in a supervised research setting, completing 20 robotic UKA procedures on sawbone models. Mastered the full workflow: CT-based planning, registration, and robotic arm control.<br>
+        <span class="label">Study Design &amp; Analysis:</span> Designed the experimental protocol to quantify surgical precision (bone resection accuracy &amp; mechanical alignment). Analyzed data from 40 cases to establish the learning curve.<br>
+        <span class="label">Outcome:</span> Manuscript drafted and finalized. Submitted to <em>Frontiers in Bioengineering and Biotechnology</em> (Biomechanics). <strong>First author.</strong>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project 3: Robotic-Assisted ACL Reconstruction (2026 NSFC Grant Preparation)</div>
+      <div class="project-desc">
+        <span class="label">Study Type:</span> A prospective multi-center RCT in collaboration with Beijing Jishuitan Hospital (National Center for Orthopedics).<br>
+        <span class="label">Role:</span> Student Co-Investigator (Assisting PI: Dr. Tang Zhengjie).<br>
+        <span class="label">Contribution:</span> Formulated the Randomized Controlled Trial (RCT) protocol (n=120) and defined the technical roadmap for validating TiRobot-assisted tunnel accuracy.<br>
+        <span class="label">Strategic Work:</span> Currently synthesizing preliminary data (from sawbones/cadavers) to demonstrate feasibility and support the 2026 National Natural Science Foundation of China (NSFC) grant application.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Lab 2: Plastic Surgery AI ── -->
+  <div class="lab-group">
+    <div class="lab-header">
+      <span class="lab-name">Plastic Surgery AI Lab</span>
+      <span class="lab-location">Peking University Third Hospital</span>
+    </div>
+    <div class="lab-role">
+      <span>Research Assistant &amp; Algorithm Developer</span>
+      <span class="date">Sept 2024 – May 2026</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project: AI-Driven 3D Reconstruction &amp; Clinical Research (Prof. An Yang)</div>
+      <div class="project-desc">
+        <span class="label">First Formal Research Group:</span> Weekly journal clubs covering the full spectrum of plastic surgery research — basic science, clinical study design, surgical techniques (rhinoplasty), and craniofacial imaging. Built foundational knowledge through intensive literature immersion.<br>
+        <span class="label">Key Publication (JPRAS 2025):</span> Co-authored AI-guided navigation paper for CT-based safe harvesting area identification. Independently annotated 1/3 of patient nasal septum CT scans using Mimics &amp; 3D Slicer — first exposure to medical image segmentation, STL file processing, and machine learning workflows.<br>
+        <span class="label">Additional Contributions:</span> Assisted in editing a plastic surgery textbook, narrated surgical technique videos, and co-authored numerous peer reviews — developing academic writing and critical appraisal skills.<br>
+        <span class="label">Independent Exploration:</span> Built a proof-of-concept Diffusion Model pipeline (PyTorch) for 2D-to-3D point cloud generation from medical images, bridging clinical imaging with generative AI.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Lab 3: Independent & Collaborative Research ── -->
+  <div class="lab-group">
+    <div class="lab-header">
+      <span class="lab-name">Independent &amp; Collaborative Research Projects</span>
+      <span class="lab-location">Multi-Institutional</span>
+    </div>
+    <div class="lab-role">
+      <span>Research Lead &amp; Collaborator</span>
+      <span class="date">2026.3 – Present</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project: Breast Tumor Localization — Prone MRI → Supine Prediction</div>
+      <div class="project-desc">
+        <span class="label">Overview:</span> Developing a novel clinical pipeline combining ICP rigid alignment, CPD non-rigid deformation, and PointNet++ deep learning to predict supine breast tumor position from prone MRI. <strong>First author.</strong><br>
+        <span class="label">Data &amp; Scale:</span> Curated and processed 314 paired cases from Shenzhen No.2 Hospital — among the largest datasets in this domain. Targeting JBHI 2026.<br>
+        <span class="label">Methods:</span> Surface point cloud registration → non-rigid deformation → deep learning prediction. Full pipeline implementation in PyTorch.
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project: LLM Long-term Memory via Dynamic Knowledge Graphs</div>
+      <div class="project-desc">
+        <span class="label">Overview:</span> Building on temporal knowledge-graph frameworks, researching improvements to episodic memory for LLM agents: entity deduplication, temporal decay strategies, and multi-hop RAG retrieval over evolving graphs.<br>
+        <span class="label">Target:</span> ICLR 2027 submission. Architecture design and prototype in progress.
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project: Embodied AI — Motion Recognition &amp; Assessment (w/ BIT Multi-Modal Lab, Prof. Ma Kang)</div>
+      <div class="project-desc">
+        <span class="label">Overview:</span> Developing multi-modal sensor fusion pipelines for motion recognition and scoring, with applications in surgical skill assessment and rehabilitation monitoring.
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Project: ADHD &amp; School Refusal — Multi-Family Group Therapy RCT (PKU Sixth Hospital, Prof. Qian Ying)</div>
+      <div class="project-desc">
+        <span class="label">Role:</span> Clinical Research Intern (July – Oct 2024). Immersed in adolescent psychiatry outpatient clinic, learning clinical research methodology from one of China's leading psychiatric institutions.<br>
+        <span class="label">Core Learning:</span> Mastered statistical analysis methods (SPSS), meta-analysis workflows, and clinical trial design through weekly journal clubs. Psychiatry's rigorous statistical tradition shaped my understanding of evidence quality and methodology–results interpretation.<br>
+        <span class="label">Contribution:</span> Participated in RCT data collection and organization, presented latest MFGT and school refusal intervention literature. Co-authored the resulting <em>BMC Psychology</em> (2026) publication.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PUBLICATIONS ═══════ -->
+<div class="section">
+  <div class="section-title">Publications</div>
+
+  <div class="pub-category">Core Medical AI &amp; Robotics:</div>
+  <div class="pub-item">
+    <span class="pub-num">[1]</span> <strong>Zhan P</strong>, et al. Robotic-Assisted UKA Surgical Accuracy and Learning Curve Analysis. <em>Submitted to Frontiers in Bioengineering and Biotechnology</em> (Biomechanics). <strong>(First author)</strong>
+  </div>
+  <div class="pub-item">
+    <span class="pub-num">[2]</span> Shen H*, Pan X*, Du S*, <strong>Zhan P</strong>, et al. AI-based three-dimensional identification of safe harvesting area of perpendicular plate of ethmoid in rhinoplasty. <em>Journal of Plastic, Reconstructive &amp; Aesthetic Surgery (JPRAS)</em>, 2025.
+  </div>
+
+  <div class="pub-category">Collaborative Clinical Research:</div>
+  <div class="pub-item">
+    <span class="pub-num">[3]</span> Wang Y, Wang X, Xiong Y, <strong>Zhan P</strong>, Ding R, Shi C. Effectiveness of Multi-Family Group Therapy for School Refusal in Adolescents with Depressive Disorders: Study Protocol for a Randomized Controlled Trial. <em>BMC Psychology</em>, 2026.
+  </div>
+  <div class="pub-item">
+    <span class="pub-num">[4]</span> <strong>Zhan P</strong>, et al. Atrial septal pacing reduces atrial fibrillation compared with right atrial appendage pacing: Insights from the clinical evidence. <em>Manuscript in preparation</em>.
+  </div>
+  <div class="pub-item">
+    <span class="pub-num">[5]</span> <strong>Zhan P</strong> (Editor). <em>Understanding Pneumothorax: Mastering the Secrets of Recovery</em>. Medical Popular Science Book, published.
+  </div>
+</div>
+
+<!-- ═══════ SKILLS ═══════ -->
+<div class="section">
+  <div class="section-title">Skills</div>
+  <div class="skills-grid">
+    <div class="skills-col">
+      <h4>Programming &amp; AI/ML</h4>
+      <ul>
+        <li><strong>Python, C++</strong> — proficient since middle school; primary languages for research</li>
+        <li><strong>Deep Learning:</strong> PyTorch, PointNet++, Diffusion Models, ICP/CPD, 3D Point Cloud Processing</li>
+        <li><strong>LLM &amp; AI Tools:</strong> Claude Code (advanced), OpenAI Codex (advanced), Git, GraphRAG, Knowledge Graphs</li>
+        <li><strong>Medical Image Analysis:</strong> CT/MRI/DICOM, 3D Reconstruction, Computer Vision</li>
+      </ul>
+    </div>
+    <div class="skills-col">
+      <h4>Clinical &amp; Translational Research</h4>
+      <ul>
+        <li><strong>Surgical Robotics:</strong> Changmugu, TiRobot — operation, CT planning, CUSUM learning curve analysis</li>
+        <li><strong>Clinical Research:</strong> RCT protocol design (n=120), systematic review, clinical data management</li>
+        <li><strong>Translational:</strong> Clinical needs analysis, PoC design, interdisciplinary team coordination, NSFC grant preparation</li>
+        <li><strong>Rapid Prototyping:</strong> 3D printing, surgical guide design, medical device innovation</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
