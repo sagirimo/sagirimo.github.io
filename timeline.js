@@ -456,21 +456,21 @@
       '機器人輔助 ACL 重建 — 多中心 RCT'
     ),
     meta: t(
-      '2025.10 – Present · w/ Jishuitan Hospital · NSFC 2026',
-      '2025.10 – 至今 · 合作方：积水潭医院 · 2026 国自然申报',
-      '2025.10 – 至今 · 合作方：積水潭醫院 · 2026 國自然申報'
+      '2025.10 – Present · Tang Zhengjie × Jishuitan Hospital',
+      '2025.10 – 至今 · 唐政杰 × 积水潭医院',
+      '2025.10 – 至今 · 唐政杰 × 積水潭醫院'
     ),
     body: t(
-      'Co-designed <span class="hl">n=120 RCT</span> protocol. TiRobot validation roadmap: sawbone → cadaver → clinical. Participating in 2026 NSFC grant application.',
-      '合作设计 <span class="hl">n=120 RCT</span> 方案，制定 TiRobot 精度验证路线：假骨 → 尸体 → 临床。参与 2026 年国家自然科学基金申报。',
-      '合作設計 <span class="hl">n=120 RCT</span> 方案，制定 TiRobot 精度驗證路線：假骨 → 屍體 → 臨床。參與 2026 年國家自然科學基金申報。'
+      'Co-designed <span class="hl">n=120 RCT</span> protocol. TiRobot validation roadmap: sawbone → cadaver → clinical. Ethics approved; long-horizon study — advancing incrementally as clinical conditions allow.',
+      '合作设计 <span class="hl">n=120 RCT</span> 方案，制定 TiRobot 精度验证路线：假骨 → 尸体 → 临床。伦理审批已通过；长周期研究，随临床条件逐步推进。',
+      '合作設計 <span class="hl">n=120 RCT</span> 方案，制定 TiRobot 精度驗證路線：假骨 → 屍體 → 臨床。倫理審批已通過；長週期研究，隨臨床條件逐步推進。'
     ),
     badges: [
       { type:'track-a',   text: t('TRACK α', '主线 α', '主線 α') },
       { type:'ongoing',   text: t('ONGOING', '进行中', '進行中') },
       { type:'co-author', text: t('CO-INVESTIGATOR', '合作研究员', '合作研究員') }
     ],
-    tags: ['RCT n=120','TiRobot','ACL','NSFC Grant'],
+    tags: ['RCT n=120','TiRobot','ACL','Ethics Approved'],
     track: 'alpha'
   });
 
@@ -496,6 +496,56 @@
       { type:'first-author', text: t('CLINICAL & PRODUCT LEAD', '临床与产品负责人', '臨床與產品負責人') }
     ],
     tags: ['3D Printing','CV','Surgical Guide','MedTech','Challenge Cup'],
+    track: 'alpha'
+  });
+
+  C(main, {
+    title: t(
+      'Robotic UKA Retrospective Cohort — CPAK Phenotype & Outcomes',
+      '机器人单髁多模态回顾队列 — CPAK 表型与患者结局',
+      '機器人單髁多模態回顧隊列 — CPAK 表型與患者結局'
+    ),
+    meta: t(
+      '2026.06 – Present · Orthopedic Robotics & AI Lab · Chen Jing',
+      '2026.06 – 至今 · 骨科机器人与 AI 研究组 · 陈晶',
+      '2026.06 – 至今 · 骨科機器人與 AI 研究組 · 陳晶'
+    ),
+    body: t(
+      'Retrospective cohort validating individualized constitutional alignment in robot-assisted fixed-bearing medial UKA (Changmugu™). Primary hypothesis: <span class="hl">CPAK phenotype preservation</span> correlates with superior PROMs (FJS-12 / OKS). Multimodal imaging (X-ray + CT + MRI). Single-surgeon series — competitive data moat.',
+      '回顾性队列研究，验证机器人辅助固定平台内侧 UKA（长木谷™）中个体化力线方案的临床效果。核心假设：<span class="hl">CPAK 表型保留</span>与更优 PROMs（FJS-12 / OKS）相关。多模态影像（X 光 + CT + MRI），单术者系列——数据竞争壁垒高。',
+      '回顧性隊列研究，驗證機器人輔助固定平台內側 UKA（長木谷™）中個體化力線方案的臨床效果。核心假設：<span class="hl">CPAK 表型保留</span>與更優 PROMs（FJS-12 / OKS）相關。多模態影像（X 光 + CT + MRI），單術者系列——數據競爭壁壘高。'
+    ),
+    badges: [
+      { type:'track-a',      text: t('TRACK α', '主线 α', '主線 α') },
+      { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
+      { type:'first-author', text: t('FIRST AUTHOR', '第一作者', '第一作者') }
+    ],
+    tags: ['CPAK','UKA','Changmugu','PROMs','FJS-12','Retrospective Cohort'],
+    track: 'alpha'
+  });
+
+  C(main, {
+    title: t(
+      'Individualized UKA Planning Protocol — CPAK + Ligament Tension',
+      '固定平台 UKA 个体化规划标准 — CPAK 分型与韧带张力',
+      '固定平台 UKA 個體化規劃標準 — CPAK 分型與韌帶張力'
+    ),
+    meta: t(
+      '2026.06 – Present · Orthopedic Robotics & AI Lab · Chen Jing',
+      '2026.06 – 至今 · 骨科机器人与 AI 研究组 · 陈晶',
+      '2026.06 – 至今 · 骨科機器人與 AI 研究組 · 陳晶'
+    ),
+    body: t(
+      'Framework proposal to standardize individualized alignment targets in robot-assisted fixed-bearing medial UKA — three-pillar approach: <span class="hl">CPAK phenotyping</span> (DL landmark detection), ligament-tension-driven gap balancing, and constitutional alignment goals.',
+      '框架提出：将术者临床经验固化为可复用的个体化规划标准。三支柱体系：<span class="hl">CPAK 表型分类</span>（DL 标志点检测）、韧带张力驱动截骨量、Constitutional Alignment 靶点。',
+      '框架提出：將術者臨床經驗固化為可複用的個體化規劃標準。三支柱體系：<span class="hl">CPAK 表型分類</span>（DL 標誌點檢測）、韌帶張力驅動截骨量、Constitutional Alignment 靶點。'
+    ),
+    badges: [
+      { type:'track-a',      text: t('TRACK α', '主线 α', '主線 α') },
+      { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
+      { type:'first-author', text: t('FIRST AUTHOR', '第一作者', '第一作者') }
+    ],
+    tags: ['CPAK','Constitutional Alignment','UKA','Changmugu','DL Landmarks'],
     track: 'alpha'
   });
 
