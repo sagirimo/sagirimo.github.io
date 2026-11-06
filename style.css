@@ -400,6 +400,22 @@ body {
     margin-bottom: 0.75rem;
 }
 
+.exp-desc a {
+    color: var(--accent);
+    text-underline-offset: 0.2em;
+}
+
+.pub-title a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+}
+
+.exp-desc a:focus-visible,
+.pub-title a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 /* ── Tags ── */
 .exp-tags {
     display: flex;
