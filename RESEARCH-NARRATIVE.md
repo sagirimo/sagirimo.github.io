@@ -59,9 +59,9 @@
 **1. 机器人辅助 UKA 手术精度研究**（第一作者）
 - 时间：2025.4 – Present
 - 地点：骨科机器人与 AI 研究组 @ 航天中心医院
-- 完成 20 例长木谷机器人 UKA 手术的 CT 术前规划和术中操作
-- 设计精度评估方案，分析 40 例学习曲线（CUSUM 方法）
-- 已投稿 *Frontiers in Bioengineering and Biotechnology*（Biomechanics 专栏）
+- 在共 40 次配对假骨实验中完成 20 次长木谷机器人 UKA 假骨实验，包括 CT 规划与机器人操作
+- 研究学习曲线、精度与假体互换性（CUSUM 方法）
+- 2026 年 9 月 28 日发表于 *Frontiers in Robotics and AI*，13:1886514；[DOI](https://doi.org/10.3389/frobt.2026.1886514)
 
 **2. 机器人辅助 ACL 重建 — 多中心 RCT**（合作研究员）
 - 时间：2025.10 – Present
@@ -80,9 +80,8 @@
 
 **1. 乳腺肿瘤定位：俯卧位 MRI → 仰卧位预测**（第一作者，独立研究）
 - 时间：2026.3 – Present
-- 数据：深圳第二医院 314 对配对俯卧位-仰卧位 MRI 病例
-- 技术路线：表面点云提取 → ICP 刚性配准 → CPD 非刚性变形 → PointNet++ 深度学习
-- 目标期刊：IEEE JBHI 2026
+- 利用表面点云配准，从俯卧位 MRI 预测仰卧位乳腺肿瘤位置
+- 研究进行中
 
 **2. Graphiti — 大模型记忆图谱推理**（独立研究）
 - 时间：2026.5 – Present
@@ -97,14 +96,21 @@
 - 处于文献调研与传感器方案搭建阶段
 
 
+**4. BioDSH：生物信息学智能体**（开源软件）
+- 时间：2026
+- 面向医生和湿实验科研人员，基于 DeepSeek Harness
+- 提供桌面应用及 dsh-biodsh 插件，支持以自然语言开展单细胞、bulk RNA-seq 和生存分析等工作流
+- [源代码](https://github.com/sagirimo/BioDSH) · [社区收录](https://github.com/0xsline/awesome-deepseek-harness/pull/738)
+
+
 ## 出版物
 
 | # | 标题 | 状态 | 角色 | 期刊/目标 |
 |---|------|------|------|----------|
 | 1 | AI-based 3D identification of safe harvesting area of perpendicular plate of ethmoid in rhinoplasty | 已发表 2025 | 共同作者 | JPRAS |
 | 2 | Effectiveness of MFGT for school refusal in adolescents with depressive disorders: RCT study protocol | 已发表 2026 | 共同作者 | BMC Psychology |
-| 3 | High-Precision Universality? Learning curve, accuracy, and implant interchangeability of robotic UKA | 已投稿 | 第一作者 | Frontiers in Bioeng. & Biotech. |
-| 4 | Breast tumor localization: prone MRI to supine prediction using PointNet++ and point cloud registration | 进行中 | 第一作者 | JBHI 2026 |
+| 3 | High-precision universality? Learning curve, accuracy, and implant interchangeability of robotic UKA | 已发表 2026-09-28 | 第一作者 | Frontiers in Robotics and AI |
+| 4 | Breast tumor localization: prone MRI to supine prediction using surface point cloud registration | 进行中 | 第一作者 | — |
 | 5 | Atrial septal pacing reduces AF compared with right atrial appendage pacing | 撰写中 | 共同作者 | TBD |
 | 6 | 《读懂气胸，掌握康复的秘诀》 | 已出版 | 编者 | 医学科普 |
 

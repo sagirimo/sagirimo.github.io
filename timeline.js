@@ -433,16 +433,16 @@
       '2025.04 – 至今 · 骨科機器人與 AI 研究組 · 陳晶'
     ),
     body: t(
-      '20 Changmugu™ robotic UKA procedures with CT pre-planning & intra-op execution. 40-case learning-curve analysis (CUSUM). <span class="hl">Submitted to Frontiers in Bioengineering & Biotechnology</span>.',
-      '完成 20 例长木谷机器人 UKA 手术的 CT 术前规划与术中执行。基于 CUSUM 方法的 40 例学习曲线分析。<span class="hl">已投稿 Frontiers in Bioengineering & Biotechnology</span>（生物力学专栏）。',
-      '完成 20 例長木谷機器人 UKA 手術的 CT 術前規劃與術中執行。基於 CUSUM 方法的 40 例學習曲線分析。<span class="hl">已投稿 Frontiers in Bioengineering & Biotechnology</span>（生物力學專欄）。'
+      '20 Changmugu™ robotic UKA <span class="hl">Sawbone experiments</span>, including CT planning and robotic operation, within a 40-experiment matched-pair study. <span class="hl">Published in Frontiers in Robotics and AI</span>, September 28, 2026.',
+      '在共 40 次配对假骨实验中完成 20 次长木谷机器人 UKA <span class="hl">假骨实验</span>，包括 CT 规划与机器人操作。<span class="hl">2026 年 9 月 28 日发表于 Frontiers in Robotics and AI</span>。',
+      '在共 40 次配對假骨實驗中完成 20 次長木谷機械人 UKA <span class="hl">假骨實驗</span>，包括 CT 規劃與機械人操作。<span class="hl">2026 年 9 月 28 日發表於 Frontiers in Robotics and AI</span>。'
     ),
     badges: [
       { type:'track-a',      text: t('TRACK α', '主线 α', '主線 α') },
-      { type:'submitted',    text: t('SUBMITTED', '已投稿', '已投稿') },
+      { type:'published',    text: t('PUBLISHED · 2026', '已发表 · 2026', '已發表 · 2026') },
       { type:'first-author', text: t('FIRST AUTHOR', '第一作者', '第一作者') }
     ],
-    tags: ['Robotic Surgery','UKA','CT Planning','CUSUM'],
+    tags: ['Robotic Surgery','UKA','Sawbone','CT Planning','CUSUM'],
     track: 'alpha'
   });
 
@@ -503,21 +503,21 @@
       '乳腺腫瘤定位：俯臥位 → 仰臥位預測'
     ),
     meta: t(
-      '2026.03 – Present · Independent · target JBHI 2026',
-      '2026.03 – 至今 · 独立研究 · 目标 JBHI 2026',
-      '2026.03 – 至今 · 獨立研究 · 目標 JBHI 2026'
+      '2026.03 – Present · Independent research',
+      '2026.03 – 至今 · 独立研究',
+      '2026.03 – 至今 · 獨立研究'
     ),
     body: t(
-      'Prone MRI → Supine prediction. <span class="hl">314 paired cases</span> (Shenzhen No.2 Hospital). Pipeline: point cloud → ICP → CPD → <span class="hl">PointNet++</span> → 3D coordinate prediction.',
-      '俯卧位 MRI → 仰卧位定位预测。<span class="hl">314 对配对病例</span>（深圳市第二人民医院）。技术路线：表面点云 → ICP 刚性配准 → CPD 非刚性变形 → <span class="hl">PointNet++</span> → 三维坐标预测。',
-      '俯臥位 MRI → 仰臥位定位預測。<span class="hl">314 對配對病例</span>（深圳市第二人民醫院）。技術路線：表面點雲 → ICP 剛性配準 → CPD 非剛性變形 → <span class="hl">PointNet++</span> → 三維坐標預測。'
+      'Prone MRI → supine tumor localization using surface point cloud registration.',
+      '利用表面点云配准，从俯卧位 MRI 预测仰卧位肿瘤位置。',
+      '利用表面點雲配準，從俯臥位 MRI 預測仰臥位腫瘤位置。'
     ),
     badges: [
       { type:'track-b',      text: t('TRACK β', '分支 β', '分支 β') },
       { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
       { type:'first-author', text: t('FIRST AUTHOR', '第一作者', '第一作者') }
     ],
-    tags: ['PointNet++','ICP/CPD','3D Point Cloud','n=314','PyTorch','JBHI'],
+    tags: ['3D Point Cloud','MRI','PyTorch'],
     track: 'beta'
   });
 
@@ -621,6 +621,22 @@
       { type:'co-author', text: t('COLLABORATOR', '合作研究员', '合作研究員') }
     ],
     tags: ['Embodied AI','IMU','Sensor Fusion','Surgical Skill'],
+    track: 'beta'
+  });
+
+  C(beta, {
+    title: t('BioDSH: Bioinformatics Agent', 'BioDSH：生物信息学智能体', 'BioDSH：生物資訊學智能體'),
+    meta: t('2026 · Open-source software', '2026 · 开源软件', '2026 · 開源軟件'),
+    body: t(
+      'An open-source bioinformatics agent for clinicians and wet-lab scientists, built on DeepSeek Harness. Desktop app and dsh-biodsh plugin for plain-language single-cell, bulk RNA-seq, and survival analysis workflows.',
+      '基于 DeepSeek Harness 的开源生物信息学智能体，面向医生和湿实验科研人员。提供桌面应用及 dsh-biodsh 插件，支持以自然语言开展单细胞、bulk RNA-seq 和生存分析工作流。',
+      '基於 DeepSeek Harness 的開源生物資訊學智能體，面向醫生和濕實驗科研人員。提供桌面應用及 dsh-biodsh 插件，支援以自然語言開展單細胞、bulk RNA-seq 和生存分析工作流程。'
+    ),
+    badges: [
+      { type:'track-b', text: t('TRACK β', '分支 β', '分支 β') },
+      { type:'ongoing', text: t('OPEN SOURCE', '开源项目', '開源項目') }
+    ],
+    tags: ['Bioinformatics','LLM Agent','DeepSeek Harness','dsh-biodsh'],
     track: 'beta'
   });
 
