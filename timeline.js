@@ -471,28 +471,26 @@
     track: 'alpha'
   });
 
-  C(alphaTang, {
+  C(main, {
     title: t(
-      '3D-Printed Surgical Guide System',
-      '3D 打印手术导板系统',
-      '3D 打印手術導板系統'
+      '3D-Printed Surgical Guide for ACL Reconstruction',
+      'ACL 重建 3D 打印手术导板',
+      'ACL 重建 3D 打印手術導板'
     ),
     meta: t(
-      '2026.01 – Present · Tang Zhengjie × BIT Multi-Modal Lab (Prof. Ma Kang)',
-      '2026.01 – 至今 · 唐政杰 × 北理工多模态实验室（马康教授）',
-      '2026.01 – 至今 · 唐政杰 × 北理工多模態實驗室（馬康教授）'
+      '2026 · Independent student project',
+      '2026 · 独立学生项目',
+      '2026 · 獨立學生項目'
     ),
     body: t(
-      'CV-driven personalized 3D-printed guides for UKA / ACL. Market research, competitor analysis (Shikang / Changmugu / Anying), <span class="hl">physician needs interviews</span>. Entered "Challenge Cup 2026".',
-      'CV 驱动的个性化 3D 打印手术导板，面向 UKA / ACL 手术。完成市场调研、竞品分析（施康 / 长木谷 / 安颖），<span class="hl">医生需求访谈</span>。参加 2026 年"青创北京"挑战杯。',
-      'CV 驅動的個性化 3D 打印手術導板，面向 UKA / ACL 手術。完成市場調研、競品分析（施康 / 長木谷 / 安穎），<span class="hl">醫生需求訪談</span>。參加 2026 年「青創北京」挑戰杯。'
+      'Designed a patient-specific guide for anterior cruciate ligament reconstruction. Interviewed physicians, outlined the workflow from CT segmentation to guide design, and built an early interface prototype. Entered the 2026 Innovation Beijing Challenge Cup.',
+      '设计用于前交叉韧带重建的个性化导板。访谈医生，梳理从 CT 分割到导板设计的工作流程，并搭建早期界面原型。参加 2026 年青创北京挑战杯。',
+      '設計用於前十字韌帶重建的個人化導板。訪談醫生，梳理從 CT 分割到導板設計的工作流程，並搭建早期介面原型。參加 2026 年青創北京挑戰盃。'
     ),
     badges: [
-      { type:'track-a',      text: t('TRACK α', '主线 α', '主線 α') },
-      { type:'ongoing',      text: t('ONGOING', '进行中', '進行中') },
-      { type:'first-author', text: t('CLINICAL & PRODUCT LEAD', '临床与产品负责人', '臨床與產品負責人') }
+      { type:'track-a', text: t('TRACK α', '主线 α', '主線 α') }
     ],
-    tags: ['3D Printing','CV','Surgical Guide','MedTech','Challenge Cup'],
+    tags: ['3D Printing','CT Segmentation','Surgical Guide','Challenge Cup'],
     track: 'alpha'
   });
 
@@ -595,32 +593,6 @@
       { type:'first-author', text: t('INDEPENDENT', '独立', '獨立') }
     ],
     tags: ['Knowledge Graph','LLM Memory','GraphRAG','Temporal KG','ICLR 2027'],
-    track: 'beta'
-  });
-
-  var embodied = gitgraph.branch({ name: 'embodied', from: beta });
-  C(embodied, {
-    title: t(
-      'Embodied AI — Motion Recognition',
-      '具身智能 — 运动识别与评估',
-      '具身智能 — 運動識別與評估'
-    ),
-    meta: t(
-      '2026.05 – Present · BIT Multi-Modal Lab (Prof. Ma Kang)',
-      '2026.05 – 至今 · 北理工多模态实验室（马康教授）',
-      '2026.05 – 至今 · 北理工多模態實驗室（馬康教授）'
-    ),
-    body: t(
-      'Multi-modal sensor fusion (<span class="hl">IMU + vision + pressure</span>) for surgical skill assessment and rehabilitation monitoring. Currently in literature review + sensor setup.',
-      '多模态传感器融合（<span class="hl">IMU + 视觉 + 压力</span>）用于手术技能评估与康复监测。目前处于文献调研与传感器方案搭建阶段。',
-      '多模態傳感器融合（<span class="hl">IMU + 視覺 + 壓力</span>）用於手術技能評估與康復監測。目前處於文獻調研與傳感器方案搭建階段。'
-    ),
-    badges: [
-      { type:'track-b',   text: t('β · SUB', 'β · 子分支', 'β · 子分支') },
-      { type:'ongoing',   text: t('ONGOING', '进行中', '進行中') },
-      { type:'co-author', text: t('COLLABORATOR', '合作研究员', '合作研究員') }
-    ],
-    tags: ['Embodied AI','IMU','Sensor Fusion','Surgical Skill'],
     track: 'beta'
   });
 
